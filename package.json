@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/EthTrader/dappening#readme",
   "dependencies": {
+    "merkle-tree-solidity": "^1.0.8",
     "truffle-hdwallet-provider": "0.0.3"
   }
 }

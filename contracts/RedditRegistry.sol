@@ -14,6 +14,8 @@ contract RedditRegistry {
         uint[4] modStarts;              // map sub to date a mod started
     }
 
+    // bytes32 root = the merkle root;
+
     // List of all users, index = userId, enables looping through all users
     User[] public users;
 
@@ -33,12 +35,12 @@ contract RedditRegistry {
 
     // "carlslarson", 1403190201000, [756,3056,0,0], [216,1688,0,0], [0,1427295310000,0,0]
 
-    modifier validated {
-        // some validation scheme here
-        _;
-    }
+    function register(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes proof) public {
 
-    function register(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts) public validated {
+        // bytes32 hash = sha3(all the data);
+
+        // require(checkProof(proof, root, hash));
+
         uint userIdx = users.push(User({
             username: _username,
             owner: msg.sender,
