@@ -1,6 +1,8 @@
 pragma solidity ^0.4.4;
 /*pragma experimental "v0.5.0";*/
 
+/*import "./StringLib.sol";*/
+
 contract RedditRegistry {
 
     enum Subs { Ethereum, EthTrader, EthDev, EtherMining }
@@ -14,7 +16,7 @@ contract RedditRegistry {
         uint[4] modStarts;              // map sub to date a mod started
     }
 
-    // bytes32 root = the merkle root;
+    bytes32 constant root = 0xae124a4deda7468be059cc35ee117aba13abe509be6249baa47478abf1582b4c;
 
     // List of all users, index = userId, enables looping through all users
     User[] public users;
@@ -33,13 +35,13 @@ contract RedditRegistry {
         users.push(user);
     }
 
-    // "carlslarson", 1403190201000, [756,3056,0,0], [216,1688,0,0], [0,1427295310000,0,0]
+    // "carlslarson", 1403190201000, [756,3056,0,0], [216,1688,0,0], [0,1427295310000,0,0], []
 
-    function register(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes proof) public {
+    function register(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public {
 
-        // bytes32 hash = sha3(all the data);
+        bytes32 hash = sha3(_username, msg.sender, _joined, _postScores, _commentScores, _modStarts);
 
-        // require(checkProof(proof, root, hash));
+        require(checkProof(proof, root, hash));
 
         uint userIdx = users.push(User({
             username: _username,
@@ -52,6 +54,11 @@ contract RedditRegistry {
         userIdxFromOwner[msg.sender] = userIdx;
         userIdxFromUsername[_username] = userIdx;
         UserRegistered(userIdx);
+    }
+
+    function check(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public returns (bytes32, bool) {
+        bytes32 hash = sha3(_username, msg.sender, _joined, _postScores, _commentScores, _modStarts);
+        return (hash, checkProof(proof, root, hash));
     }
 
     function getUserByUsername(bytes20 _username) public returns (bytes20 username, address owner, uint joined, uint[4] postScores, uint[4] commentScores, uint[4] modStarts) {
@@ -82,6 +89,21 @@ contract RedditRegistry {
             User storage user = users[userIdxFromUsername[_usernames[i]]];
             scores[i] = user.postScores[subIdx] + user.commentScores[subIdx];
         }
+    }
+
+    function checkProof(bytes32[] proof, bytes32 root, bytes32 hash) constant returns (bool) {
+        bytes32 h = hash;
+
+        for (uint i = 1; i <= proof.length; i++) {
+
+            if (h < proof[i]) {
+                h = sha3(h, proof[i]);
+            } else {
+                h = sha3(proof[i], h);
+            }
+        }
+
+        return h == root;
     }
 
 }
