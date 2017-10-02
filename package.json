@@ -1,0 +1,28 @@
+{
+  "name": "dappening",
+  "version": "0.0.1",
+  "description": "code and contracts for ethtrader registry, tokens, and plugins",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EthTrader/dappening.git"
+  },
+  "keywords": [
+    "ethereum",
+    "ethtrader",
+    "solidity",
+    "reddit"
+  ],
+  "author": "Carl Larson <cslarson@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EthTrader/dappening/issues"
+  },
+  "homepage": "https://github.com/EthTrader/dappening#readme",
+  "dependencies": {
+    "truffle-hdwallet-provider": "0.0.3"
+  }
+}

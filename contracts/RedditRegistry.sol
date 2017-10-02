@@ -1,4 +1,6 @@
-pragma experimental "v0.5.0";
+pragma solidity ^0.4.4;
+/*pragma experimental "v0.5.0";*/
+
 contract RedditRegistry {
 
     enum Subs { Ethereum, EthTrader, EthDev, EtherMining }
@@ -51,7 +53,7 @@ contract RedditRegistry {
     }
 
     function getUserByUsername(bytes20 _username) public returns (bytes20 username, address owner, uint joined, uint[4] postScores, uint[4] commentScores, uint[4] modStarts) {
-        User user = users[userIdxFromUsername[_username]];
+        User storage user = users[userIdxFromUsername[_username]];
         return (user.username, user.owner, user.joined, user.postScores, user.commentScores, user.modStarts);
     }
 
@@ -75,7 +77,7 @@ contract RedditRegistry {
     function getSubScoreBatchByUsername(uint subIdx, bytes20[] _usernames) public returns (uint[20] scores) {
         require(_usernames.length <= 20);
         for (uint i = 0; i < _usernames.length; i++) {
-            User user = users[userIdxFromUsername[_usernames[i]]];
+            User storage user = users[userIdxFromUsername[_usernames[i]]];
             scores[i] = user.postScores[subIdx] + user.commentScores[subIdx];
         }
     }
