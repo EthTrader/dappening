@@ -16,7 +16,7 @@ contract RedditRegistry {
         uint[4] modStarts;              // map sub to date a mod started
     }
 
-    bytes32 constant root = 0xae124a4deda7468be059cc35ee117aba13abe509be6249baa47478abf1582b4c;
+    bytes32 constant root = 0xe306e86827e36927118b824568f5a7e1faf78a9f1dbd94fe549fa2c728cd988d;
 
     // List of all users, index = userId, enables looping through all users
     User[] public users;
@@ -35,11 +35,9 @@ contract RedditRegistry {
         users.push(user);
     }
 
-    // "carlslarson", 1403190201000, [756,3056,0,0], [216,1688,0,0], [0,1427295310000,0,0], []
-
     function register(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public {
 
-        bytes32 hash = sha3(_username, msg.sender, _joined, _postScores, _commentScores, _modStarts);
+        bytes32 hash = sha3(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
 
         require(checkProof(proof, root, hash));
 
@@ -57,7 +55,7 @@ contract RedditRegistry {
     }
 
     function check(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public returns (bytes32, bool) {
-        bytes32 hash = sha3(_username, msg.sender, _joined, _postScores, _commentScores, _modStarts);
+        bytes32 hash = sha3(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
         return (hash, checkProof(proof, root, hash));
     }
 
