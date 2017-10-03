@@ -10,13 +10,13 @@ contract RedditRegistry {
     struct User {
         bytes20 username;               // reddit username
         address owner;                  // ethereum address of user
-        uint joined;                    // date user joined reddit
-        uint[4] postScores;             // map sub to sub karma score
-        uint[4] commentScores;          // map sub to sub karma score
-        uint[4] modStarts;              // map sub to date a mod started
+        uint32 joined;                    // date user joined reddit, seconds since epoc
+        uint24[4] postScores;             // map sub to sub karma score
+        uint24[4] commentScores;          // map sub to sub karma score
+        uint32[4] modStarts;              // map sub to date a mod started, seconds since epoc
     }
 
-    bytes32 constant root = 0x68e0594d0972dac03730aa4df9346a87723587007a7d88c54211e090ebe22f12;
+    bytes32 constant root = 0xe7d75e6c8f82958bc25d328aa39d3556dc7e957cfef15966edfd304b1e47d5bd;
 
     // List of all users, index = userId, enables looping through all users
     User[] public users;
@@ -35,12 +35,10 @@ contract RedditRegistry {
         users.push(user);
     }
 
-    function register(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public {
+    function register(bytes20 _username, uint32 _joined, uint24[4] _postScores, uint24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public {
         //bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
         bytes32 hash = keccak256(msg.sender, _username, _joined);
-        //bytes32 hash = keccak256(msg.sender, _username);
-        //bytes32 hash = keccak256(msg.sender);
-        // bytes32 hash = keccak256(_username);
+        //bytes32 hash = keccak256(_postScores);
 
         require(MerkleTreeLib.checkProof(proof, root, hash));
 
@@ -57,16 +55,15 @@ contract RedditRegistry {
         UserRegistered(userIdx);
     }
 
-    function check(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public returns (bytes32, bool) { //(bytes20, address) {// (bytes32, bool) {
+    function check(bytes20 _username, uint32 _joined, uint24[4] _postScores, uint24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public returns (bytes32, bool) { //(bytes20, address) {// (bytes32, bool) {
         //bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
         bytes32 hash = keccak256(msg.sender, _username, _joined);
-        //bytes32 hash = keccak256(msg.sender, _username);
-        //bytes32 hash = keccak256(msg.sender);
-        // bytes32 hash = keccak256(_username);
+        //bytes32 hash = keccak256(_postScores);
+
         return (hash, MerkleTreeLib.checkProof(proof, root, hash));
     }
 
-    /*function getUserByUsername(bytes20 _username) public returns (bytes20 username, address owner, uint joined, uint[4] postScores, uint[4] commentScores, uint[4] modStarts) {
+    /*function getUserByUsername(bytes20 _username) public returns (bytes20 username, address owner, uint32 joined, uint24[4] postScores, uint24[4] commentScores, uint32[4] modStarts) {
         User storage user = users[userIdxFromUsername[_username]];
         return (user.username, user.owner, user.joined, user.postScores, user.commentScores, user.modStarts);
     }*/
