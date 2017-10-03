@@ -23,7 +23,9 @@
   },
   "homepage": "https://github.com/EthTrader/dappening#readme",
   "dependencies": {
+    "js-sha3": "^0.6.1",
     "merkle-tree-solidity": "^1.0.8",
+    "pad": "^1.1.0",
     "solidity-sha3": "^0.4.1",
     "truffle-hdwallet-provider": "0.0.3",
     "web3": "^1.0.0-beta.22"

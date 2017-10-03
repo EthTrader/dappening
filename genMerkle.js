@@ -6,11 +6,13 @@ const merkleRoot = MerkleTreeSolidity.merkleRoot;
 const checkProofSolidityFactory = MerkleTreeSolidity.checkProofSolidityFactory;
 const utils = require("ethereumjs-util");
 const sha3 = utils.sha3;
+const keccak256 = require('js-sha3').keccak256;
 // const sha3 = require("solidity-sha3").default;
 const toBuffer = utils.toBuffer;
 const bufferToHex = utils.bufferToHex;
 const users = require("./data/users.json");
 const fs = require("fs");
+const pad = require('pad');
 
 // const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
@@ -20,11 +22,12 @@ const userArrays = users.map(u=>[u.address, u.username, u.joined, [u.ethereumPos
 
 const userHashBuffers = users.map(u=>{
   // let userBuffer = toBuffer(u.address);
-  let userBuffer = toBuffer(u.username);
-  // let userBuffer = Buffer.concat([
-  //   toBuffer(u.address),
-  //   toBuffer(u.username)
-  // ])
+  // let userBuffer = utils.setLengthRight(toBuffer(u.username), 20);
+  let userBuffer = Buffer.concat([
+    toBuffer(u.address),
+    utils.setLengthRight(toBuffer(u.username), 20),
+    toBuffer(u.joined)
+  ])
   // let userBuffer = Buffer.concat([
   //   toBuffer(u.address),
   //   toBuffer(u.username)//,
@@ -33,8 +36,8 @@ const userHashBuffers = users.map(u=>{
   //   // Buffer.concat([toBuffer(u.ethereumComments), toBuffer(u.ethtraderComments), toBuffer(u.ethdevComments), toBuffer(u.etherminingComments)]),
   //   // Buffer.concat([toBuffer(u.modStartDateEthereum || 0), toBuffer(u.modStartDateEthtrader || 0), toBuffer(u.modStartDateEtherdev || 0), toBuffer(u.modStartDateEthermining || 0)])
   // ])
-  // return toBuffer(sha3(userBuffer))])
-  return sha3(userBuffer)
+  return toBuffer(sha3(userBuffer))
+  // return toBuffer(`0x${keccak256(pad(u.username, 20))}`)
 })
 // const userHashesHex = userHashBuffers.map(b=>bufferToHex(b))
 
