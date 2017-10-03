@@ -16,7 +16,7 @@ contract RedditRegistry {
         uint[4] modStarts;              // map sub to date a mod started
     }
 
-    bytes32 constant root = 0x3071122286e7865f5badb14861112209ab08b24c8efd7c0e297edbce2a648439;
+    bytes32 constant root = 0x6620b9d7936a4157278b664a8163ab586fecf6a1656a2f4e8febdbc66c5ba46e;
 
     // List of all users, index = userId, enables looping through all users
     User[] public users;
@@ -36,8 +36,11 @@ contract RedditRegistry {
     }
 
     function register(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public {
-
-        bytes32 hash = sha3(msg.sender);//, _username);//, _joined);//, _postScores, _commentScores, _modStarts);
+        //bytes32 hash = sha3(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
+        //bytes32 hash = sha3(msg.sender, _username, _joined);
+        //bytes32 hash = sha3(msg.sender, _username);
+        //bytes32 hash = sha3(msg.sender);
+        bytes32 hash = sha3(_username);
 
         require(MerkleTreeLib.checkProof(proof, root, hash));
 
@@ -55,7 +58,11 @@ contract RedditRegistry {
     }
 
     function check(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public returns (bytes32, bool) { //(bytes20, address) {// (bytes32, bool) {
-        bytes32 hash = sha3(msg.sender);//, _username);//, _joined);//, _postScores, _commentScores, _modStarts);
+        //bytes32 hash = sha3(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
+        //bytes32 hash = sha3(msg.sender, _username, _joined);
+        //bytes32 hash = sha3(msg.sender, _username);
+        //bytes32 hash = sha3(msg.sender);
+        bytes32 hash = sha3(_username);
         return (hash, MerkleTreeLib.checkProof(proof, root, hash));
     }
 

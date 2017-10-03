@@ -1,4 +1,5 @@
 const MerkleTreeSolidity = require("merkle-tree-solidity");
+const Web3 = require("web3");
 const MerkleTree = MerkleTreeSolidity.default;
 const checkProof = MerkleTreeSolidity.checkProof;
 const merkleRoot = MerkleTreeSolidity.merkleRoot;
@@ -11,12 +12,19 @@ const bufferToHex = utils.bufferToHex;
 const users = require("./data/users.json");
 const fs = require("fs");
 
+// const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+
 const username = "carlslarson";
 const userIdx = users.findIndex(u=>u.username===username)
 const userArrays = users.map(u=>[u.address, u.username, u.joined, [u.ethereumPosts, u.ethtraderPosts, u.ethdevPosts, u.etherminingPosts], [u.ethereumComments, u.ethtraderComments, u.ethdevComments, u.etherminingComments], [u.modStartDateEthereum || 0, u.modStartDateEthtrader || 0, u.modStartDateEtherdev || 0, u.modStartDateEthermining || 0]])
 
 const userHashBuffers = users.map(u=>{
-  let userBuffer = toBuffer(u.address);
+  // let userBuffer = toBuffer(u.address);
+  let userBuffer = toBuffer(u.username);
+  // let userBuffer = Buffer.concat([
+  //   toBuffer(u.address),
+  //   toBuffer(u.username)
+  // ])
   // let userBuffer = Buffer.concat([
   //   toBuffer(u.address),
   //   toBuffer(u.username)//,
