@@ -11,9 +11,9 @@ contract RedditRegistry {
         bytes20 username;               // reddit username
         address owner;                  // ethereum address of user
         uint joined;                    // date user joined reddit
-        // uint[4] postScores;             // map sub to sub karma score
-        // uint[4] commentScores;          // map sub to sub karma score
-        // uint[4] modStarts;              // map sub to date a mod started
+        uint[4] postScores;             // map sub to sub karma score
+        uint[4] commentScores;          // map sub to sub karma score
+        uint[4] modStarts;              // map sub to date a mod started
     }
 
     bytes32 constant root = 0x3071122286e7865f5badb14861112209ab08b24c8efd7c0e297edbce2a648439;
@@ -35,29 +35,28 @@ contract RedditRegistry {
         users.push(user);
     }
 
-    function register(bytes20 _username, uint _joined, /*uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, */bytes32[] proof) public {
+    function register(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public {
 
-        bytes32 hash = sha3(msg.sender);//, _username, _joined);//, _postScores, _commentScores, _modStarts);
+        bytes32 hash = sha3(msg.sender);//, _username);//, _joined);//, _postScores, _commentScores, _modStarts);
 
         require(MerkleTreeLib.checkProof(proof, root, hash));
 
         uint userIdx = users.push(User({
             username: _username,
             owner: msg.sender,
-            joined: _joined//,
-            /*postScores: _postScores,
+            joined: _joined,
+            postScores: _postScores,
             commentScores: _commentScores,
-            modStarts: _modStarts*/
+            modStarts: _modStarts
         })) - 1;
         userIdxFromOwner[msg.sender] = userIdx;
         userIdxFromUsername[_username] = userIdx;
         UserRegistered(userIdx);
     }
 
-    function check(bytes20 _username, uint _joined, /*uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, */bytes32[] proof) public returns (bytes32, bool) { //(bytes20, address) {// (bytes32, bool) {
-        //bytes32 hash = sha3(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
-        bytes32 h = sha3(msg.sender);//, _username, _joined);//, _postScores, _commentScores, _modStarts);
-        return (h, MerkleTreeLib.checkProof(proof, root, h));
+    function check(bytes20 _username, uint _joined, uint[4] _postScores, uint[4] _commentScores, uint[4] _modStarts, bytes32[] proof) public returns (bytes32, bool) { //(bytes20, address) {// (bytes32, bool) {
+        bytes32 hash = sha3(msg.sender);//, _username);//, _joined);//, _postScores, _commentScores, _modStarts);
+        return (hash, MerkleTreeLib.checkProof(proof, root, hash));
     }
 
     /*function getUserByUsername(bytes20 _username) public returns (bytes20 username, address owner, uint joined, uint[4] postScores, uint[4] commentScores, uint[4] modStarts) {

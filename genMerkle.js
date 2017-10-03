@@ -13,14 +13,14 @@ const fs = require("fs");
 
 const username = "carlslarson";
 const userIdx = users.findIndex(u=>u.username===username)
-const userArrays = users.map(u=>[u.address, u.username, u.joined])//, [u.ethereumPosts, u.ethtraderPosts, u.ethdevPosts, u.etherminingPosts], [u.ethereumComments, u.ethtraderComments, u.ethdevComments, u.etherminingComments], [u.modStartDateEthereum || 0, u.modStartDateEthtrader || 0, u.modStartDateEtherdev || 0, u.modStartDateEthermining || 0]])
+const userArrays = users.map(u=>[u.address, u.username, u.joined, [u.ethereumPosts, u.ethtraderPosts, u.ethdevPosts, u.etherminingPosts], [u.ethereumComments, u.ethtraderComments, u.ethdevComments, u.etherminingComments], [u.modStartDateEthereum || 0, u.modStartDateEthtrader || 0, u.modStartDateEtherdev || 0, u.modStartDateEthermining || 0]])
 
 const userHashBuffers = users.map(u=>{
   let userBuffer = toBuffer(u.address);
   // let userBuffer = Buffer.concat([
   //   toBuffer(u.address),
-  //   toBuffer(u.username),
-  //   toBuffer(u.joined),
+  //   toBuffer(u.username)//,
+  //   // toBuffer(u.joined)
   //   // Buffer.concat([toBuffer(u.ethereumPosts), toBuffer(u.ethtraderPosts), toBuffer(u.ethdevPosts), toBuffer(u.etherminingPosts)]),
   //   // Buffer.concat([toBuffer(u.ethereumComments), toBuffer(u.ethtraderComments), toBuffer(u.ethdevComments), toBuffer(u.etherminingComments)]),
   //   // Buffer.concat([toBuffer(u.modStartDateEthereum || 0), toBuffer(u.modStartDateEthtrader || 0), toBuffer(u.modStartDateEtherdev || 0), toBuffer(u.modStartDateEthermining || 0)])
