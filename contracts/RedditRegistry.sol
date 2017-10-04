@@ -15,7 +15,7 @@ contract RedditRegistry {
         uint32[4] modStarts;              // map sub to date a mod started, seconds since epoc
     }
 
-    bytes32 constant root = 0xbe68e0a6d8574ec215960cc3f6fc2531c8ad4b3ec8c42026668b69e023bbbc9e;
+    bytes32 constant root = 0x8d7e4caeec656911d9ee0afc00049a714187f7dd455008b48c19b5ba931de763;
 
     // List of all users, index = userId, enables looping through all users
     User[] public users;
