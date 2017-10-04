@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+
+  "name": "Dappening",
+  "description": "An Ethereum plugin for Reddit",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    "dappening.js",
+    "ethjs.min.js"
+  ],
+  "permissions": [
+    "activeTab",
+    "tabs", "https://www.reddit.com/*/*"
+  ]
+}
