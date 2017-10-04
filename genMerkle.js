@@ -10,6 +10,8 @@ const keccak256 = utils.sha3;
 // const sha3 = require("solidity-sha3").default;
 const toBuffer = utils.toBuffer;
 const bufferToHex = utils.bufferToHex;
+const setLengthLeft = utils.setLengthLeft;
+const setLengthRight = utils.setLengthRight;
 const users = require("./data/users.json");
 const fs = require("fs");
 const pad = require('pad');
@@ -25,21 +27,35 @@ const userArrays = users.map(u=>[u.address, u.username, parseInt(u.joined/1000),
 const userHashBuffers = users.map(u=>{
   // let userBuffer = toBuffer(u.address);
   // let userBuffer = utils.setLengthRight(toBuffer(u.username), 20);
+  // let userBuffer = Buffer.concat([
+  //   toBuffer(u.address),
+  //   setLengthRight(toBuffer(u.username), 20),
+  //   setLengthLeft(toBuffer(parseInt(u.joined/1000)), 4)
+  // ])
   let userBuffer = Buffer.concat([
     toBuffer(u.address),
     utils.setLengthRight(toBuffer(u.username), 20),
-    utils.setLengthLeft(toBuffer(parseInt(u.joined/1000)), 4)
+    setLengthLeft(toBuffer(parseInt(u.joined/1000)), 4),
+    Buffer.concat([
+      setLengthLeft(toBuffer(u.ethereumPosts), 32),
+      setLengthLeft(toBuffer(u.ethtraderPosts), 32),
+      setLengthLeft(toBuffer(u.ethdevPosts), 32),
+      setLengthLeft(toBuffer(u.etherminingPosts), 32)
+    ]),
+    Buffer.concat([
+      setLengthLeft(toBuffer(u.ethereumComments), 32),
+      setLengthLeft(toBuffer(u.ethtraderComments), 32),
+      setLengthLeft(toBuffer(u.ethdevComments), 32),
+      setLengthLeft(toBuffer(u.etherminingComments), 32)
+    ]),
+    Buffer.concat([
+      setLengthLeft(toBuffer(parseInt(u.modStartDateEthereum/1000) || 0), 32),
+      setLengthLeft(toBuffer(parseInt(u.modStartDateEthtrader/1000) || 0), 32),
+      setLengthLeft(toBuffer(parseInt(u.modStartDateEtherdev/1000) || 0), 32),
+      setLengthLeft(toBuffer(parseInt(u.modStartDateEthermining/1000) || 0), 32)
+    ])
   ])
-  // let userBuffer = Buffer.concat([
-  //   // toBuffer(u.address),
-  //   // utils.setLengthRight(toBuffer(u.username), 20),
-  //   // utils.setLengthLeft(toBuffer(parseInt(u.joined/1000)), 4),
-  //   Buffer.concat([utils.setLengthLeft(toBuffer(u.ethereumPosts), 3), utils.setLengthLeft(toBuffer(u.ethtraderPosts), 3), utils.setLengthLeft(toBuffer(u.ethdevPosts), 3), utils.setLengthLeft(toBuffer(u.etherminingPosts), 3)]),
-  //   // Buffer.concat([utils.setLengthLeft(toBuffer(u.ethereumComments), 3), utils.setLengthLeft(toBuffer(u.ethtraderComments), 3), utils.setLengthLeft(toBuffer(u.ethdevComments), 3), utils.setLengthLeft(toBuffer(u.etherminingComments), 3)]),
-  //   // Buffer.concat([utils.setLengthLeft(toBuffer(parseInt(u.modStartDateEthereum/1000) || 0), 4), utils.setLengthLeft(toBuffer(parseInt(u.modStartDateEthtrader/1000) || 0), 4), utils.setLengthLeft(toBuffer(parseInt(u.modStartDateEtherdev/1000) || 0), 4), utils.setLengthLeft(toBuffer(parseInt(u.modStartDateEthermining/1000) || 0), 4)])
-  // ])
-  return toBuffer(keccak256(userBuffer))
-  // return toBuffer(`0x${keccak256(pad(u.username, 20))}`)
+  return keccak256(userBuffer)
 })
 // const userHashesHex = userHashBuffers.map(b=>bufferToHex(b))
 
