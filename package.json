@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-plugin": "cp plugin/manifest.json plugin/popup.html plugin/popup.css plugin/icon.png out/plugin/ && browserify plugin/src/dappening.js -o out/plugin/dappening.js -t [ babelify --presets [ es2015 react ] ] && browserify plugin/src/popup.js -o out/plugin/popup.js -t [ babelify --presets [ es2015 react ] ]"
+    "build-plugin": "cp plugin/manifest.json plugin/popup.html plugin/popup.css plugin/icon.png out/plugin/ && browserify plugin/src/dappening.js -o out/plugin/dappening.js -t [ babelify --presets [ es2015 react ] ] && browserify plugin/src/popup.js -o out/plugin/popup.js -t [ babelify --presets [ es2015 react ] ]",
+    "build-regdapp": "cp regdapp/index.html out/regdapp/ && browserify regdapp/src/index.js -o out/regdapp/script.js -t [ babelify --presets [ es2015 react ] ]"
   },
   "repository": {
     "type": "git",
