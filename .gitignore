@@ -60,5 +60,5 @@ typings/
 .secret.json
 
 build/
-bot/praw.ini
+bot*/praw.ini
 bot/regbot.db
