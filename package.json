@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-plugin": "cp plugin/manifest.json plugin/popup.html plugin/popup.css plugin/icon.png out/plugin/ && browserify plugin/src/dappening.js -o out/plugin/dappening.js -t [ babelify --presets [ es2015 react ] ] && browserify plugin/src/popup.js -o out/plugin/popup.js -t [ babelify --presets [ es2015 react ] ]",
+    "build-plugin": "cp plugin/manifest.json plugin/popup.html plugin/popup.css plugin/icon.png out/plugin/ && browserify plugin/src/dappening.js -o out/plugin/dappening.js -t [ babelify --presets [ es2015 react ] ] && browserify plugin/src/popup.js -o out/plugin/popup.js -t [ babelify --presets [ es2015 react ] ]"
   },
   "repository": {
     "type": "git",
@@ -27,13 +27,12 @@
     "bluebird": "^3.5.0",
     "merkle-tree-solidity": "^1.0.8",
     "truffle-hdwallet-provider": "0.0.3",
-    "web3": "^1.0.0-beta.22",
-    "web3-providers-ws": "^1.0.0-beta.22",
-    "websocket": "^1.0.24"
+    "web3": "^1.0.0-beta.22"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "babelify": "^7.3.0"
+    "babelify": "^7.3.0",
+    "browserify": "^14.4.0"
   }
 }
