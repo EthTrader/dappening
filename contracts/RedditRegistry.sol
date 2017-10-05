@@ -21,10 +21,10 @@ contract RedditRegistry {
     User[] public users;
 
     // Map owner address to user id
-    mapping(address => uint) public userIdxFromOwner;
+    mapping(address => uint) public ownerToIdx;
 
     // Map username to user id
-    mapping(bytes20 => uint) public userIdxFromUsername;
+    mapping(bytes20 => uint) public usernameToIdx;
 
     event UserRegistered(uint userIdx);
 
@@ -35,6 +35,12 @@ contract RedditRegistry {
     }
 
     function register(bytes20 _username, uint32 _joined, uint24[4] _postScores, uint24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public {
+
+        // only register address once
+        require(ownerToIdx[msg.sender] == 0);
+        // only register username once
+        require(usernameToIdx[_username] == 0);
+
         bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
 
         require(MerkleTreeLib.checkProof(proof, root, hash));
@@ -47,8 +53,9 @@ contract RedditRegistry {
             commentScores: _commentScores,
             modStarts: _modStarts
         })) - 1;
-        userIdxFromOwner[msg.sender] = userIdx;
-        userIdxFromUsername[_username] = userIdx;
+
+        ownerToIdx[msg.sender] = userIdx;
+        usernameToIdx[_username] = userIdx;
         UserRegistered(userIdx);
     }
 
@@ -59,7 +66,7 @@ contract RedditRegistry {
     }
 
     function getUserByUsername(bytes20 _username) public constant returns (bytes20 username, address owner, uint32 joined, uint24[4] postScores, uint24[4] commentScores, uint32[4] modStarts) {
-        User storage user = users[userIdxFromUsername[_username]];
+        User storage user = users[usernameToIdx[_username]];
         return (user.username, user.owner, user.joined, user.postScores, user.commentScores, user.modStarts);
     }
 
@@ -69,21 +76,21 @@ contract RedditRegistry {
     function getIdxBatchByUsername(bytes20[] _usernames) public constant returns (uint[20] registered) {
         require(_usernames.length <= 20);
         for (uint i = 0; i < _usernames.length; i++) {
-            registered[i] = userIdxFromUsername[_usernames[i]];
+            registered[i] = usernameToIdx[_usernames[i]];
         }
     }
 
     function getAddressBatchByUsername(bytes20[] _usernames) public constant returns (address[20] addresses) {
         require(_usernames.length <= 20);
         for (uint i = 0; i < _usernames.length; i++) {
-            addresses[i] = users[userIdxFromUsername[_usernames[i]]].owner;
+            addresses[i] = users[usernameToIdx[_usernames[i]]].owner;
         }
     }
 
     function getSubScoreBatchByUsername(uint subIdx, bytes20[] _usernames) public constant returns (uint[20] scores) {
         require(_usernames.length <= 20);
         for (uint i = 0; i < _usernames.length; i++) {
-            User storage user = users[userIdxFromUsername[_usernames[i]]];
+            User storage user = users[usernameToIdx[_usernames[i]]];
             scores[i] = user.postScores[subIdx] + user.commentScores[subIdx];
         }
     }

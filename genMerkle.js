@@ -14,7 +14,6 @@ const setLengthLeft = utils.setLengthLeft;
 const setLengthRight = utils.setLengthRight;
 const users = require("./data/users.json");
 const fs = require("fs");
-const pad = require('pad');
 
 // const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
