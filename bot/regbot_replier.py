@@ -23,7 +23,7 @@ while True:
                 print(user[1:])
                 post_scores = map(str,user[1:5])
                 comment_scores = map(str,user[5:9])
-                comment.reply("your karma through 30/9/2017\nfor posts: {0}\nfor comments: {1}".format(' | '.join(post_scores), ' | '.join(comment_scores)))
+                comment.reply("your karma till 30/9/2017 ( r/ethereum | r/ethtrader | r/ethdev | r/ethermining ) is posts: {0} & comments: {1}".format(' | '.join(post_scores), ' | '.join(comment_scores)))
             else:
                 comment.reply("sorry, your username was not found")
         elif '0x' in text:
