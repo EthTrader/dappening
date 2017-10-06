@@ -20,10 +20,7 @@ comments = subreddit.stream.comments()
 for comment in comments:
     text = comment.body
     if '!ethreg' in text.lower():
-        try:
-            cursor.execute("INSERT INTO reg_comments (comment_id) VALUES (%s)", (comment.id,))
-            conn.commit()
-        except Exception as err:
-            print(err)
+        cursor.execute("INSERT INTO reg_comments (comment_id) VALUES (%s) ON CONFLICT (comment_id) DO NOTHING", (comment.id,))
+        conn.commit()
 
 conn.close()
