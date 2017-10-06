@@ -17,7 +17,7 @@ while True:
         comment = reddit.comment(comment_id)
         text = comment.body
         if 'karma' in text:
-            cursor.execute("SELECT * FROM user_scores WHERE author = %s", (comment.author.name,))
+            cursor.execute("SELECT * FROM user_scores WHERE username = %s", (comment.author.name,))
             user = cursor.fetchone()
             if user is not None:
                 print(user[1:])
