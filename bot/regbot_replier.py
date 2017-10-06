@@ -21,7 +21,9 @@ while True:
             user = cursor.fetchone()
             if user is not None:
                 print(user[1:])
-                comment.reply("your karma is {0}".format('/'.join(map(str,user[1:]))))
+                post_scores = map(str,user[1:5])
+                comment_scores = map(str,user[5:9])
+                comment.reply("your karma through 30/9/2017 is posts: {0}, comments: {1}".format(post_scores.join('/'), comment_scores.join('/')))
             else:
                 comment.reply("sorry, your username was not found")
         elif '0x' in text:
