@@ -23,7 +23,7 @@ while True:
                 print(user[1:])
                 post_scores = map(str,user[1:5])
                 comment_scores = map(str,user[5:9])
-                comment.reply("your karma through 30/9/2017 is posts: {0}, comments: {1}".format('/'.join(post_scores), '/'.join(comment_scores)))
+                comment.reply("your karma through 30/9/2017\nfor posts: {0}\nfor comments: {1}".format(' | '.join(post_scores), ' | '.join(comment_scores)))
             else:
                 comment.reply("sorry, your username was not found")
         elif '0x' in text:
@@ -35,9 +35,9 @@ while True:
                 if address is not None and is_address(address):
                     cursor.execute("UPDATE users SET address = %s WHERE id = %s", (address, user[0]))
                     if user[1] is not None:
-                        comment.reply("you have updated your pre-registration ethereum address")
+                        comment.reply("you have updated your pre-registration ethereum address to: {0}".format(address))
                     else:
-                        comment.reply("you are now pre-registered")
+                        comment.reply("you are now pre-registered with the address: {0}".format(address))
                 else:
                     comment.reply("that's doesn't appear to be a valid ethereum address.")
             else:
