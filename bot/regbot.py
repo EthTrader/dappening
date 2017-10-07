@@ -20,7 +20,7 @@ def start():
     try:
         get_comments()
     except requests.exceptions.Timeout:
-        print "Timeout occurred"
+        print("Timeout occurred")
         start()
 
 def get_comments():
