@@ -15,12 +15,21 @@ args = vars(parser.parse_args())
 
 subreddit = reddit.subreddit(args['sub'])
 print("streaming from:", subreddit)
-comments = subreddit.stream.comments()
 
-for comment in comments:
-    text = comment.body
-    if '!ethreg' in text.lower():
-        cursor.execute("INSERT INTO reg_comments (comment_id) VALUES (%s) ON CONFLICT (comment_id) DO NOTHING", (comment.id,))
-        conn.commit()
+def start():
+    try:
+        get_comments()
+    except requests.exceptions.Timeout:
+        print "Timeout occurred"
+        start()
+
+def get_comments():
+    comments = subreddit.stream.comments()
+
+    for comment in comments:
+        text = comment.body
+        if '!ethreg' in text.lower():
+            cursor.execute("INSERT INTO reg_comments (comment_id) VALUES (%s) ON CONFLICT (comment_id) DO NOTHING", (comment.id,))
+            conn.commit()
 
 conn.close()
