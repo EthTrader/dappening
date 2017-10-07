@@ -59894,7 +59894,7 @@ var regAbi = [{ "constant": true, "inputs": [{ "name": "_usernames", "type": "by
 
 var reg = new web3.eth.Contract(regAbi, "0x472805E20574d61F0e3C3814DB55f246261d8c84");
 
-// console.log(reg)
+console.log(reg);
 //
 // console.log($users);
 
