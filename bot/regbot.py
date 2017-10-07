@@ -15,6 +15,7 @@ args = vars(parser.parse_args())
 
 subreddit = reddit.subreddit(args['sub'])
 print("streaming from:", subreddit)
+start()
 
 def start():
     try:
