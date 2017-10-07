@@ -14,8 +14,6 @@ parser.add_argument('--sub', help='the subreddit to watch')
 args = vars(parser.parse_args())
 
 subreddit = reddit.subreddit(args['sub'])
-print("streaming from:", subreddit)
-start()
 
 def start():
     try:
@@ -33,4 +31,6 @@ def get_comments():
             cursor.execute("INSERT INTO reg_comments (comment_id) VALUES (%s) ON CONFLICT (comment_id) DO NOTHING", (comment.id,))
             conn.commit()
 
+print("streaming from:", subreddit)
+start()
 conn.close()
