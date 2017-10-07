@@ -1,4 +1,5 @@
 import praw
+import prawcore
 import time
 import psycopg2
 import argparse
@@ -18,14 +19,12 @@ subreddit = reddit.subreddit(args['sub'])
 def start():
     try:
         get_comments()
-    except requests.exceptions.Timeout:
-        print("Timeout occurred")
+    except prawcore.exceptions.RequestException:
+        print("RequestException occurred, restarting...")
         start()
 
 def get_comments():
-    comments = subreddit.stream.comments()
-
-    for comment in comments:
+    for comment in subreddit.stream.comments():
         text = comment.body
         if '!ethreg' in text.lower():
             cursor.execute("INSERT INTO reg_comments (comment_id) VALUES (%s) ON CONFLICT (comment_id) DO NOTHING", (comment.id,))
