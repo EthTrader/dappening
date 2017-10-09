@@ -9,10 +9,10 @@ contract RedditRegistry {
     struct User {
         bytes20 username;               // reddit username
         address owner;                  // ethereum address of user
-        uint32 joined;                    // date user joined reddit, seconds since epoc
-        uint24[4] postScores;             // map sub to sub karma score
-        uint24[4] commentScores;          // map sub to sub karma score
-        uint32[4] modStarts;              // map sub to date a mod started, seconds since epoc
+        uint32 joined;                  // date user joined reddit, seconds since epoc
+        int24[4] postScores;            // map sub to sub karma score
+        int24[4] commentScores;         // map sub to sub karma score
+        uint32[4] modStarts;            // map sub to date a mod started, seconds since epoc
     }
 
     bytes32 constant root = 0x8d7e4caeec656911d9ee0afc00049a714187f7dd455008b48c19b5ba931de763;
@@ -34,7 +34,7 @@ contract RedditRegistry {
         users.push(user);
     }
 
-    function register(bytes20 _username, uint32 _joined, uint24[4] _postScores, uint24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public {
+    function register(bytes20 _username, uint32 _joined, int24[4] _postScores, int24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public {
 
         // only register address once
         require(ownerToIdx[msg.sender] == 0);
@@ -59,13 +59,13 @@ contract RedditRegistry {
         UserRegistered(userIdx);
     }
 
-    function check(bytes20 _username, uint32 _joined, uint24[4] _postScores, uint24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public constant returns (bytes32, bool) { //(bytes20, address) {// (bytes32, bool) {
+    function check(bytes20 _username, uint32 _joined, int24[4] _postScores, int24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public constant returns (bytes32, bool) { //(bytes20, address) {// (bytes32, bool) {
         bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
 
         return (hash, MerkleTreeLib.checkProof(proof, root, hash));
     }
 
-    function getUserByUsername(bytes20 _username) public constant returns (bytes20 username, address owner, uint32 joined, uint24[4] postScores, uint24[4] commentScores, uint32[4] modStarts) {
+    function getUserByUsername(bytes20 _username) public constant returns (bytes20 username, address owner, uint32 joined, int24[4] postScores, int24[4] commentScores, uint32[4] modStarts) {
         User storage user = users[usernameToIdx[_username]];
         return (user.username, user.owner, user.joined, user.postScores, user.commentScores, user.modStarts);
     }
@@ -87,7 +87,7 @@ contract RedditRegistry {
         }
     }
 
-    function getSubScoreBatchByUsername(uint subIdx, bytes20[] _usernames) public constant returns (uint[20] scores) {
+    function getSubScoreBatchByUsername(uint subIdx, bytes20[] _usernames) public constant returns (int[20] scores) {
         require(_usernames.length <= 20);
         for (uint i = 0; i < _usernames.length; i++) {
             User storage user = users[usernameToIdx[_usernames[i]]];
