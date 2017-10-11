@@ -1,8 +1,9 @@
 pragma solidity ^0.4.15;
 
 import "./MerkleTreeLib.sol";
+import "./MiniMeToken.sol";
 
-contract RedditRegistry {
+contract RedditRegistry is TokenController {
 
     enum Subs { Ethereum, EthTrader, EthDev, EtherMining }
 
@@ -15,7 +16,11 @@ contract RedditRegistry {
         uint32[4] modStarts;            // map sub to date a mod started, seconds since epoc
     }
 
-    bytes32 constant root = 0x8d7e4caeec656911d9ee0afc00049a714187f7dd455008b48c19b5ba931de763;
+    uint8 public constant modDayRate = 10;
+    uint public start;
+    address public token;
+    address public factory;
+    bytes32 public root = 0x8d7e4caeec656911d9ee0afc00049a714187f7dd455008b48c19b5ba931de763;
 
     // List of all users, index = userId, enables looping through all users
     User[] public users;
@@ -26,15 +31,34 @@ contract RedditRegistry {
     // Map username to user id
     mapping(bytes20 => uint) public usernameToIdx;
 
-    event UserRegistered(uint userIdx);
+    event Registered(uint userIdx, uint endowment);
 
-    function RedditRegistry() {
+    function RedditRegistry(bytes32 _root) {
         // initialise the 0 index user
         User memory user;
         users.push(user);
+        root = _root;//0x8d7e4caeec656911d9ee0afc00049a714187f7dd455008b48c19b5ba931de763;
+        start = block.timestamp;
+        factory = new MiniMeTokenFactory();
+        token = new MiniMeToken(
+            factory,
+            0,// address _parentToken,
+            0,// uint _snapshotBlock,
+            "Reddit Ethereum Community Token",// string _tokenName,
+            9,// uint8 _decimalUnits,
+            "RECT",// string _tokenSymbol,
+            false// bool _transfersEnabled
+            );
     }
 
-    function register(bytes20 _username, uint32 _joined, int24[4] _postScores, int24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public {
+    function register(
+        bytes20 _username,
+        uint32 _joined,
+        int24[4] _postScores,
+        int24[4] _commentScores,
+        uint32[4] _modStarts,
+        bytes32[] proof
+    ) public {
 
         // only register address once
         require(ownerToIdx[msg.sender] == 0);
@@ -45,24 +69,61 @@ contract RedditRegistry {
 
         require(MerkleTreeLib.checkProof(proof, root, hash));
 
-        uint userIdx = users.push(User({
+        User memory user = User({
             username: _username,
             owner: msg.sender,
             joined: _joined,
             postScores: _postScores,
             commentScores: _commentScores,
             modStarts: _modStarts
-        })) - 1;
+        });
+
+        uint userIdx = users.push(user) - 1;
 
         ownerToIdx[msg.sender] = userIdx;
         usernameToIdx[_username] = userIdx;
-        UserRegistered(userIdx);
+        Registered(userIdx, endow(user));
     }
 
-    function check(bytes20 _username, uint32 _joined, int24[4] _postScores, int24[4] _commentScores, uint32[4] _modStarts, bytes32[] proof) public constant returns (bytes32, bool) { //(bytes20, address) {// (bytes32, bool) {
+    function endow(User user) internal returns (uint endowment){
+        int _endowment = 0;
+        endowment = 0;
+        for (uint i = 0; i < user.postScores.length; i++) {
+            _endowment += user.postScores[i];
+        }
+        for (uint j = 0; j < user.commentScores.length; j++) {
+            _endowment += user.commentScores[j];
+        }
+        if(_endowment > 0) endowment = uint(_endowment);
+        uint modStartMax = 0;
+        for (uint k = 0; k < user.modStarts.length; k++) {
+            if(user.modStarts[k] > modStartMax) modStartMax = user.modStarts[k];
+        }
+        if(modStartMax > start) {
+            endowment += (modStartMax-start)*modDayRate / 1 days;
+        }
+        MiniMeToken(token).generateTokens(user.owner, endowment);
+    }
+
+    function onTransfer(address _from, address _to, uint _amount) returns(bool) {
+        return true;
+    }
+
+    function onApprove(address _owner, address _spender, uint _amount) returns(bool) {
+        return true;
+    }
+
+    function check(
+        bytes20 _username,
+        uint32 _joined,
+        int24[4] _postScores,
+        int24[4] _commentScores,
+        uint32[4] _modStarts,
+        bytes32[] proof
+    ) public constant returns (bool) {
         bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
 
-        return (hash, MerkleTreeLib.checkProof(proof, root, hash));
+        return MerkleTreeLib.checkProof(proof, root, hash);
     }
 
     function getUserByUsername(bytes20 _username) public constant returns (bytes20 username, address owner, uint32 joined, int24[4] postScores, int24[4] commentScores, uint32[4] modStarts) {

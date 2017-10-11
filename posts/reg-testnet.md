@@ -31,11 +31,12 @@ Please review the proposed procedure for enabling self-registration using merkle
 
 **Some stats**
 
-* [57,915] register-able users from r/ethereum, r/ethtrader, r/ethdev, and r/ethermining
-* karma from 96,814 posts (1,959,963) and 1,876,562 comments (5,924,793) collected
+* 57,915 register-able users from r/ethereum, r/ethtrader, r/ethdev, and r/ethermining
+* karma from 96,814 posts (sum to 1,959,963) and 1,876,562 comments (sum to 5,924,793) collected
 
 **Code**
 
 * [Karma collection](https://github.com/EthTrader/karma)
 * [Dappening (bot, contracts, merkle generation)](https://github.com/EthTrader/dappening)
 * [Plugin](https://github.com/EthTrader/plugin)
+* [Registration dApp](https://github.com/EthTrader/EthTrader.github.io)
