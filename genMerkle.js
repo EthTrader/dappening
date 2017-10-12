@@ -19,9 +19,9 @@ const fs = require("fs");
 
 const username = "carlslarson";
 const userIdx = users.findIndex(u=>u.username===username)
-const userArrays = users.map(u=>[u.address, u.username, parseInt(u.joined/1000), [u.ethereumPosts, u.ethtraderPosts, u.ethdevPosts, u.etherminingPosts], [u.ethereumComments, u.ethtraderComments, u.ethdevComments, u.etherminingComments], [parseInt(u.modStartDateEthereum/1000) || 0, parseInt(u.modStartDateEthtrader/1000) || 0, parseInt(u.modStartDateEtherdev/1000) || 0, parseInt(u.modStartDateEthermining/1000) || 0]])
+const userArrays = users.map(u=>[u.address, u.username, u.joined, [u.ethereumPosts, u.ethtraderPosts, u.ethdevPosts, u.etherminingPosts], [u.ethereumComments, u.ethtraderComments, u.ethdevComments, u.etherminingComments], [u.modStartDateEthereum || 0, u.modStartDateEthtrader || 0, u.modStartDateEtherdev || 0, u.modStartDateEthermining || 0]])
 
-// console.log(Number.isInteger(247283000/1000))
+// console.log(Number.isInteger(247283000)
 
 const userHashBuffers = users.map(u=>{
   // let userBuffer = toBuffer(u.address);
@@ -29,12 +29,12 @@ const userHashBuffers = users.map(u=>{
   // let userBuffer = Buffer.concat([
   //   toBuffer(u.address),
   //   setLengthRight(toBuffer(u.username), 20),
-  //   setLengthLeft(toBuffer(parseInt(u.joined/1000)), 4)
+  //   setLengthLeft(toBuffer(u.joined), 4)
   // ])
   let userBuffer = Buffer.concat([
     toBuffer(u.address),
     utils.setLengthRight(toBuffer(u.username), 20),
-    setLengthLeft(toBuffer(parseInt(u.joined/1000)), 4),
+    setLengthLeft(toBuffer(u.joined), 4),
     Buffer.concat([
       setLengthLeft(toBuffer(u.ethereumPosts), 32),
       setLengthLeft(toBuffer(u.ethtraderPosts), 32),
@@ -48,10 +48,10 @@ const userHashBuffers = users.map(u=>{
       setLengthLeft(toBuffer(u.etherminingComments), 32)
     ]),
     Buffer.concat([
-      setLengthLeft(toBuffer(parseInt(u.modStartDateEthereum/1000) || 0), 32),
-      setLengthLeft(toBuffer(parseInt(u.modStartDateEthtrader/1000) || 0), 32),
-      setLengthLeft(toBuffer(parseInt(u.modStartDateEtherdev/1000) || 0), 32),
-      setLengthLeft(toBuffer(parseInt(u.modStartDateEthermining/1000) || 0), 32)
+      setLengthLeft(toBuffer(u.modStartDateEthereum || 0), 32),
+      setLengthLeft(toBuffer(u.modStartDateEthtrader || 0), 32),
+      setLengthLeft(toBuffer(u.modStartDateEtherdev || 0), 32),
+      setLengthLeft(toBuffer(u.modStartDateEthermining || 0), 32)
     ])
   ])
   return keccak256(userBuffer)
@@ -66,12 +66,15 @@ const userRegInputs = userArrays.map((ua,idx)=>{
   return ua
 })
 
+const root = bufferToHex(merkleTree.getRoot())
+
 fs.writeFileSync(`${__dirname}/out/userRegInputs.json`, JSON.stringify(userRegInputs))
+fs.writeFileSync(`${__dirname}/out/root.json`, JSON.stringify(root))
+// TODO properly calculate modDayRate
+fs.writeFileSync(`${__dirname}/out/modDayRate.json`, JSON.stringify(24))
 
 // const proof = merkleTree.getProof(userHashBuffers[userIdx])
 // console.log(JSON.stringify(userArrays[userIdx]))
 // console.log(proof.map(p=>bufferToHex(p)))
-
-const root = merkleTree.getRoot()
 console.log(`carlslarson hash: ${bufferToHex(userHashBuffers[userIdx])}`)
-console.log(`root: ${bufferToHex(root)}`)
+console.log(`root: ${root}`)

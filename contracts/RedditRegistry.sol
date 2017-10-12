@@ -16,11 +16,11 @@ contract RedditRegistry is TokenController {
         uint32[4] modStarts;            // map sub to date a mod started, seconds since epoc
     }
 
-    uint8 public constant modDayRate = 10;
-    uint public start;
+    uint8 public modDayRate;
+    uint public constant collectedTill = 1506816000;
     address public token;
     address public factory;
-    bytes32 public root = 0x8d7e4caeec656911d9ee0afc00049a714187f7dd455008b48c19b5ba931de763;
+    bytes32 public root;
 
     // List of all users, index = userId, enables looping through all users
     User[] public users;
@@ -33,12 +33,12 @@ contract RedditRegistry is TokenController {
 
     event Registered(uint userIdx, uint endowment);
 
-    function RedditRegistry(bytes32 _root) {
+    function RedditRegistry(bytes32 _root, uint8 _modDayRate) {
         // initialise the 0 index user
         User memory user;
         users.push(user);
-        root = _root;//0x8d7e4caeec656911d9ee0afc00049a714187f7dd455008b48c19b5ba931de763;
-        start = block.timestamp;
+        root = _root;
+        modDayRate = _modDayRate;
         factory = new MiniMeTokenFactory();
         token = new MiniMeToken(
             factory,
@@ -97,10 +97,12 @@ contract RedditRegistry is TokenController {
         if(_endowment > 0) endowment = uint(_endowment);
         uint modStartMax = 0;
         for (uint k = 0; k < user.modStarts.length; k++) {
-            if(user.modStarts[k] > modStartMax) modStartMax = user.modStarts[k];
+            if(user.modStarts[k] > 0 && (modStartMax == 0 || user.modStarts[k] < modStartMax)) {
+                modStartMax = user.modStarts[k];
+            }
         }
-        if(modStartMax > start) {
-            endowment += (modStartMax-start)*modDayRate / 1 days;
+        if(modStartMax > 0 && modStartMax < collectedTill) {
+            endowment += (collectedTill - modStartMax) * modDayRate / 1 days;
         }
         MiniMeToken(token).generateTokens(user.owner, endowment);
     }
@@ -120,10 +122,10 @@ contract RedditRegistry is TokenController {
         int24[4] _commentScores,
         uint32[4] _modStarts,
         bytes32[] proof
-    ) public constant returns (bool) {
+    ) public constant returns (bool, bytes32) {
         bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
 
-        return MerkleTreeLib.checkProof(proof, root, hash);
+        return (MerkleTreeLib.checkProof(proof, root, hash), hash);
     }
 
     function getUserByUsername(bytes20 _username) public constant returns (bytes20 username, address owner, uint32 joined, int24[4] postScores, int24[4] commentScores, uint32[4] modStarts) {
@@ -145,14 +147,6 @@ contract RedditRegistry is TokenController {
         require(_usernames.length <= 20);
         for (uint i = 0; i < _usernames.length; i++) {
             addresses[i] = users[usernameToIdx[_usernames[i]]].owner;
-        }
-    }
-
-    function getSubScoreBatchByUsername(uint subIdx, bytes20[] _usernames) public constant returns (int[20] scores) {
-        require(_usernames.length <= 20);
-        for (uint i = 0; i < _usernames.length; i++) {
-            User storage user = users[usernameToIdx[_usernames[i]]];
-            scores[i] = user.postScores[subIdx] + user.commentScores[subIdx];
         }
     }
 
