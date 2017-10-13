@@ -25,31 +25,6 @@ pragma solidity ^0.4.6;
 ///  affecting the original token
 /// @dev It is ERC20 compliant, but still needs to under go further testing.
 
-
-/// @dev The token controller contract must implement these functions
-contract TokenController {
-    /// @notice Called when `_owner` sends ether to the MiniMe Token contract
-    /// @param _owner The address that sent the ether to create tokens
-    /// @return True if the ether is accepted, false if it throws
-    /*function proxyPayment(address _owner) payable returns(bool);*/
-
-    /// @notice Notifies the controller about a token transfer allowing the
-    ///  controller to react if desired
-    /// @param _from The origin of the transfer
-    /// @param _to The destination of the transfer
-    /// @param _amount The amount of the transfer
-    /// @return False if the controller does not authorize the transfer
-    function onTransfer(address _from, address _to, uint _amount) public returns(bool);
-
-    /// @notice Notifies the controller about an approval allowing the
-    ///  controller to react if desired
-    /// @param _owner The address that calls `approve()`
-    /// @param _spender The spender in the `approve()` call
-    /// @param _amount The amount in the `approve()` call
-    /// @return False if the controller does not authorize the approval
-    function onApprove(address _owner, address _spender, uint _amount) public returns(bool);
-}
-
 contract Controlled {
     /// @notice The address of the controller is the only address that can call
     ///  a function with this modifier
@@ -219,9 +194,9 @@ contract MiniMeToken is Controlled {
            }
 
            // Alerts the token controller of the transfer
-           if (isContract(controller)) {
-               require(TokenController(controller).onTransfer(_from, _to, _amount));
-           }
+           //if (isContract(controller)) {
+           //   require(TokenController(controller).onTransfer(_from, _to, _amount));
+           //}
 
            // First update the balance array with the new value for the address
            //  sending the tokens
@@ -261,9 +236,9 @@ contract MiniMeToken is Controlled {
         require((_amount == 0) || (allowed[msg.sender][_spender] == 0));
 
         // Alerts the token controller of the approve function call
-        if (isContract(controller)) {
-            require(TokenController(controller).onApprove(msg.sender, _spender, _amount));
-        }
+        //if (isContract(controller)) {
+        //    require(TokenController(controller).onApprove(msg.sender, _spender, _amount));
+        //}
 
         allowed[msg.sender][_spender] = _amount;
         Approval(msg.sender, _spender, _amount);

@@ -9,5 +9,5 @@ module.exports = function(deployer) {
   // deployer.link(MerkleTreeLib, Registry);
   // deployer.deploy(Registry, merkleRoot, modDayRate, 4);
   deployer.link(MerkleTreeLib, Registry);
-  deployer.deploy(Registry, merkleRoot, modDayRate, 4);
+  deployer.deploy(Registry, merkleRoot, modDayRate, 4, ["Ethereum", "EthTrader", "EthDev", "EtherMining"]);
 };

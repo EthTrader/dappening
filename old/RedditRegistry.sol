@@ -149,15 +149,15 @@ contract RedditRegistry is TokenController {
     // playing with the batch idea as a way to expedite retrieving data from a third party hosted blockchian like Infura
     // i'm not sure what the best batch size would be here
 
-    function getIdxBatchByUsername(bytes20[] _usernames) public view returns (uint[20] registered) {
-        require(_usernames.length <= 20);
+    function getIdxBatchByUsername(bytes20[] _usernames) public view returns (uint[50] registered) {
+        require(_usernames.length <= 50);
         for (uint i = 0; i < _usernames.length; i++) {
             registered[i] = usernameToIdx[_usernames[i]];
         }
     }
 
-    function getAddressBatchByUsername(bytes20[] _usernames) public view returns (address[20] addresses) {
-        require(_usernames.length <= 20);
+    function getAddressBatchByUsername(bytes20[] _usernames) public view returns (address[50] addresses) {
+        require(_usernames.length <= 50);
         for (uint i = 0; i < _usernames.length; i++) {
             addresses[i] = users[usernameToIdx[_usernames[i]]].owner;
         }

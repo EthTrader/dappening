@@ -3,17 +3,16 @@ pragma solidity ^0.4.17;
 import "./MerkleTreeLib.sol";
 import "./MiniMeToken.sol";
 
-contract Registry {
-
-    enum Subs { Ethereum, EthTrader, EthDev, EtherMining }
+contract Registry is Controlled {
 
     struct User {
         bytes20 username;               // reddit username
         address owner;                  // ethereum address of user
         uint32 joined;                  // date user joined reddit, seconds since epoc
-        int24[4] postScores;            // map sub to sub karma score
-        int24[4] commentScores;         // map sub to sub karma score
-        uint32[4] modStarts;            // map sub to date a mod started, seconds since epoc
+        int24[] postScores;            // map sub to sub karma score
+        int24[] commentScores;         // map sub to sub karma score
+        uint32[] modStarts;            // map sub to date a mod started, seconds since epoc
+        uint16 rootIndex;
     }
 
     uint8 public modDayRate;
@@ -21,26 +20,24 @@ contract Registry {
     uint public endowEnd;
     address public token;
     address public factory;
-    bytes32 public root;
 
-    // List of all users, index = userId, enables looping through all users
     User[] public users;
+    bytes32[] public roots;
+    bytes20[] public subreddits;
 
-    // Map owner address to user id
-    mapping(address => uint) public ownerToIdx;
+    mapping(address => uint) public ownerToIndex;
+    mapping(bytes20 => uint) public usernameToIndex;
 
-    // Map username to user id
-    mapping(bytes20 => uint) public usernameToIdx;
+    event Registered(uint userIndex, uint endowment);
 
-    event Registered(uint userIdx, uint endowment);
-
-    function Registry(bytes32 _root, uint8 _modDayRate, uint16 _endowDuration) {
+    function Registry(bytes32 _root, uint8 _modDayRate, uint16 _endowDuration, bytes20[] _subreddits) {
         // initialise the 0 index user
         User memory user;
         users.push(user);
-        root = _root;
+        roots.push(_root);
         modDayRate = _modDayRate;
         endowEnd = block.number + _endowDuration;
+        subreddits = _subreddits;
         factory = new MiniMeTokenFactory();
         token = new MiniMeToken(
             factory,
@@ -56,20 +53,21 @@ contract Registry {
     function register(
         bytes20 _username,
         uint32 _joined,
-        int24[4] _postScores,
-        int24[4] _commentScores,
-        uint32[4] _modStarts,
-        bytes32[] proof
+        int24[] _postScores,
+        int24[] _commentScores,
+        uint32[] _modStarts,
+        bytes32[] proof,
+        uint16 _rootIndex
     ) public {
 
         // only register address once
-        require(ownerToIdx[msg.sender] == 0);
+        require(ownerToIndex[msg.sender] == 0);
         // only register username once
-        require(usernameToIdx[_username] == 0);
+        require(usernameToIndex[_username] == 0);
 
         bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
 
-        require(MerkleTreeLib.checkProof(proof, root, hash));
+        require(MerkleTreeLib.checkProof(proof, roots[_rootIndex], hash));
 
         User memory user = User({
             username: _username,
@@ -77,54 +75,71 @@ contract Registry {
             joined: _joined,
             postScores: _postScores,
             commentScores: _commentScores,
-            modStarts: _modStarts
+            modStarts: _modStarts,
+            rootIndex: _rootIndex
         });
 
-        uint userIdx = users.push(user) - 1;
+        uint userIndex = users.push(user) - 1;
 
-        ownerToIdx[msg.sender] = userIdx;
-        usernameToIdx[_username] = userIdx;
+        ownerToIndex[msg.sender] = userIndex;
+        usernameToIndex[_username] = userIndex;
 
         uint endowment = 0;
-        if(block.number < endowEnd) {
+        if(block.number < endowEnd)
             endowment = endow(user);
-        }
 
-        Registered(userIdx, endowment);
+        Registered(userIndex, endowment);
+    }
+
+    function addRoot(bytes32 _root) public onlyController {
+        roots.push(_root);
+    }
+
+    function addSubreddit(bytes20 _subreddit) public onlyController {
+        subreddits.push(_subreddit);
+    }
+
+    function enableTransfers() public {
+        require(block.number >= endowEnd);
+        MiniMeToken(token).enableTransfers(true);
     }
 
     function endow(User user) internal returns (uint endowment){
         int _endowment = 0;
         endowment = 0;
-        for (uint i = 0; i < user.postScores.length; i++) {
+
+        for (uint i = 0; i < user.postScores.length; i++)
             _endowment += user.postScores[i];
-        }
-        for (uint j = 0; j < user.commentScores.length; j++) {
+
+        for (uint j = 0; j < user.commentScores.length; j++)
             _endowment += user.commentScores[j];
-        }
-        if(_endowment > 0) endowment = uint(_endowment);
+
+        if(_endowment > 0)
+            endowment = uint(_endowment);
+
         uint modStartMax = 0;
         for (uint k = 0; k < user.modStarts.length; k++) {
-            if(user.modStarts[k] > 0 && (modStartMax == 0 || user.modStarts[k] < modStartMax)) {
+            if(user.modStarts[k] > 0 && (modStartMax == 0 || user.modStarts[k] < modStartMax))
                 modStartMax = user.modStarts[k];
-            }
         }
-        if(modStartMax > 0 && modStartMax < collectedTill) {
+
+        if(modStartMax > 0 && modStartMax < collectedTill)
             endowment += (collectedTill - modStartMax) * modDayRate / 1 days;
-        }
+
         MiniMeToken(token).generateTokens(user.owner, endowment);
     }
 
     function check(
         bytes20 _username,
         uint32 _joined,
-        int24[4] _postScores,
-        int24[4] _commentScores,
-        uint32[4] _modStarts,
-        bytes32[] proof
+        int24[] _postScores,
+        int24[] _commentScores,
+        uint32[] _modStarts,
+        bytes32[] proof,
+        uint16 _rootIndex
     ) public view returns (bool, bytes32) {
         bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
-
-        return (MerkleTreeLib.checkProof(proof, root, hash), hash);
+        return (MerkleTreeLib.checkProof(proof, roots[_rootIndex], hash), hash);
     }
+    
 }

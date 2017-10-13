@@ -11,7 +11,7 @@ How
 * All post and comment karma earned through 30/9/2017 counted at equal ratios
 * 2.5% of total to mods, distributed based on time as mod
 * no endowment after endowment period ends, but still allow registrations
-* how to allow future registration periods (needs new merkle)? whoever can append merkle roots must be trusted/monitored.
+* admin can add new merkle root. merkle root index stored along with updates and new registrations.
 * collect addresses during pre-registration, generate merkle root & proofs, publish contract & proofs
 * self-registration with merkle tree validation
 * after set registration period (1 week, `regEndBlock`), can call enableTransfers on registry (minime controller)
