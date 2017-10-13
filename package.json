@@ -25,6 +25,7 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "merkle-tree-solidity": "^1.0.8",
+    "promise-log": "^0.1.1",
     "truffle-hdwallet-provider": "0.0.3",
     "web3": "^1.0.0-beta.22"
   }

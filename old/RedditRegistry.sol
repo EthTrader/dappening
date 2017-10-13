@@ -17,7 +17,8 @@ contract RedditRegistry is TokenController {
     }
 
     uint8 public modDayRate;
-    uint public constant collectedTill = 1506816000;
+    uint32 public constant collectedTill = 1506816000;
+    uint public endowEnd;
     address public token;
     address public factory;
     bytes32 public root;
@@ -33,12 +34,13 @@ contract RedditRegistry is TokenController {
 
     event Registered(uint userIdx, uint endowment);
 
-    function RedditRegistry(bytes32 _root, uint8 _modDayRate) {
+    function RedditRegistry(bytes32 _root, uint8 _modDayRate, uint16 _endowDuration) public {
         // initialise the 0 index user
         User memory user;
         users.push(user);
         root = _root;
         modDayRate = _modDayRate;
+        endowEnd = block.number + _endowDuration;
         factory = new MiniMeTokenFactory();
         token = new MiniMeToken(
             factory,
@@ -82,7 +84,13 @@ contract RedditRegistry is TokenController {
 
         ownerToIdx[msg.sender] = userIdx;
         usernameToIdx[_username] = userIdx;
-        Registered(userIdx, endow(user));
+
+        uint endowment = 0;
+        if(block.number < endowEnd) {
+            endowment = endow(user);
+        }
+
+        Registered(userIdx, endowment);
     }
 
     function endow(User user) internal returns (uint endowment){
@@ -107,11 +115,16 @@ contract RedditRegistry is TokenController {
         MiniMeToken(token).generateTokens(user.owner, endowment);
     }
 
-    function onTransfer(address _from, address _to, uint _amount) returns(bool) {
+    function enableTransfers() public {
+        require(block.number >= endowEnd);
+        MiniMeToken(token).enableTransfers(true);
+    }
+
+    function onTransfer(address _from, address _to, uint _amount) public returns(bool) {
         return true;
     }
 
-    function onApprove(address _owner, address _spender, uint _amount) returns(bool) {
+    function onApprove(address _owner, address _spender, uint _amount) public returns(bool) {
         return true;
     }
 
@@ -122,13 +135,13 @@ contract RedditRegistry is TokenController {
         int24[4] _commentScores,
         uint32[4] _modStarts,
         bytes32[] proof
-    ) public constant returns (bool, bytes32) {
+    ) public view returns (bool, bytes32) {
         bytes32 hash = keccak256(msg.sender, _username, _joined, _postScores, _commentScores, _modStarts);
 
         return (MerkleTreeLib.checkProof(proof, root, hash), hash);
     }
 
-    function getUserByUsername(bytes20 _username) public constant returns (bytes20 username, address owner, uint32 joined, int24[4] postScores, int24[4] commentScores, uint32[4] modStarts) {
+    function getUserByUsername(bytes20 _username) public view returns (bytes20 username, address owner, uint32 joined, int24[4] postScores, int24[4] commentScores, uint32[4] modStarts) {
         User storage user = users[usernameToIdx[_username]];
         return (user.username, user.owner, user.joined, user.postScores, user.commentScores, user.modStarts);
     }
@@ -136,14 +149,14 @@ contract RedditRegistry is TokenController {
     // playing with the batch idea as a way to expedite retrieving data from a third party hosted blockchian like Infura
     // i'm not sure what the best batch size would be here
 
-    function getIdxBatchByUsername(bytes20[] _usernames) public constant returns (uint[20] registered) {
+    function getIdxBatchByUsername(bytes20[] _usernames) public view returns (uint[20] registered) {
         require(_usernames.length <= 20);
         for (uint i = 0; i < _usernames.length; i++) {
             registered[i] = usernameToIdx[_usernames[i]];
         }
     }
 
-    function getAddressBatchByUsername(bytes20[] _usernames) public constant returns (address[20] addresses) {
+    function getAddressBatchByUsername(bytes20[] _usernames) public view returns (address[20] addresses) {
         require(_usernames.length <= 20);
         for (uint i = 0; i < _usernames.length; i++) {
             addresses[i] = users[usernameToIdx[_usernames[i]]].owner;
