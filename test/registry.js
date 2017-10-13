@@ -1,6 +1,7 @@
 // const Registry = artifacts.require("./RedditRegistry.sol");
 const MiniMeToken = artifacts.require("./MiniMeToken.sol");
 const Registry = artifacts.require("./Registry.sol");
+const RegReader = artifacts.require("./RegReader.sol");
 const userRegInputs = require("../out/userRegInputs.json");
 const merkleRoot = require("../out/root.json");
 const modDayRate = require("../out/modDayRate.json");
@@ -11,7 +12,7 @@ const testUsername0 = "carlslarson";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
 const testEndowment = calcEndowment(testData0);
 testData0.push(0);
-const testUsername1 = "doppio";
+const testUsername1 = "MrKup";//"doppio";
 const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
 testData1.push(1);
 console.log(testData1)
@@ -26,6 +27,7 @@ contract('Registry', function(accounts) {
     it(`check ${testUsername0} data`, () => {
         return Registry.deployed()
             .then( registry => registry.check.call(...testData0) )
+            .log()
             .then( res => assert.ok(res[0], `${testUsername0} failed merkle validation`) );
     });
 
@@ -55,14 +57,24 @@ contract('Registry', function(accounts) {
         return Registry.deployed()
             .then( registry => registry.addRoot(merkleRoot) )
             .then( () => Registry.deployed() )
-            // .then( registry => registry.roots.call(1) )
-            // .log()
-            // .then( root => assert.equal(root, merkleRoot, `merkle roots[1] doesn't match (${root} vs ${merkleRoot})`) );
-            .then( registry => registry.register(...testData1) )
-            .then( tx => Registry.deployed() )
-            .then( registry => registry.usernameToIndex.call(testUsername1) )
+            .then( registry => registry.roots.call(1) )
             .log()
-            .then( idx => assert.equal(idx.valueOf(), 2, `${testUsername1} was not registered@2`) );
+            .then( root => assert.equal(root, merkleRoot, `merkle roots[1] doesn't match (${root} vs ${merkleRoot})`) )
+            .then( tx => Registry.deployed() )
+            .then( registry => registry.check.call(...testData1) )
+            .log()
+            .then( res => assert.ok(res[0], `${testUsername1} failed merkle validation`) );
+            // .then( tx => Registry.deployed() )
+            // .then( registry => registry.usernameToIndex.call(testUsername1) )
+            // .log()
+            // .then( idx => assert.equal(idx.valueOf(), 2, `${testUsername1} was not registered@2`) );
+    });
+
+    it(`use regreader to get user data`, () => {
+        return Registry.deployed()
+            .then( registry => RegReader.new(registry.address) )
+            .then( reader => reader.getUserByUsername.call(testUsername0) )
+            .then( user => assert.equal(user[2].valueOf(), testData0[1], `${testUsername0} start date was not ${testData0[1]}`) );
     });
 
 });

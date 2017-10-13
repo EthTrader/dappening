@@ -17,7 +17,9 @@ const fs = require("fs");
 
 // const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
-const username = "carlslarson";
+const username = "MrKup";
+// const username = "doppio";
+// const username = "carlslarson";
 const userIdx = users.findIndex(u=>u.username===username)
 const userArrays = users.map(u=>[u.address, u.username, u.joined, [u.ethereumPosts, u.ethtraderPosts, u.ethdevPosts, u.etherminingPosts], [u.ethereumComments, u.ethtraderComments, u.ethdevComments, u.etherminingComments], [u.modStartDateEthereum || 0, u.modStartDateEthtrader || 0, u.modStartDateEtherdev || 0, u.modStartDateEthermining || 0]])
 
@@ -76,5 +78,5 @@ fs.writeFileSync(`${__dirname}/out/modDayRate.json`, JSON.stringify(24))
 // const proof = merkleTree.getProof(userHashBuffers[userIdx])
 // console.log(JSON.stringify(userArrays[userIdx]))
 // console.log(proof.map(p=>bufferToHex(p)))
-console.log(`carlslarson hash: ${bufferToHex(userHashBuffers[userIdx])}`)
+console.log(`${username} hash: ${bufferToHex(userHashBuffers[userIdx])}`)
 console.log(`root: ${root}`)
