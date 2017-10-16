@@ -18,6 +18,7 @@ testData1.push(1);
 console.log(testData1)
 
 contract('Registry', function(accounts) {
+    console.log(accounts);
     it(`merkle roots[0] matches ${merkleRoot}`, () => {
         return Registry.deployed()
             .then( registry => registry.roots.call(0) )
@@ -27,7 +28,6 @@ contract('Registry', function(accounts) {
     it(`check ${testUsername0} data`, () => {
         return Registry.deployed()
             .then( registry => registry.check.call(...testData0) )
-            .log()
             .then( res => assert.ok(res[0], `${testUsername0} failed merkle validation`) );
     });
 
@@ -58,16 +58,12 @@ contract('Registry', function(accounts) {
             .then( registry => registry.addRoot(merkleRoot) )
             .then( () => Registry.deployed() )
             .then( registry => registry.roots.call(1) )
-            .log()
             .then( root => assert.equal(root, merkleRoot, `merkle roots[1] doesn't match (${root} vs ${merkleRoot})`) )
             .then( tx => Registry.deployed() )
-            .then( registry => registry.check.call(...testData1) )
-            .log()
-            .then( res => assert.ok(res[0], `${testUsername1} failed merkle validation`) );
-            // .then( tx => Registry.deployed() )
-            // .then( registry => registry.usernameToIndex.call(testUsername1) )
-            // .log()
-            // .then( idx => assert.equal(idx.valueOf(), 2, `${testUsername1} was not registered@2`) );
+            .then( registry => registry.register(...testData1, {from: accounts[1]}) )
+            .then( tx => Registry.deployed() )
+            .then( registry => registry.usernameToIndex.call(testUsername1) )
+            .then( idx => assert.equal(idx.valueOf(), 2, `${testUsername1} was not registered@2`) );
     });
 
     it(`use regreader to get user data`, () => {

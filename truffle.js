@@ -4,9 +4,8 @@ const secret = require("./.secret.json");
 module.exports = {
   networks: {
     test: {
-      provider: new HDWalletProvider(secret.mnemonic, "http://localhost:8545/"),
-      // host: "localhost",
-      // port: 8545,
+      host: "localhost",
+      port: 8545,
       network_id: "*", // Match any network id
       gas: 20000000
     },
@@ -21,5 +20,3 @@ module.exports = {
     }
   }
 };
-
-// 0xFdF500D77363369A0b3277dd1cAE8BB298921bfe
