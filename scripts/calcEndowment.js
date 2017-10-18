@@ -1,8 +1,11 @@
-const modDayRate = require("./out/modDayRate.json");
+const modDayRate = require("../out/modDayRate.json");
+const collectedTill = require("../out/collectedTill.json");
 
-function calcEndowment(userData){
-    const collectedTill = 1506816000;
-    const [username, startDate, postScores, commentScores, modStarts] = userData;
+function calcEndowment(user){
+    const postScores = [user.ethereumPosts, user.ethtraderPosts, user.ethdevPosts, user.etherminingPosts];
+    const commentScores = [user.ethereumComments, user.ethtraderComments, user.ethdevComments, user.etherminingComments];
+    const modStarts = [user.modStartDateEthereum || 0, user.modStartDateEthtrader || 0, user.modStartDateEtherdev || 0, user.modStartDateEthermining || 0];
+
     let endowment = 0;
     for (let i = 0; i < postScores.length; i++) {
         endowment += postScores[i];

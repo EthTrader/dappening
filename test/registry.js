@@ -1,16 +1,14 @@
 // const Registry = artifacts.require("./RedditRegistry.sol");
 const MiniMeToken = artifacts.require("./MiniMeToken.sol");
 const Registry = artifacts.require("./Registry.sol");
-const RegReader = artifacts.require("./RegReader.sol");
+// const RegReader = artifacts.require("./RegReader.sol");
 const userRegInputs = require("../out/userRegInputs.json");
-const merkleRoot = require("../out/root.json");
+const merkleRoot = require("../out/merkleRoot.json");
 const modDayRate = require("../out/modDayRate.json");
-const calcEndowment = require("../calcEndowment");
 require('promise-log')(Promise);
 
 const testUsername0 = "carlslarson";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
-const testEndowment = calcEndowment(testData0);
 testData0.push(0);
 const testUsername1 = "MrKup";//"doppio";
 const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
@@ -28,6 +26,7 @@ contract('Registry', function(accounts) {
     it(`check ${testUsername0} data`, () => {
         return Registry.deployed()
             .then( registry => registry.check.call(...testData0) )
+            .log()
             .then( res => assert.ok(res[0], `${testUsername0} failed merkle validation`) );
     });
 
@@ -35,15 +34,15 @@ contract('Registry', function(accounts) {
         return Registry.deployed()
             .then( registry => registry.register(...testData0) )
             .then( tx => Registry.deployed() )
-            .then( registry => registry.usernameToIndex.call(testUsername0) )
-            .then( idx => assert.equal(idx.valueOf(), 1, `${testUsername0} was not registered@1`) );
+            .then( registry => registry.usernameToAddress.call(testUsername0) )
+            .then( address => assert.equal(address, accounts[0], `${testUsername0} was not registered@1`) );
     });
 
-    it(`${testUsername0} was endowed ${testEndowment}`, () => {
+    it(`${testUsername0} was endowed ${testData0[1]}`, () => {
       return Registry.deployed()
         .then( registry => registry.token.call() )
         .then( address => MiniMeToken.at(address).balanceOf.call(accounts[0]) )
-        .then( amount => assert.equal(amount.valueOf(), testEndowment, `${testUsername0} was not endowed ${testEndowment}`) )
+        .then( amount => assert.equal(amount.valueOf(), testData0[1], `${testUsername0} was not endowed ${testData0[1]}`) )
     });
 
     it(`token transfers are not enabled`, () => {
@@ -62,15 +61,7 @@ contract('Registry', function(accounts) {
             .then( tx => Registry.deployed() )
             .then( registry => registry.register(...testData1, {from: accounts[1]}) )
             .then( tx => Registry.deployed() )
-            .then( registry => registry.usernameToIndex.call(testUsername1) )
-            .then( idx => assert.equal(idx.valueOf(), 2, `${testUsername1} was not registered@2`) );
+            .then( registry => registry.usernameToAddress.call(testUsername1) )
+            .then( address => assert.equal(address, accounts[1], `${testUsername1} was not registered@2`) );
     });
-
-    it(`use regreader to get user data`, () => {
-        return Registry.deployed()
-            .then( registry => RegReader.new(registry.address) )
-            .then( reader => reader.getUserByUsername.call(testUsername0) )
-            .then( user => assert.equal(user[2].valueOf(), testData0[1], `${testUsername0} start date was not ${testData0[1]}`) );
-    });
-
 });
