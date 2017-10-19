@@ -64,4 +64,12 @@ contract('Registry', function(accounts) {
             .then( registry => registry.usernameToAddress.call(testUsername1) )
             .then( address => assert.equal(address, accounts[1], `${testUsername1} was not registered@2`) );
     });
+
+    it(`${testUsername0} initialised a vote@0`, () => {
+        return Registry.deployed()
+            .then( registry => registry.addProp("peaches are great", "PEACH") )
+            .then( () => Registry.deployed() )
+            .then( registry => registry.votes.call(1) )
+            .log();
+    });
 });
