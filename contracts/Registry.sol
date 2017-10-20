@@ -10,16 +10,16 @@ contract Registry is Controlled {
     event Added(bytes20 username, address owner);
     event Removed(bytes20 username, address owner);
 
-    function add(bytes20 _username) public onlyController {
-        addressToUsername[msg.sender] = _username;
-        usernameToAddress[_username] = msg.sender;
-        Added(_username, msg.sender);
+    function add(bytes20 _username, address _owner) public onlyController {
+        addressToUsername[_owner] = _username;
+        usernameToAddress[_username] = _owner;
+        Added(_username, _owner);
     }
 
-    function remove(bytes20 _username) public onlyController {
-        delete addressToUsername[msg.sender];
+    function remove(bytes20 _username, address _owner) public onlyController {
+        delete addressToUsername[_owner];
         delete usernameToAddress[_username];
-        Removed(_username, msg.sender);
+        Removed(_username, _owner);
     }
 
 }
