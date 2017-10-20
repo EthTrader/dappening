@@ -5,12 +5,17 @@ import "./Registry.sol";
 
 contract Voting {
 
+    enum PropState                  { UNRESOLVED, PASS, FAIL }
+
     struct Prop {
-        bytes20                     username;
+        bytes20                     action;
+        PropState                   state;
+        bytes32                     data;
+        uint                        startedAt;
         MiniMeToken                 token;
-        uint startedAt;
-        uint lastSigVoteAt;
-        uint[] results;
+        bytes20                     author;
+        uint                        lastSigVoteAt;
+        uint[]                      results;
         mapping(address => bool)    voted;
     }
 
@@ -22,46 +27,53 @@ contract Voting {
     uint                            public propDuration = 43200;
     Prop[]                          public props;
 
-    event Proposed(bytes20 username, uint propIdx);
+    event Proposed(uint propIdx);
     event Voted(bytes20 username, uint propIdx, uint prefIdx);
 
-    function addProp(string _name, string _symbol) public {
+    function addProp(bytes20 _action, bytes32 _data) public {
         // TODO - ensure sufficient "stake"
 
         bytes20 username = registry.addressToUsername(msg.sender);
-        require(username != "0x");
+        require(username != "0x");                                              // only registered accounts
 
         Prop memory prop;
 
-        prop.username = username;
+        prop.action = _action;
+        prop.data = _data;
+        prop.author = username;
         prop.token = tokenFactory.createCloneToken(
             token,
             block.number,
-            _name,
+            "EthTrader Vote",
             token.decimals(),
-            _symbol,
+            "ETR_VOTE",
             false
             );
         prop.startedAt = block.number;
 
-        Proposed(username, props.push(prop)-1);
+        Proposed(props.push(prop)-1);
     }
 
-    function resolveProp(uint _propIdx) public {
-        Prop storage prop = props[_propIdx];
-
+    function resolveProp(Prop _prop) internal returns(bool) {
         require(
-            block.number >= prop.lastSigVoteAt + sigVoteDelay &&
-            block.number >= prop.startedAt + propDuration
+            _prop.state   == PropState.UNRESOLVED &&
+            block.number >= _prop.lastSigVoteAt + sigVoteDelay &&
+            block.number >= _prop.startedAt + propDuration
             );
 
-        require(prop.results[1]/2 > prop.results[0]);                           // need 2/3 majority to pass
+        if(_prop.results[1]/2 > _prop.results[0]) {                               // need 2/3 majority to pass
+            _prop.state = PropState.PASS;
+            return true;
+        } else {
+            _prop.state = PropState.FAIL;
+            return false;
+        }
     }
 
     function vote(uint _propIdx, uint _prefIdx) public {
 
         bytes20 username = registry.addressToUsername(msg.sender);
-        require(username != "0x");
+        require(username != "0x");                                              // only registered accounts
 
         Prop storage prop = props[_propIdx];
 
@@ -77,5 +89,16 @@ contract Voting {
         prop.results[_prefIdx] += weightedVote;
         prop.voted[msg.sender] == true;
         Voted(username, _propIdx, _prefIdx);
+    }
+
+    function extractKV(bytes32 data) public pure returns (bytes20 key, bytes12 val) {
+        key=extract20(data);
+        for (uint i=20; i<32; i++)
+            val^=(bytes12(0xff0000000000000000000000)&data[i])>>(i*8);
+    }
+
+    function extract20(bytes32 data) public pure returns (bytes20 result) {
+        for (uint i=0; i<20; i++)
+            result^=(bytes20(0xff00000000000000000000000000000000000000)&data[i])>>(i*8);
     }
 }

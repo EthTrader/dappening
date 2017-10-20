@@ -7,16 +7,17 @@ import "./Voting.sol";
 // is controller of Token, Registry
 contract EthTraderDAO is Voting {
 
+    /*actions "NONE", "UPGRADE", "ADD_ROOT", "TOGGLE_TRANSFERABLE", "TOGGLE_ENDOWABLE", "UPDATE_UINT"*/
+
     Registry                    public registry;
     MiniMeTokenFactory          public tokenFactory;
     MiniMeToken                 public token;
-    uint                        public endowEnd;
+    bool                        public endowable = true;
     bytes32[]                   public roots;
 
-    function EthTraderDAO(address _parent, bytes32 _root, uint16 _endowDuration) {
+    function EthTraderDAO(address _parent, bytes32 _root) {
         if(_parent == 0){
             roots.push(_root);
-            endowEnd = block.number + _endowDuration;
             registry = new Registry();
             tokenFactory = new MiniMeTokenFactory();
             token = new MiniMeToken(
@@ -34,9 +35,30 @@ contract EthTraderDAO is Voting {
         }
     }
 
-    function enableTransfers() public {
+    /*function enableTransfers() internal {
         require(block.number >= endowEnd);
         token.enableTransfers(true);
+    }*/
+
+    function enactProp(uint _propIdx) public {
+        Prop storage prop = props[_propIdx];
+
+        if(!resolveProp(prop))
+            return;
+
+        if( prop.action == "UPGRADE" ) {
+            upgrade(address(extract20(prop.data)));
+        } else if( prop.action == "ADD_ROOT" ) {
+            roots.push(prop.data);
+        } else if( prop.action ==  "TOGGLE_TRANSFERABLE" ) {
+            token.enableTransfers(!token.transfersEnabled());
+        } else if( prop.action ==  "TOGGLE_ENDOWABLE" ) {
+            endowable = !endowable;
+        }
+        /*else if( prop.action == "UPDATE_UINT") {
+            var (key, val) = extractKV(prop.data);
+            votableUINT[key] = somehowCoerceBytes12ToUINT(val);
+        }*/
     }
 
     function reset(address _registry, address _tokenFactory, address _token) internal {
@@ -65,7 +87,7 @@ contract EthTraderDAO is Voting {
 
         registry.add(_username, msg.sender);
 
-        if(block.number < endowEnd)
+        if(endowable)
             token.generateTokens(msg.sender, _endowment);
     }
 
