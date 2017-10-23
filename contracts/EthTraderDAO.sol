@@ -7,13 +7,14 @@ import "./Voting.sol";
 // is controller of Token, Registry
 contract EthTraderDAO is Voting {
 
-    /*actions "NONE", "UPGRADE", "ADD_ROOT", "TOGGLE_TRANSFERABLE", "TOGGLE_ENDOWABLE", "UPDATE_UINT"*/
+    //"UPGRADE", "ADD_ROOT", "TOGGLE_TRANSFERABLE", "TOGGLE_REG_ENDOW", "UPDATE_VALUE", "ENDOW"
 
     Registry                    public registry;
     MiniMeTokenFactory          public tokenFactory;
     MiniMeToken                 public token;
-    bool                        public endowable = true;
+    bool                        public regEndow = true;
     bytes32[]                   public roots;
+    mapping(bytes20 => uint)    public votableValues;
 
     function EthTraderDAO(address _parent, bytes32 _root) {
         if(_parent == 0){
@@ -29,16 +30,14 @@ contract EthTraderDAO is Voting {
                 "ETR",// string _tokenSymbol,
                 false// bool _transfersEnabled
                 );
+            votableValues["SIG_VOTE"] = 500;
+            votableValues["SIG_VOTE_DELAY"] = 43;
+            votableValues["PROP_DURATION"] = 43200;
         } else {
             EthTraderDAO parentDAO = EthTraderDAO(_parent);
             reset(address(parentDAO.registry), address(parentDAO.tokenFactory), address(parentDAO.token));
         }
     }
-
-    /*function enableTransfers() internal {
-        require(block.number >= endowEnd);
-        token.enableTransfers(true);
-    }*/
 
     function enactProp(uint _propIdx) public {
         Prop storage prop = props[_propIdx];
@@ -52,13 +51,15 @@ contract EthTraderDAO is Voting {
             roots.push(prop.data);
         } else if( prop.action ==  "TOGGLE_TRANSFERABLE" ) {
             token.enableTransfers(!token.transfersEnabled());
-        } else if( prop.action ==  "TOGGLE_ENDOWABLE" ) {
-            endowable = !endowable;
+        } else if( prop.action ==  "TOGGLE_REG_ENDOW" ) {
+            regEndow = !regEndow;
+        } else if( prop.action == "UPDATE_VALUE" ) {
+            var (k, v) = split32_20_12(prop.data);
+            votableValues[k] = uint(v);
+        } else if( prop.action == "ENDOW" ) {
+            var (r, a) = split32_20_12(prop.data);
+            token.generateTokens(address(r), uint(a));
         }
-        /*else if( prop.action == "UPDATE_UINT") {
-            var (key, val) = extractKV(prop.data);
-            votableUINT[key] = somehowCoerceBytes12ToUINT(val);
-        }*/
     }
 
     function reset(address _registry, address _tokenFactory, address _token) internal {
@@ -80,14 +81,14 @@ contract EthTraderDAO is Voting {
         uint16 _rootIndex
     ) public {
         require(
-            registry.addressToUsername(msg.sender) == 0 &&
-            registry.usernameToAddress(_username) == 0 &&
+            registry.ownerToUsername(msg.sender) == 0 &&
+            registry.usernameToUser(_username) == 0 &&
             validate(_username, _endowment, _firstContent, _proof, _rootIndex)
             );
 
         registry.add(_username, msg.sender);
 
-        if(endowable)
+        if(regEndow)
             token.generateTokens(msg.sender, _endowment);
     }
 
@@ -100,6 +101,10 @@ contract EthTraderDAO is Voting {
     ) public view returns (bool) {
         bytes32 hash = keccak256(msg.sender, _username, _endowment, _firstContent);
         return MerkleTreeLib.checkProof(_proof, roots[_rootIndex], hash);
+    }
+
+    function getVotableValue(bytes20 _name) public returns (uint) {
+        return votableValues[_name];
     }
 
 }

@@ -35,8 +35,8 @@ contract('EthTraderDAO', function(accounts) {
             .then( dao => dao.register(...testData0) )
             .then( tx => EthTraderDAO.deployed() )
             .then( dao => dao.registry.call() )
-            .then( address => Registry.at(address).usernameToAddress.call(testUsername0) )
-            .then( address => assert.equal(address, accounts[0], `${testUsername0} was not registered@1`) );
+            .then( address => Registry.at(address).getOwner.call(testUsername0) )
+            .then( address => assert.equal(address, accounts[0], `${testUsername0} was not registered`) );
     });
 
     it(`${testUsername0} was endowed ${testData0[1]}`, () => {

@@ -22,9 +22,6 @@ contract Voting {
     Registry                        public registry;
     MiniMeTokenFactory              public tokenFactory;
     MiniMeToken                     public token;
-    uint                            public sigVote = 500;
-    uint                            public sigVoteDelay = 43;
-    uint                            public propDuration = 43200;
     Prop[]                          public props;
 
     event Proposed(uint propIdx);
@@ -33,7 +30,7 @@ contract Voting {
     function addProp(bytes20 _action, bytes32 _data) public {
         // TODO - ensure sufficient "stake"
 
-        bytes20 username = registry.addressToUsername(msg.sender);
+        bytes20 username = registry.ownerToUsername(msg.sender);
         require(username != "0x");                                              // only registered accounts
 
         Prop memory prop;
@@ -57,8 +54,8 @@ contract Voting {
     function resolveProp(Prop _prop) internal returns(bool) {
         require(
             _prop.state   == PropState.UNRESOLVED &&
-            block.number >= _prop.lastSigVoteAt + sigVoteDelay &&
-            block.number >= _prop.startedAt + propDuration
+            block.number >= _prop.lastSigVoteAt + getVotableValue("SIG_VOTE_DELAY") &&
+            block.number >= _prop.startedAt + getVotableValue("PROP_DURATION")
             );
 
         if(_prop.results[1]/2 > _prop.results[0]) {                               // need 2/3 majority to pass
@@ -72,29 +69,31 @@ contract Voting {
 
     function vote(uint _propIdx, uint _prefIdx) public {
 
-        bytes20 username = registry.addressToUsername(msg.sender);
+        bytes20 username = registry.ownerToUsername(msg.sender);
         require(username != "0x");                                              // only registered accounts
 
         Prop storage prop = props[_propIdx];
 
         require(prop.voted[msg.sender] == false);                               // didn't already vote
         require(                                                                // prop still active
-            block.number < prop.startedAt + propDuration ||
-            block.number < prop.lastSigVoteAt + sigVoteDelay
+            block.number < prop.startedAt + getVotableValue("PROP_DURATION") ||
+            block.number < prop.lastSigVoteAt + getVotableValue("SIG_VOTE_DELAY")
             );
 
         uint weightedVote = prop.token.balanceOf(msg.sender);                   // TODO - add time component to weight
-        if(weightedVote >= sigVote)
+        if(weightedVote >= getVotableValue("SIG_VOTE"))
             prop.lastSigVoteAt = block.number;
         prop.results[_prefIdx] += weightedVote;
         prop.voted[msg.sender] == true;
         Voted(username, _propIdx, _prefIdx);
     }
 
-    function extractKV(bytes32 data) public pure returns (bytes20 key, bytes12 val) {
-        key=extract20(data);
+    function getVotableValue(bytes20 _name) public returns (uint);
+
+    function split32_20_12(bytes32 data) public pure returns (bytes20 twenty, bytes12 twelve) {
+        twenty=extract20(data);
         for (uint i=20; i<32; i++)
-            val^=(bytes12(0xff0000000000000000000000)&data[i])>>(i*8);
+            twelve^=(bytes12(0xff0000000000000000000000)&data[i])>>(i*8);
     }
 
     function extract20(bytes32 data) public pure returns (bytes20 result) {
