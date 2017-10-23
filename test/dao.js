@@ -50,7 +50,7 @@ contract('EthTraderDAO', function(accounts) {
       return EthTraderDAO.deployed()
         .then( dao => dao.token.call() )
         .then( address => MiniMeToken.at(address).transfersEnabled.call() )
-        .then( enabled => assert.equal(enabled, false, `token transfers were enabled`) )
+        .then( enabled => assert.equal(enabled, false, `token transfers were not disabled`) )
     });
 
     // it(`${testUsername1} was registered@2 with new merkle root@1`, () => {
@@ -66,12 +66,12 @@ contract('EthTraderDAO', function(accounts) {
     //         .then( address => assert.equal(address, accounts[1], `${testUsername1} was not registered@2`) );
     // });
 
-    it(`${testUsername0} initialised a vote@0`, () => {
+    it(`${testUsername0} initialised a prop@0`, () => {
         return EthTraderDAO.deployed()
-            .then( dao => dao.addProp("NONE", 0) )
+            .then( dao => dao.addProp("TOGGLE_TRANSFERABLE", 0) )
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.props.call(0) )
-            .then( prop => assert.equal(prop.length, 7, `token transfers were enabled`) );
+            .then( prop => assert.equal(prop.length, 7, `return data length mismatch`) );
     });
 
     it(`${testUsername0} could vote@0`, () => {
@@ -79,7 +79,29 @@ contract('EthTraderDAO', function(accounts) {
             .then( dao => dao.vote(0, 1) )          // vote in favour
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.props.call(0) )
-            .then( prop => assert.equal(prop[0], '0x4e4f4e4500000000000000000000000000000000', `token transfers were enabled`) );
+            .log()
+            // .then( prop => assert.equal(prop[0], '0x4e4f4e4500000000000000000000000000000000', `token transfers were enabled`) );
+    });
+
+    it(`${testUsername0} enacted prop@0, tokens are transferable`, () => {
+        return EthTraderDAO.deployed()
+            .then( dao => dao.enactProp(0) )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.props.call(0) )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.token.call() )
+            .then( address => MiniMeToken.at(address).transfersEnabled.call() )
+            .then( enabled => assert.equal(enabled, true, `token transfers were not enabled`) );
+    });
+
+    it(`${testUsername0} transfer 600 to ${testUsername1}`, () => {
+        return EthTraderDAO.deployed()
+            .then( dao => dao.token.call() )
+            .then( address => MiniMeToken.at(address).transfer(accounts[1], 600) )
+            .then( () => EthTraderDAO.deployed())
+            .then( dao => dao.token.call() )
+            .then( address => MiniMeToken.at(address).balanceOf(accounts[1]) )
+            .then( amount => assert.equal(amount.valueOf(), 600, `${testUsername1} did not receive 600`) );
     });
 
 });

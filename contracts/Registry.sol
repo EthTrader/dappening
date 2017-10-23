@@ -41,4 +41,8 @@ contract Registry is Controlled {
         value = usernameToUser[_username].values[_valueIdx];
     }
 
+    function setUserValue(bytes20 _username, uint8 _valueIdx, uint _value) public onlyController {
+        usernameToUser[_username].values[_valueIdx] = _value;
+    }
+
 }

@@ -26,6 +26,7 @@ pragma solidity ^0.4.6;
 /// @dev It is ERC20 compliant, but still needs to under go further testing.
 
 import "./Controlled.sol";
+import "./TokenController.sol";
 
 contract ApproveAndCallFallBack {
     function receiveApproval(address from, uint256 _amount, address _token, bytes _data) public;
@@ -180,9 +181,9 @@ contract MiniMeToken is Controlled {
            }
 
            // Alerts the token controller of the transfer
-           //if (isContract(controller)) {
-           //   require(TokenController(controller).onTransfer(_from, _to, _amount));
-           //}
+           if (isContract(controller)) {
+               require(TokenController(controller).onTransfer(_from, _to, _amount));
+           }
 
            // First update the balance array with the new value for the address
            //  sending the tokens

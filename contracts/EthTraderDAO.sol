@@ -4,9 +4,10 @@ import "./MerkleTreeLib.sol";
 import "./MiniMeToken.sol";
 import "./Voting.sol";
 import "./Store.sol";
+import "./TokenController.sol";
 
 // is controller of Token, Registry
-contract EthTraderDAO is Voting {
+contract EthTraderDAO is Voting, TokenController {
 
     bool                        public regEndow = true;
     bytes32[]                   public roots;
@@ -17,6 +18,9 @@ contract EthTraderDAO is Voting {
         if(_parent == 0){
             roots.push(_root);
             registry = new Registry();
+            registry.addUserValueName("TOKEN_AGE");
+            registry.addUserValueName("DAY_TRANSFERS_START");
+            registry.addUserValueName("DAY_TOTAL");
             tokenFactory = new MiniMeTokenFactory();
             token = new MiniMeToken(
                 tokenFactory,
@@ -29,8 +33,9 @@ contract EthTraderDAO is Voting {
                 );
             store = new Store();
             store.set("SIG_VOTE", 500);
-            store.set("SIG_VOTE_DELAY", 43);
-            store.set("PROP_DURATION", 43200);
+            store.set("SIG_VOTE_DELAY", 0);//43);       !!!SET TO 0 FOR TESTING
+            store.set("PROP_DURATION", 0);//43200);     !!!SET TO 0 FOR TESTING
+            store.set("NO_PENALTY_DAY_CAP", 500);
         } else {
             EthTraderDAO parentDAO = EthTraderDAO(_parent);
             registry = Registry(address(parentDAO.registry));
@@ -83,6 +88,7 @@ contract EthTraderDAO is Voting {
             );
 
         registry.add(_username, msg.sender);
+        registry.setUserValue(_username, 0, _firstContent);                     // set initial token age to (time since epoch) of users first ethtrader content
 
         if(regEndow)
             token.generateTokens(msg.sender, _endowment);
@@ -97,6 +103,29 @@ contract EthTraderDAO is Voting {
     ) public view returns (bool) {
         bytes32 hash = keccak256(msg.sender, _username, _endowment, _firstContent);
         return MerkleTreeLib.checkProof(_proof, roots[_rootIndex], hash);
+    }
+
+    function onTransfer(address _from, address _to, uint _amount) returns(bool) {
+        bytes20 username = registry.ownerToUsername(_from);
+        if( username == 0 || _amount == 0 ) return true;                        // skip if not registered
+
+        uint tokenAgeDayCap = store.values("TOKEN_AGE_DAY_CAP");
+        bool isSameDay = block.timestamp - registry.getUserValue(username, 1) < 1 days;
+        if( isSameDay ) {
+            uint dayTotal = registry.getUserValue(username, 2);
+            if( dayTotal + _amount > tokenAgeDayCap ) {
+                registry.setUserValue(username, 0, block.timestamp);
+            }
+            registry.setUserValue(username, 2, dayTotal + _amount);
+        } else {
+            if( _amount > tokenAgeDayCap ) {
+                registry.setUserValue(username, 0, block.timestamp);            // set TOKEN_AGE
+            } else {
+                registry.setUserValue(username, 1, block.timestamp);            // set DAY_TRANSFERS_START
+                registry.setUserValue(username, 2, _amount);                    // set DAY_TOTAL
+            }
+        }
+        return true;
     }
 
 }
