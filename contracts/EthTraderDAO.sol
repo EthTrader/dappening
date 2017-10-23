@@ -3,17 +3,14 @@ pragma solidity ^0.4.17;
 import "./MerkleTreeLib.sol";
 import "./MiniMeToken.sol";
 import "./Voting.sol";
+import "./Store.sol";
 
 // is controller of Token, Registry
 contract EthTraderDAO is Voting {
 
-    //"UPGRADE", "ADD_ROOT", "TOGGLE_TRANSFERABLE", "TOGGLE_REG_ENDOW", "UPDATE_VALUE", "ENDOW"
-
-    Registry                    public registry;
-    MiniMeTokenFactory          public tokenFactory;
-    MiniMeToken                 public token;
     bool                        public regEndow = true;
     bytes32[]                   public roots;
+    bytes20[]                   public actions = [bytes20("NONE"), bytes20("UPGRADE"), bytes20("ADD_ROOT"), bytes20("TOGGLE_TRANSFERABLE"), bytes20("TOGGLE_REG_ENDOW"), bytes20("SET_VALUE"), bytes20("ENDOW")];
     mapping(bytes20 => uint)    public votableValues;
 
     function EthTraderDAO(address _parent, bytes32 _root) {
@@ -30,12 +27,16 @@ contract EthTraderDAO is Voting {
                 "ETR",// string _tokenSymbol,
                 false// bool _transfersEnabled
                 );
-            votableValues["SIG_VOTE"] = 500;
-            votableValues["SIG_VOTE_DELAY"] = 43;
-            votableValues["PROP_DURATION"] = 43200;
+            store = new Store();
+            store.set("SIG_VOTE", 500);
+            store.set("SIG_VOTE_DELAY", 43);
+            store.set("PROP_DURATION", 43200);
         } else {
             EthTraderDAO parentDAO = EthTraderDAO(_parent);
-            reset(address(parentDAO.registry), address(parentDAO.tokenFactory), address(parentDAO.token));
+            registry = Registry(address(parentDAO.registry));
+            tokenFactory = MiniMeTokenFactory(address(parentDAO.tokenFactory));
+            token = MiniMeToken(address(parentDAO.token));
+            store = Store(address(parentDAO.store));
         }
     }
 
@@ -45,32 +46,27 @@ contract EthTraderDAO is Voting {
         if(!resolveProp(prop))
             return;
 
-        if( prop.action == "UPGRADE" ) {
+        if( prop.action == actions[1] ) {                                       // UPGRADE
             upgrade(address(extract20(prop.data)));
-        } else if( prop.action == "ADD_ROOT" ) {
+        } else if( prop.action == actions[2] ) {                                // ADD_ROOT
             roots.push(prop.data);
-        } else if( prop.action ==  "TOGGLE_TRANSFERABLE" ) {
+        } else if( prop.action ==  actions[3] ) {                               // TOGGLE_TRANSFERABLE
             token.enableTransfers(!token.transfersEnabled());
-        } else if( prop.action ==  "TOGGLE_REG_ENDOW" ) {
+        } else if( prop.action ==  actions[4] ) {                               // TOGGLE_REG_ENDOW
             regEndow = !regEndow;
-        } else if( prop.action == "UPDATE_VALUE" ) {
+        } else if( prop.action == actions[5] ) {                                // SET_VALUE
             var (k, v) = split32_20_12(prop.data);
             votableValues[k] = uint(v);
-        } else if( prop.action == "ENDOW" ) {
+        } else if( prop.action == actions[6] ) {                                // ENDOW
             var (r, a) = split32_20_12(prop.data);
             token.generateTokens(address(r), uint(a));
         }
     }
 
-    function reset(address _registry, address _tokenFactory, address _token) internal {
-        registry = Registry(_registry);
-        tokenFactory = MiniMeTokenFactory(_tokenFactory);
-        token = MiniMeToken(_token);
-    }
-
     function upgrade(address _newController) internal {
         registry.changeController(_newController);
         token.changeController(_newController);
+        store.changeController(_newController);
     }
 
     function register(
@@ -101,10 +97,6 @@ contract EthTraderDAO is Voting {
     ) public view returns (bool) {
         bytes32 hash = keccak256(msg.sender, _username, _endowment, _firstContent);
         return MerkleTreeLib.checkProof(_proof, roots[_rootIndex], hash);
-    }
-
-    function getVotableValue(bytes20 _name) public returns (uint) {
-        return votableValues[_name];
     }
 
 }

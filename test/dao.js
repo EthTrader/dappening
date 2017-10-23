@@ -66,11 +66,20 @@ contract('EthTraderDAO', function(accounts) {
     //         .then( address => assert.equal(address, accounts[1], `${testUsername1} was not registered@2`) );
     // });
 
-    // it(`${testUsername0} initialised a vote@0`, () => {
-    //     return Registry.deployed()
-    //         .then( registry => registry.addProp("peaches are great", "PEACH") )
-    //         .then( () => Registry.deployed() )
-    //         .then( registry => registry.votes.call(1) )
-    //         .log();
-    // });
+    it(`${testUsername0} initialised a vote@0`, () => {
+        return EthTraderDAO.deployed()
+            .then( dao => dao.addProp("NONE", 0) )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.props.call(0) )
+            .then( prop => assert.equal(prop.length, 7, `token transfers were enabled`) );
+    });
+
+    it(`${testUsername0} could vote@0`, () => {
+        return EthTraderDAO.deployed()
+            .then( dao => dao.vote(0, 1) )          // vote in favour
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.props.call(0) )
+            .then( prop => assert.equal(prop[0], '0x4e4f4e4500000000000000000000000000000000', `token transfers were enabled`) );
+    });
+
 });
