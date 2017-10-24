@@ -2,6 +2,9 @@
 const MiniMeToken = artifacts.require("./MiniMeToken.sol");
 const Registry = artifacts.require("./Registry.sol");
 const EthTraderDAO = artifacts.require("./EthTraderDAO.sol");
+const Store = artifacts.require("./Store.sol");
+const utils = require("ethereumjs-util");
+const { toBuffer, bufferToHex, setLengthLeft, setLengthRight } = utils;
 // const RegReader = artifacts.require("./RegReader.sol");
 const userRegInputs = require("../out/userRegInputs.json");
 const merkleRoot = require("../out/merkleRoot.json");
@@ -76,18 +79,15 @@ contract('EthTraderDAO', function(accounts) {
 
     it(`${testUsername0} could vote@0`, () => {
         return EthTraderDAO.deployed()
-            .then( dao => dao.vote(0, 1) )          // vote in favour
+            .then( dao => dao.vote(0, 1) )                                      // vote in favour
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.props.call(0) )
-            .log()
             // .then( prop => assert.equal(prop[0], '0x4e4f4e4500000000000000000000000000000000', `token transfers were enabled`) );
     });
 
     it(`${testUsername0} enacted prop@0, tokens are transferable`, () => {
         return EthTraderDAO.deployed()
             .then( dao => dao.enactProp(0) )
-            .then( () => EthTraderDAO.deployed() )
-            .then( dao => dao.props.call(0) )
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.token.call() )
             .then( address => MiniMeToken.at(address).transfersEnabled.call() )
@@ -102,6 +102,54 @@ contract('EthTraderDAO', function(accounts) {
             .then( dao => dao.token.call() )
             .then( address => MiniMeToken.at(address).balanceOf(accounts[1]) )
             .then( amount => assert.equal(amount.valueOf(), 600, `${testUsername1} did not receive 600`) );
+    });
+
+    it(`TOKEN_AGE_DAY_CAP is 500`, () => {
+        return EthTraderDAO.deployed()
+            .then( dao => dao.store.call() )
+            .then( address => Store.at(address).values.call("TOKEN_AGE_DAY_CAP") )
+            .then( amount => assert.equal(amount.valueOf(), 500, `TOKEN_AGE_DAY_CAP not changed to 800`) );
+    });
+
+    it(`${testUsername0} initialised a prop@1`, () => {
+        let propData = bufferToHex(Buffer.concat([
+          setLengthRight(toBuffer("TOKEN_AGE_DAY_CAP"), 20),
+          setLengthLeft(toBuffer(800), 12)
+        ]));
+        return EthTraderDAO.deployed()
+            .then( dao => dao.split32_20_12.call(propData) )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.addProp("SET_VALUE", propData) );
+    });
+
+    it(`${testUsername0} could vote@1`, () => {
+        return EthTraderDAO.deployed()
+            .then( dao => dao.vote(1, 1) )                                      // vote in favour
+    });
+
+    it(`${testUsername0} enacted prop@1, TOKEN_AGE_DAY_CAP changed to 800`, () => {
+        return EthTraderDAO.deployed()
+            .then( dao => dao.enactProp(1) )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.store.call() )
+            .then( address => Store.at(address).values.call("TOKEN_AGE_DAY_CAP") )
+            .then( amount => assert.equal(amount.valueOf(), 800, `TOKEN_AGE_DAY_CAP not changed to 800`) );
+    });
+
+    it(`Deploy new DAO and upgrade by vote`, () => {
+        let newDAOAddress;
+        return EthTraderDAO.new(0, 0, true)
+            .then( instance => newDAOAddress = instance.address )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.addProp("UPGRADE", newDAOAddress) )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.vote(2, 1) )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.enactProp(2) )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.registry.call() )
+            .then( address => Registry.at(address).controller.call() )
+            .then( address => assert.equal(address, newDAOAddress, `registry controller was not changed to new DAO address`) );
     });
 
 });

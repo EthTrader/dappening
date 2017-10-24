@@ -6,7 +6,7 @@ contract Registry is Controlled {
 
     struct User {
         address                        owner;
-        mapping(uint8 => uint)         values;
+        mapping(uint => uint)       values;
     }
 
     mapping(bytes20 => User)    public usernameToUser;
@@ -37,11 +37,11 @@ contract Registry is Controlled {
         owner = usernameToUser[_username].owner;
     }
 
-    function getUserValue(bytes20 _username, uint8 _valueIdx) public returns(uint value) {
+    function getUserValue(bytes20 _username, uint _valueIdx) public returns(uint value) {
         value = usernameToUser[_username].values[_valueIdx];
     }
 
-    function setUserValue(bytes20 _username, uint8 _valueIdx, uint _value) public onlyController {
+    function setUserValue(bytes20 _username, uint _valueIdx, uint _value) public onlyController {
         usernameToUser[_username].values[_valueIdx] = _value;
     }
 

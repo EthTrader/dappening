@@ -12,9 +12,9 @@ contract EthTraderDAO is Voting, TokenController {
     bool                        public regEndow = true;
     bytes32[]                   public roots;
     bytes20[]                   public actions = [bytes20("NONE"), bytes20("UPGRADE"), bytes20("ADD_ROOT"), bytes20("TOGGLE_TRANSFERABLE"), bytes20("TOGGLE_REG_ENDOW"), bytes20("SET_VALUE"), bytes20("ENDOW")];
-    mapping(bytes20 => uint)    public votableValues;
 
-    function EthTraderDAO(address _parent, bytes32 _root) {
+    function EthTraderDAO(address _parent, bytes32 _root, bool _isDev) {
+        isDev = _isDev;
         if(_parent == 0){
             roots.push(_root);
             registry = new Registry();
@@ -33,9 +33,14 @@ contract EthTraderDAO is Voting, TokenController {
                 );
             store = new Store();
             store.set("SIG_VOTE", 500);
-            store.set("SIG_VOTE_DELAY", 0);//43);       !!!SET TO 0 FOR TESTING
-            store.set("PROP_DURATION", 0);//43200);     !!!SET TO 0 FOR TESTING
-            store.set("NO_PENALTY_DAY_CAP", 500);
+            if(isDev) {
+                store.set("SIG_VOTE_DELAY", 0);
+                store.set("PROP_DURATION", 2);
+            } else {
+                store.set("SIG_VOTE_DELAY", 43);
+                store.set("PROP_DURATION", 43200);
+            }
+            store.set("TOKEN_AGE_DAY_CAP", 500);
         } else {
             EthTraderDAO parentDAO = EthTraderDAO(_parent);
             registry = Registry(address(parentDAO.registry));
@@ -61,7 +66,7 @@ contract EthTraderDAO is Voting, TokenController {
             regEndow = !regEndow;
         } else if( prop.action == actions[5] ) {                                // SET_VALUE
             var (k, v) = split32_20_12(prop.data);
-            votableValues[k] = uint(v);
+            store.set(k, uint(v));
         } else if( prop.action == actions[6] ) {                                // ENDOW
             var (r, a) = split32_20_12(prop.data);
             token.generateTokens(address(r), uint(a));
@@ -112,17 +117,17 @@ contract EthTraderDAO is Voting, TokenController {
         uint tokenAgeDayCap = store.values("TOKEN_AGE_DAY_CAP");
         bool isSameDay = block.timestamp - registry.getUserValue(username, 1) < 1 days;
         if( isSameDay ) {
-            uint dayTotal = registry.getUserValue(username, 2);
-            if( dayTotal + _amount > tokenAgeDayCap ) {
+            uint dayTotal = registry.getUserValue(username, 2) + _amount;
+            if( dayTotal > tokenAgeDayCap ) {
                 registry.setUserValue(username, 0, block.timestamp);
             }
-            registry.setUserValue(username, 2, dayTotal + _amount);
+            registry.setUserValue(username, 2, dayTotal);
         } else {
             if( _amount > tokenAgeDayCap ) {
-                registry.setUserValue(username, 0, block.timestamp);            // set TOKEN_AGE
+                registry.setUserValue(username, 0, block.timestamp);    // set TOKEN_AGE
             } else {
-                registry.setUserValue(username, 1, block.timestamp);            // set DAY_TRANSFERS_START
-                registry.setUserValue(username, 2, _amount);                    // set DAY_TOTAL
+                registry.setUserValue(username, 1, block.timestamp);    // set DAY_TRANSFERS_START
+                registry.setUserValue(username, 2, _amount);            // set DAY_TOTAL
             }
         }
         return true;

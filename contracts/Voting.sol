@@ -20,6 +20,7 @@ contract Voting {
         MiniMeToken                 token;
     }
 
+    bool                            public isDev;
     Store                           public store;
     Registry                        public registry;
     MiniMeTokenFactory              public tokenFactory;
@@ -90,7 +91,7 @@ contract Voting {
     function split32_20_12(bytes32 data) public pure returns (bytes20 twenty, bytes12 twelve) {
         twenty=extract20(data);
         for (uint i=20; i<32; i++)
-            twelve^=(bytes12(0xff0000000000000000000000)&data[i])>>(i*8);
+            twelve^=(bytes12(0xff0000000000000000000000)&data[i])>>((i-20)*8);
     }
 
     function extract20(bytes32 data) public pure returns (bytes20 result) {
