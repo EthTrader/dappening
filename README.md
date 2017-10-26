@@ -1,9 +1,9 @@
 # dappening
-Contracts and code for an EthTrader registry, browser plugin, tokens, and other experimentation
+Contracts relating to the EthTrader DAO/token project
 
-### EthRegBot
-####  Collector
-`python regbot.py --sub ethtrader`
-
-#### Replier
-`python regbot_replier.py`
+### Related repos
+* [Karma collector](https://github.com/EthTrader/karma)
+* [Pre-registration bot](https://github.com/EthTrader/regbot)
+* [Browser plugin](https://github.com/EthTrader/plugin)
+* [EthTrader dApp](https://github.com/EthTrader/EthTrader.github.io)
+* [ICO review criteria](https://github.com/EthTrader/ico-review)
