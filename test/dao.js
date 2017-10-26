@@ -74,7 +74,7 @@ contract('EthTraderDAO', function(accounts) {
             .then( dao => dao.addProp("TOGGLE_TRANSFERABLE", 0) )
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.props.call(0) )
-            .then( prop => assert.equal(prop.length, 7, `return data length mismatch`) );
+            .then( prop => assert.equal(prop.length, 8, `return data length mismatch`) );
     });
 
     it(`${testUsername0} could vote:0`, () => {
@@ -137,7 +137,7 @@ contract('EthTraderDAO', function(accounts) {
     });
 
     const stake = 2000;
-    it(`Prop:2 fail loses ${stake} stake`, () => {
+    it(`prop:2 fail loses ${stake} stake`, () => {
         let totalSupply;
         return EthTraderDAO.deployed()
             .then( dao => dao.token.call() )
@@ -155,7 +155,7 @@ contract('EthTraderDAO', function(accounts) {
             .then( amount => assert.equal(amount.valueOf(), totalSupply-stake, `totalSupply not reduced by ${stake}`) );
     });
 
-    it(`Deploy new DAO and upgrade by vote prop:3`, () => {
+    it(`deploy new DAO and upgrade by vote prop:3`, () => {
         let newDAOAddress;
         return EthTraderDAO.new(0, 0, true)
             .then( instance => newDAOAddress = instance.address )
