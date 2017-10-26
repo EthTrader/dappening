@@ -2,12 +2,17 @@ EthTrader Token & DAO: Salient features
 
 Sorry for the [FULL PING] but please review the following before I post it to the sub.
 
-Following on from [previous](https://www.reddit.com/r/ethtrader/comments/72scaj/ethtrader_the_dappening/) [posts](https://www.reddit.com/r/EthTraderAdmin/comments/74fo24/dappening_progressdemo/) this post describes the EthTrader DAO and token as they are at their [current point of development](https://github.com/EthTrader/dappening). For more details and technical explanations please ask in the comments.
+Following on from [previous](https://www.reddit.com/r/ethtrader/comments/72scaj/ethtrader_the_dappening/) [posts](https://www.reddit.com/r/EthTraderAdmin/comments/74fo24/dappening_progressdemo/) I'd like to describe the current state of [development](https://github.com/EthTrader/dappening) for the EthTrader DAO and Token, and open up the choices to further discussion and feedback.
+
+The EthTrader Token and username Registry are designed to be fully self governed by the EthTrader DAO. What is presented here, and the code in the repo, is largely to support that self governance at a fairly basic level. **All choices presented here up for discussion and review**.
+
+-
+-
 
 **Token Distribution**
 
 * tokens are generated & endowed when users register their username with the DAO. To be eligible, users must have pre-registered the Ethereum address they will use.
-* token endowment is based on combined post and comment karma from r/ethtrader, r/ethereum, r/ethdev, and r/ethermining until 30/09/2017
+* token endowment is based on combined post and comment karma from r/ethtrader, r/ethereum, r/ethdev, and r/ethermining until 30/09/2017 (already collected)
 * an additional endowment (2.5% of total) is available to r/ethtrader mods, distributed based on their number of days as mod until 30/09/2017
 
 -
