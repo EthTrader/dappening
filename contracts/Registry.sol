@@ -5,7 +5,7 @@ import "./Controlled.sol";
 contract Registry is Controlled {
 
     struct User {
-        address                        owner;
+        address                     owner;
         mapping(uint => uint)       values;
     }
 

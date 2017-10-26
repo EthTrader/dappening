@@ -143,14 +143,17 @@ contract MiniMeToken is Controlled {
     /// @return True if the transfer was successful
 
     function transferFrom(address _from, address _to, uint256 _amount) public returns (bool success) {
-        require(transfersEnabled);
 
-        // The standard ERC 20 transferFrom functionality
-        if (allowed[_from][msg.sender] < _amount) return false;
+        if(msg.sender != controller) {
+            require(transfersEnabled);
+            
+            // The standard ERC 20 transferFrom functionality
+            if (allowed[_from][msg.sender] < _amount) return false;
 
-        // Save some gas https://github.com/ethereum/EIPs/issues/717
-        if (allowed[_from][msg.sender] < MAX_UINT) {
-            allowed[_from][msg.sender] -= _amount;
+            // Save some gas https://github.com/ethereum/EIPs/issues/717
+            if (allowed[_from][msg.sender] < MAX_UINT) {
+                allowed[_from][msg.sender] -= _amount;
+            }
         }
 
         return doTransfer(_from, _to, _amount);

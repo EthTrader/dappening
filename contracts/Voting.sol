@@ -15,6 +15,7 @@ contract Voting {
         uint                        startedAt;
         uint                        lastSigVoteAt;
         bytes20                     author;
+        uint                        stake;
         mapping(uint => uint)       results;
         mapping(address => bool)    voted;
         MiniMeToken                 token;
@@ -31,15 +32,18 @@ contract Voting {
     event Voted(bytes20 username, uint propIdx, uint prefIdx);
 
     function addProp(bytes20 _action, bytes32 _data) public {
-        // TODO - ensure sufficient "stake"
         bytes20 username = registry.ownerToUsername(msg.sender);
         require( username != 0 );
+
+        uint stake = store.values("PROP_STAKE");
+        require( token.transferFrom(msg.sender, 1, stake) );
 
         Prop memory prop;
         prop.action = _action;
         prop.data = _data;
         prop.startedAt = block.number;
         prop.author = username;
+        prop.stake = stake;
         prop.token = tokenFactory.createCloneToken(
             address(token),
             block.number,
@@ -61,9 +65,13 @@ contract Voting {
 
         if(_prop.results[1]/2 > _prop.results[0]) {                               // need 2/3 majority to pass
             _prop.state = PropState.PASS;
+            // return staked tokens
+            require( token.transferFrom(1, registry.getOwner(_prop.author), _prop.stake) );
             return true;
         } else {
             _prop.state = PropState.FAIL;
+            // burn staked tokens
+            require( token.destroyTokens(1, _prop.stake) );
             return false;
         }
     }

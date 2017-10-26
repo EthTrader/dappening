@@ -32,6 +32,7 @@ contract EthTraderDAO is Voting, TokenController {
                 false// bool _transfersEnabled
                 );
             store = new Store();
+            store.set("PROP_STAKE", 2000);
             store.set("SIG_VOTE", 500);
             if(isDev) {
                 store.set("SIG_VOTE_DELAY", 0);
@@ -111,6 +112,7 @@ contract EthTraderDAO is Voting, TokenController {
     }
 
     function onTransfer(address _from, address _to, uint _amount) returns(bool) {
+        if( _to == 0 || _to == 1 ) return true;                                 // skip if burn or staking transfer
         bytes20 username = registry.ownerToUsername(_from);
         if( username == 0 || _amount == 0 ) return true;                        // skip if not registered
 
