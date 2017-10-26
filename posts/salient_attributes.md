@@ -1,8 +1,8 @@
-EthTrader Token & DAO
+EthTrader Token & DAO: Salient features
 
-Sorry for the [PING ALL] but please review the following before I post it to the sub.
+Sorry for the [FULL PING] but please review the following before I post it to the sub.
 
-Following on from [previous](https://www.reddit.com/r/ethtrader/comments/72scaj/ethtrader_the_dappening/) [posts](https://www.reddit.com/r/EthTraderAdmin/comments/74fo24/dappening_progressdemo/) regarding the EthTrader token project, or dappening, this top line overview is intended to solicit feedback on how the EthTrader DAO and token will work as they have currently been [developed](https://github.com/EthTrader/dappening). For more details and technical explanations please ask in the comments.
+Following on from [previous](https://www.reddit.com/r/ethtrader/comments/72scaj/ethtrader_the_dappening/) [posts](https://www.reddit.com/r/EthTraderAdmin/comments/74fo24/dappening_progressdemo/) this post describes the EthTrader DAO and token as they are at their [current point of development](https://github.com/EthTrader/dappening). For more details and technical explanations please ask in the comments.
 
 **Token Distribution**
 
@@ -15,7 +15,7 @@ Following on from [previous](https://www.reddit.com/r/ethtrader/comments/72scaj/
 
 **DAO Operation**
 
-* Proposals are submitted by registered users along with a token stake (PROP_STAKE) that is burned if the proposal fails (not yet implemented).
+* Proposals are submitted by registered users along with a token stake (PROP_STAKE) that is burned if the proposal fails.
 * Proposals can be enacted following a 2/3 majority vote.
 * Voting is eligible to registered token holders and is weighted by token amount and token age.
 * Initial token age is established by the date of the users first comment or post.
