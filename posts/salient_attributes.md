@@ -15,18 +15,19 @@ Following on from [previous](https://www.reddit.com/r/ethtrader/comments/72scaj/
 
 **DAO Operation**
 
-* Proposals are submitted with a token stake that is burned if the proposal fails (not yet implemented).
+* Proposals are submitted by registered users along with a token stake (PROP_STAKE) that is burned if the proposal fails (not yet implemented).
 * Proposals can be enacted following a 2/3 majority vote.
 * Voting is eligible to registered token holders and is weighted by token amount and token age.
 * Initial token age is established by the date of the users first comment or post.
-* TOKEN_AGE_DAY_CAP amount can be transferred each day without affecting token age. Exceeding TOKEN_AGE_DAY_CAP within a day sets the token age to the current date.
-* Proposals last PROP_DURATION time or until SIG_VOTE_DELAY if a vote of amount SIG_VOTE has occurred.
+* An amount (TOKEN_AGE_DAY_CAP) can be transferred each day without affecting token age. Exceeding this amount within a day sets the token age to the current date.
+* Proposals last a preset time (PROP_DURATION), but the end can be delayed (SIG_VOTE_DELAY) if a vote above a certain threshold amount (SIG_VOTE) has occurred.
 * The following actions can be performed by voting:
     * UPGRADE - upgrade the DAO/controller contract
     * ADD_ROOT - adding a merkle root opens registration up to a new set of users
     * TOGGLE_TRANSFERABLE - toggle transferability of tokens
     * TOGGLE_REG_ENDOW - toggle endowment during registration
     * SET_VALUE - update one of the following values (or a new value used in a future contract)
+        * PROP_STAKE - amount of tokens to be staked in order to submit a proposal
         * SIG_VOTE - threshold weighted vote amount that would cause a delay to ending a proposal
         * SIG_VOTE_DELAY - (in blocks) the length of time a "significant vote" would delay ending a proposal
         * PROP_DURATION - (in blocks) the duration for proposals
