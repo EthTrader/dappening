@@ -11,14 +11,13 @@ contract EthTraderDAO is Voting, TokenController {
 
     bool                        public regEndow = true;
     bytes32[]                   public roots;
-    bytes20[]                   public actions = [bytes20("NONE"), bytes20("UPGRADE"), bytes20("ADD_ROOT"), bytes20("TOGGLE_TRANSFERABLE"), bytes20("TOGGLE_REG_ENDOW"), bytes20("SET_VALUE"), bytes20("ENDOW")];
 
     function EthTraderDAO(address _parent, bytes32 _root, bool _isDev) {
         isDev = _isDev;
         if(_parent == 0){
             roots.push(_root);
             registry = new Registry();
-            registry.addUserValueName("TOKEN_AGE");
+            registry.addUserValueName("TOKEN_AGE_START");
             registry.addUserValueName("DAY_TRANSFERS_START");
             registry.addUserValueName("DAY_TOTAL");
             tokenFactory = new MiniMeTokenFactory();
@@ -33,7 +32,7 @@ contract EthTraderDAO is Voting, TokenController {
                 );
             store = new Store();
             store.set("PROP_STAKE", 2000);
-            store.set("SIG_VOTE", 500);
+            store.set("SIG_VOTE", 1000);
             if(isDev) {
                 store.set("SIG_VOTE_DELAY", 0);
                 store.set("PROP_DURATION", 2);
@@ -49,12 +48,15 @@ contract EthTraderDAO is Voting, TokenController {
             token = MiniMeToken(address(parentDAO.token));
             store = Store(address(parentDAO.store));
         }
+        actions = [bytes20("NONE"), bytes20("UPGRADE"), bytes20("ADD_ROOT"), bytes20("TOGGLE_TRANSFERABLE"), bytes20("TOGGLE_REG_ENDOW"), bytes20("SET_VALUE"), bytes20("ENDOW")];
     }
 
     function enactProp(uint _propIdx) public {
         Prop storage prop = props[_propIdx];
 
-        if(!resolveProp(prop))
+        bool isPassed = resolveProp(prop);
+        Resolved(_propIdx, isPassed);
+        if(!isPassed)
             return;
 
         if( prop.action == actions[1] ) {                                       // UPGRADE
@@ -121,18 +123,28 @@ contract EthTraderDAO is Voting, TokenController {
         if( isSameDay ) {
             uint dayTotal = registry.getUserValue(username, 2) + _amount;
             if( dayTotal > tokenAgeDayCap ) {
-                registry.setUserValue(username, 0, block.timestamp);
+                registry.setUserValue(username, 0, block.timestamp);            // set TOKEN_AGE_START
             }
             registry.setUserValue(username, 2, dayTotal);
         } else {
             if( _amount > tokenAgeDayCap ) {
-                registry.setUserValue(username, 0, block.timestamp);    // set TOKEN_AGE
+                registry.setUserValue(username, 0, block.timestamp);            // set TOKEN_AGE_START
             } else {
-                registry.setUserValue(username, 1, block.timestamp);    // set DAY_TRANSFERS_START
-                registry.setUserValue(username, 2, _amount);            // set DAY_TOTAL
+                registry.setUserValue(username, 1, block.timestamp);            // set DAY_TRANSFERS_START
+                registry.setUserValue(username, 2, _amount);                    // set DAY_TOTAL
             }
         }
         return true;
+    }
+
+    function getWeightedVote(bytes20 _username, uint _propIdx) public view returns (uint) {
+        Prop storage prop = props[_propIdx];
+        uint tokenAgeStart = registry.getUserValue(_username, 0);
+        uint multiplier = 0;
+        if(tokenAgeStart != 0)
+            multiplier = (block.timestamp - tokenAgeStart) / 8 weeks;
+        if(multiplier > 5) multiplier = 5;
+        return multiplier * prop.token.balanceOf(msg.sender);
     }
 
 }
