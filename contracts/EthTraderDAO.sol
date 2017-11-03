@@ -144,7 +144,7 @@ contract EthTraderDAO is Voting, TokenController {
         if(tokenAgeStart != 0)
             multiplier = (block.timestamp - tokenAgeStart) / 8 weeks;
         if(multiplier > 5) multiplier = 5;
-        return multiplier * prop.token.balanceOf(msg.sender);
+        return multiplier * token.balanceOfAt(msg.sender, prop.startedAt);
     }
 
 }

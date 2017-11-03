@@ -74,7 +74,7 @@ contract('EthTraderDAO', function(accounts) {
             .then( dao => dao.addProp("TOGGLE_TRANSFERABLE", 0) )
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.props.call(0) )
-            .then( prop => assert.equal(prop.length, 8, `return data length mismatch`) );
+            .then( prop => assert.equal(prop.length, 7, `return data length mismatch`) );
     });
 
     it(`${testUsername0} weighted vote amount`, () => {

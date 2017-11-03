@@ -7,3 +7,7 @@ Contracts relating to the EthTrader DAO/token project
 * [Browser plugin](https://github.com/EthTrader/plugin)
 * [EthTrader dApp](https://github.com/EthTrader/EthTrader.github.io)
 * [ICO review criteria](https://github.com/EthTrader/ico-review)
+
+
+2376840
+227012

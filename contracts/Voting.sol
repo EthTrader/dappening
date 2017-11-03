@@ -18,7 +18,6 @@ contract Voting {
         uint                        stake;
         mapping(uint => uint)       results;
         mapping(address => bool)    voted;
-        MiniMeToken                 token;
     }
 
     bool                            public isDev;
@@ -50,14 +49,6 @@ contract Voting {
         prop.data = _data;
         prop.startedAt = block.number;
         prop.author = username;
-        prop.token = tokenFactory.createCloneToken(
-            address(token),
-            block.number,
-            "EthTrader Vote",
-            token.decimals(),
-            "ETR_VOTE",
-            false
-            );
 
         Proposed(props.push(prop)-1);
     }
@@ -100,7 +91,7 @@ contract Voting {
 
     function getWeightedVote(bytes20 _username, uint _propIdx) public view returns (uint) {        // override this method in DAO
         Prop storage prop = props[_propIdx];
-        return prop.token.balanceOf(msg.sender);
+        return token.balanceOfAt(msg.sender, prop.startedAt);
     }
 
     function vote(uint _propIdx, uint _prefIdx) public {
