@@ -1,8 +1,10 @@
 pragma solidity ^0.4.17;
 
 import "./MiniMeToken.sol";
-import "./Registry.sol";
-import "./Store.sol";
+// import "./Registry.sol";
+import "./Interfaces.sol";
+// import "./Store.sol";
+// import "./EthTraderLib.sol";
 
 contract Voting {
 
@@ -20,12 +22,10 @@ contract Voting {
         mapping(address => bool)    voted;
     }
 
-    bool                            public isDev;
     bytes20[]                       public actions = [bytes20("NONE")];
-    Store                           public store;
-    Registry                        public registry;
-    MiniMeTokenFactory              public tokenFactory;
-    MiniMeToken                     public token;
+    IStore                          public store;
+    IRegistry                        public registry;
+    IMiniMeToken                     public token;
     Prop[]                          public props;
 
     event Proposed(uint propIdx);
@@ -112,16 +112,5 @@ contract Voting {
         prop.results[_prefIdx] += weightedVote;
         prop.voted[msg.sender] = true;
         Voted(username, _propIdx, _prefIdx);
-    }
-
-    function split32_20_12(bytes32 data) public pure returns (bytes20 twenty, bytes12 twelve) {
-        twenty=extract20(data);
-        for (uint i=20; i<32; i++)
-            twelve^=(bytes12(0xff0000000000000000000000)&data[i])>>((i-20)*8);
-    }
-
-    function extract20(bytes32 data) public pure returns (bytes20 result) {
-        for (uint i=0; i<20; i++)
-            result^=(bytes20(0xff00000000000000000000000000000000000000)&data[i])>>(i*8);
     }
 }
