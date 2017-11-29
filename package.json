@@ -27,6 +27,7 @@
     "csvtojson": "^1.1.9",
     "ethereum-bip44": "^2.1.3",
     "generate-contract-interface": "^0.1.13",
+    "json2csv": "^3.11.5",
     "merkle-tree-solidity": "^1.0.8",
     "promise-log": "^0.1.1",
     "truffle-hdwallet-provider": "0.0.3",

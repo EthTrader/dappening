@@ -34,6 +34,7 @@ const merkleTree = new MerkleTree(userHashBuffers)
 const userRegInputs = userArrays.map((ua,idx)=>{
   let address = ua.shift();
   ua.push(merkleTree.getProof(userHashBuffers[idx]).map(p=>bufferToHex(p)))
+  ua.push(address);
   return ua
 })
 

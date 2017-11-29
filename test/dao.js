@@ -15,10 +15,8 @@ require('promise-log')(Promise);
 
 const testUsername0 = "carlslarson";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
-testData0.push(0);
 const testUsername1 = "heliumcraft";//"doppio";
 const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
-testData1.push(1);
 // console.log(testData1)
 
 contract('EthTraderDAO', function(accounts) {
