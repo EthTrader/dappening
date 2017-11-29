@@ -15,8 +15,10 @@ require('promise-log')(Promise);
 
 const testUsername0 = "carlslarson";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
+testData0.splice(-1,1); // remove address
+testData0.push(0);      // add merkle root index
 const testUsername1 = "heliumcraft";//"doppio";
-const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
+// const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
 // console.log(testData1)
 
 contract('EthTraderDAO', function(accounts) {
