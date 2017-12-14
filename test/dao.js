@@ -104,6 +104,16 @@ contract('EthTraderDAO', function(accounts) {
         return EthTraderDAO.deployed()
             .then( dao => dao.vote(0, 1) )
             .then( () => EthTraderDAO.deployed() )
+            .then( dao => {
+              console.log(Object.keys(dao))
+              return dao
+            })
+            .then( dao => dao.getVoted.call(0) )
+            .then( voted => {
+              console.log(voted)
+              return assert.equal(voted, true, `did not register voted`)
+            } )
+            .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.props.call(0) );
     });
 
@@ -138,6 +148,7 @@ contract('EthTraderDAO', function(accounts) {
           setLengthRight(toBuffer("TOKEN_AGE_DAY_CAP"), 20),
           setLengthLeft(toBuffer(400), 12)
         ]));
+        console.log("PROPDATA", propData)
         return EthTraderLib.deployed()
             .then( lib => lib.split32_20_12.call(propData) )
             .then( () => EthTraderDAO.deployed() )

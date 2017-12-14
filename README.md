@@ -22,3 +22,5 @@ WHERE address IS NOT NULL)
 To
 '/tmp/users.csv'
 With CSV HEADER;
+
+personal.unlockAccount(personal.listAccounts[0], null, 0)

@@ -1,13 +1,9 @@
-// const MerkleTreeLib = artifacts.require("./MerkleTreeLib.sol");
 const EthTraderLib = artifacts.require("./EthTraderLib.sol");
 const EthTraderDAO = artifacts.require("./EthTraderDAO.sol");
-// const Controlled = artifacts.require("./Controlled.sol");
 const MiniMeToken = artifacts.require("./MiniMeToken.sol");
-// const Voting = artifacts.require("./Voting.sol");
 const Registry = artifacts.require("./Registry.sol");
 const Store = artifacts.require("./Store.sol");
 const TokenFactory = artifacts.require("./TokenFactory.sol");
-// const TokenController = artifacts.require("./TokenController.sol");
 const merkleRoot = require("../out/merkleRoot.json");
 const modDayRate = require("../out/modDayRate.json");
 
@@ -23,7 +19,7 @@ module.exports = function(deployer) {
     .then( () => deployer.deploy(Registry) )
     .then( () => Registry.deployed() )
     .then( registry => regAddress = registry.address )
-    .then( () => deployer.deploy(Store, true) ) //false)
+    .then( () => deployer.deploy(Store, !["1","2","3","4","42"].includes(web3.version.network)) )
     .then( () => Store.deployed() )
     .then( store => storeAddress = store.address )
     .then( () => deployer.deploy(EthTraderDAO, 0, merkleRoot, tokenAddress, regAddress, storeAddress) )

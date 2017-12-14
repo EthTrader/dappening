@@ -1,5 +1,11 @@
 [
     {
+        "username": "weirdbeard666",
+        "address": "0x0b56b4782aD76c2b881f2162b57D8E2be5b16401",
+        "score": 49,
+        "firstContent": 1508337202
+    },
+    {
         "username": "HodlDwon",
         "address": "0x87D4c94e893660Ea4624a2AFa881937ED8ea8C8d",
         "score": 9838,
@@ -36,10 +42,22 @@
         "firstContent": 1463015716
     },
     {
+        "username": "leoleo1994",
+        "address": "0xa7c541720Ad95680aF5B96BF777e928339B6b215",
+        "score": 251,
+        "firstContent": 1489602916
+    },
+    {
         "username": "Dunning_Krugerrands",
         "address": "0x00cA6F17801C0F53a89211d25849147A3fBaCdDB",
         "score": 18974,
         "firstContent": 1442228689
+    },
+    {
+        "username": "roamingandy",
+        "address": "0xD64AF740E60C371a95cd85b96B1709d3A0ECd9B6",
+        "score": 231,
+        "firstContent": 1498670128
     },
     {
         "username": "ZNTTSKN",
@@ -60,6 +78,18 @@
         "firstContent": 1495801560
     },
     {
+        "username": "Monko760",
+        "address": "0x137D16aD1eF2E06007F7F7C6B4Ad501d28d7615d",
+        "score": 647,
+        "firstContent": 1496565136
+    },
+    {
+        "username": "BoominBuddha",
+        "address": "0x50a07818Ae97eE399f21AeC40522Cbcdfb8EfDdD",
+        "score": 655,
+        "firstContent": 1498663589
+    },
+    {
         "username": "mswezey",
         "address": "0x9daB5D2A63c3AA9c38d9d799BfA1f17B52098FDb",
         "score": 414,
@@ -72,16 +102,40 @@
         "firstContent": 1492769709
     },
     {
+        "username": "classic_katapult",
+        "address": "0xca678453CC79Afe9D94d742514CafCede4f0c57B",
+        "score": 1925,
+        "firstContent": 1430592668
+    },
+    {
         "username": "emergepython",
         "address": "0x06d89621871BD530F1287fa303DCed5b48256DB9",
         "score": 501,
         "firstContent": 1494502632
     },
     {
+        "username": "ToHodlOrNotToHodl",
+        "address": "0x5DB545c75a2DEA2867273dE79828F15a3593D804",
+        "score": 718,
+        "firstContent": 1497876550
+    },
+    {
+        "username": "hungrystudent",
+        "address": "0x5e65f892f9d9d96e19433d6b2158de96b52d107e",
+        "score": 111,
+        "firstContent": 1494025856
+    },
+    {
         "username": "POSSUM_CUNT",
         "address": "0x145f71b7a87a0EB88d1391f3D56D5ea92A26dF26",
         "score": 2,
         "firstContent": 1493333894
+    },
+    {
+        "username": "pcastonguay",
+        "address": "0xd046B3C521c0F5513C8A47eB3C2011684eA80B27",
+        "score": 1815,
+        "firstContent": 1493388969
     },
     {
         "username": "7878ayush",
@@ -96,6 +150,12 @@
         "firstContent": 1502821360
     },
     {
+        "username": "aboitm",
+        "address": "0x8ad88087765f5e7d87350c31C4782D23dD96eb8A",
+        "score": 169,
+        "firstContent": 1489300687
+    },
+    {
         "username": "snasps",
         "address": "0xBdf2019580DB3f51E54Bb96B813A2671B86eba7A",
         "score": 529,
@@ -106,6 +166,12 @@
         "address": "0x14d5fa7C4409138262737Ea4a19c7995f1678FCC",
         "score": 51,
         "firstContent": 1498435397
+    },
+    {
+        "username": "Jesusthegoat",
+        "address": "0x1773B64aaE55342A56694D2A0D55Ef76eDdAA68E",
+        "score": 93,
+        "firstContent": 1496215375
     },
     {
         "username": "SeaMonkey82",
@@ -174,6 +240,12 @@
         "firstContent": 1488449127
     },
     {
+        "username": "jtnichol",
+        "address": "0x7Eb84E42059F0D44269C50f4D3A280Fd307a6824",
+        "score": 37209,
+        "firstContent": 1453779820
+    },
+    {
         "username": "andy_the_ant",
         "address": "0xEDFD015cEA763781598E024a8218b209EF3d0463",
         "score": 239,
@@ -234,6 +306,12 @@
         "firstContent": 1469375656
     },
     {
+        "username": "MalcolmTurdball",
+        "address": "0x87dF67E24b8572cAbc79D4a81516E70e680f4D67",
+        "score": 720,
+        "firstContent": 1486810038
+    },
+    {
         "username": "5chdn",
         "address": "0xfcae7970392f510a985a7eaccd3820b7759d65d9",
         "score": 18555,
@@ -264,6 +342,12 @@
         "firstContent": 1455008333
     },
     {
+        "username": "capnal",
+        "address": "0xc606f37b70c1a690C92Dcb3fD36a55A7f4da1220",
+        "score": 3523,
+        "firstContent": 1439304859
+    },
+    {
         "username": "drknudy",
         "address": "0x7d91f63DF3f79A1Fe607633ffEBAacd331FCfbcB",
         "score": 383,
@@ -292,6 +376,18 @@
         "address": "0xE357435a278d4B3dCb78441D8Ea4e1cfc57A1176",
         "score": 268,
         "firstContent": 1496261104
+    },
+    {
+        "username": "mightypenguin07",
+        "address": "0x962cC17825dA76A6457B5F8842f86134a32546d3",
+        "score": 308,
+        "firstContent": 1439919792
+    },
+    {
+        "username": "elbalaa",
+        "address": "0x0EF0b6cE6AF87a3Bb62F5a22c96940402aFED920",
+        "score": 369,
+        "firstContent": 1461397938
     },
     {
         "username": "PinkPuppyBall",
@@ -330,6 +426,18 @@
         "firstContent": 1490657564
     },
     {
+        "username": "Smaz1087",
+        "address": "0x4A26bF89aB53316562428FE116479C4bceC64948",
+        "score": 1439,
+        "firstContent": 1492094295
+    },
+    {
+        "username": "justafrenchasshole",
+        "address": "0xde014fd27798271Eac019b249f336B42bC1e6F64",
+        "score": 1400,
+        "firstContent": 1482917248
+    },
+    {
         "username": "lte13",
         "address": "0x45E96C91b0A8014CD80E0342b6E7120307DB4135",
         "score": 337,
@@ -358,6 +466,12 @@
         "address": "0xd03ff5274e6ff0b43cee31cafe1c40324fe5d33c",
         "score": 790,
         "firstContent": 1489642037
+    },
+    {
+        "username": "MemeExtreme",
+        "address": "0x169381506870283cbABC52034E4ECc123f3FAD02",
+        "score": 542,
+        "firstContent": 1480491690
     },
     {
         "username": "Thathathatha",
@@ -402,10 +516,28 @@
         "firstContent": 1496345321
     },
     {
+        "username": "YoItsJoel",
+        "address": "0xa05dEe18050b5B1858d2320512Cda73173Dfd12e",
+        "score": 95,
+        "firstContent": 1497304524
+    },
+    {
         "username": "mikeatgl",
         "address": "0xCAB704fd901016D3883CBA140E201EbeC7E198f4",
         "score": 239,
         "firstContent": 1497333257
+    },
+    {
+        "username": "provatidis",
+        "address": "0xf10EFd52a9F9f434b316963A87dfD4104A33cAd0",
+        "score": 534,
+        "firstContent": 1446115596
+    },
+    {
+        "username": "boomerius",
+        "address": "0xeF9966b38505935FeD4A2C9FeCb4B211C99e3eF4",
+        "score": 402,
+        "firstContent": 1461680775
     },
     {
         "username": "Slay61",
@@ -438,6 +570,12 @@
         "firstContent": 1446984828
     },
     {
+        "username": "InsidiousMind15",
+        "address": "0x884531EaB1bA4a81E9445c2d7B64E29c2F14587C",
+        "score": 41,
+        "firstContent": 1488952642
+    },
+    {
         "username": "loul42",
         "address": "0x29fCb5683BA5eB461D355CF6fe00AC64D957F73c",
         "score": 377,
@@ -468,16 +606,58 @@
         "firstContent": 1502813210
     },
     {
+        "username": "setagaya",
+        "address": "0x5dde1185e2d3D512Cf532d14360a4286b1b3915F",
+        "score": 389,
+        "firstContent": 1457909611
+    },
+    {
         "username": "-JRCSGO-",
         "address": "0x39fd1741b506f75768ab2bfff9d44eb1c9b7a7c2",
         "score": 179,
         "firstContent": 1493440534
     },
     {
+        "username": "danbrk",
+        "address": "0x3F62e793B13F385F20Ad189B9684F93584d658f1",
+        "score": 86,
+        "firstContent": 1497803265
+    },
+    {
+        "username": "yoloehh",
+        "address": "0x25592c246f1985949c6E0616A0ad5525D5DEB2ec",
+        "score": 6,
+        "firstContent": 1498428911
+    },
+    {
         "username": "heliem",
         "address": "0x9743A70a1133434513FbEaf8aA4fEe6B8b2C1a3B",
         "score": 37,
         "firstContent": 1391194581
+    },
+    {
+        "username": "orlyfactor",
+        "address": "0x5A36E2867fD3F7A7A96FF3e42e5a1EC6f6b1FDe0",
+        "score": 186,
+        "firstContent": 1497798482
+    },
+    {
+        "username": "jmiehau",
+        "address": "0x09fac217f9a9f47b50651fb8c7c641dd0d39efc8",
+        "score": 2276,
+        "firstContent": 1389442557
+    },
+    {
+        "username": "odd1e",
+        "address": "0x64490acdaac111cf19847c9bdbadb6fbce3cb8ef",
+        "score": 434,
+        "firstContent": 1504870240
+    },
+    {
+        "username": "tradersinsight",
+        "address": "0xdc8518A1Fc67cd307f2AfFFb76B92F0CF376C04E",
+        "score": 144,
+        "firstContent": 1500569415
     },
     {
         "username": "MrNebbiolo",
@@ -504,6 +684,18 @@
         "firstContent": 1495829023
     },
     {
+        "username": "jesusthatsgreat",
+        "address": "0xfAF1D7cC7A1ef2a14b703b1899BF9dB6C933af69",
+        "score": 2330,
+        "firstContent": 1469267360
+    },
+    {
+        "username": "orangesphere",
+        "address": "0xC04b65beB404Fd42f412F2B202f5027F799b17fe",
+        "score": 175,
+        "firstContent": 1493624512
+    },
+    {
         "username": "bumbleborn",
         "address": "0x149b9c2e3b2ca33156b930f55b6F38EF652b5E9a",
         "score": 282,
@@ -516,16 +708,28 @@
         "firstContent": 1391739044
     },
     {
+        "username": "MSFT000",
+        "address": "0x69D70C2C7d6eb946Fc70A57d4021551fA03C47E1",
+        "score": 77,
+        "firstContent": 1506632445
+    },
+    {
+        "username": "ididundoit",
+        "address": "0x5e8e3c61a42e3e186076467f498173dc8eb4f411",
+        "score": 45,
+        "firstContent": 1501635758
+    },
+    {
+        "username": "Isilmalith",
+        "address": "0x5831664c56afc6033e35f36e4ec0a14a20df9be4",
+        "score": 30,
+        "firstContent": 1503008008
+    },
+    {
         "username": "hendrik_v",
         "address": "0x09F85EF0eec51fe2Eef3B312AA7992C87b3D03f5",
         "score": 180,
         "firstContent": 1506446654
-    },
-    {
-        "username": "TheHealthyCat",
-        "address": "0xFAb70d48021e72c449A6111Fc4F40A004a0E52cc",
-        "score": 10,
-        "firstContent": 1503569220
     },
     {
         "username": "Crye",
@@ -540,6 +744,12 @@
         "firstContent": 1462734297
     },
     {
+        "username": "C1t1zen_Erased",
+        "address": "0xCAe215eab8f4Ad7BC401d958F0ECAB173267B24A",
+        "score": 1123,
+        "firstContent": 1495446721
+    },
+    {
         "username": "Dark_Ghost",
         "address": "0xC2471993c3050359798D4b157f5FC7B3E8a1d7AC",
         "score": 203,
@@ -552,10 +762,28 @@
         "firstContent": 1489623284
     },
     {
+        "username": "TheCryptoDivision",
+        "address": "0x709d40E907AF6F19c7222E613abEAF63838e5424",
+        "score": 15,
+        "firstContent": 1509989741
+    },
+    {
         "username": "80brew",
         "address": "0xf4A4fD8b44eF2DC2f7C6c8CB2248696ce380dC6C",
         "score": 197,
         "firstContent": 1501623705
+    },
+    {
+        "username": "3esmit",
+        "address": "0x9c9Ab63204ce5A014369934f98a2030881C9E5c8",
+        "score": 2696,
+        "firstContent": 1459783250
+    },
+    {
+        "username": "blindmikey",
+        "address": "0xddbaa298Ff16b40293Cba433fb65eB7a7907f896",
+        "score": 24,
+        "firstContent": 1496908421
     },
     {
         "username": "gynoplasty",
@@ -574,6 +802,12 @@
         "address": "0xf7d934bC4b9935610f40Bd1f77E7e7De780A940F",
         "score": 93,
         "firstContent": 1501540076
+    },
+    {
+        "username": "xqzv",
+        "address": "0xcC15CB481165CF0296841f152AeC4Ae5B73EfC3B",
+        "score": 11,
+        "firstContent": 1497312297
     },
     {
         "username": "khalo_",
@@ -666,12 +900,6 @@
         "firstContent": 1499125283
     },
     {
-        "username": "flowcrypt",
-        "address": "0x0FA3E67A4E451573AC68173FE85Df69F9b357cef",
-        "score": 1280,
-        "firstContent": 1486636896
-    },
-    {
         "username": "WooTzZ",
         "address": "0x6B1BcFb36F39D97d113Eb44C7bf2E20aa5CF8Cbd",
         "score": 4713,
@@ -730,12 +958,6 @@
         "address": "0x0F619ac3c43c8a3903f47208855B7f6c5D606A61",
         "score": 2388,
         "firstContent": 1492679564
-    },
-    {
-        "username": "myownman",
-        "address": "0xA9B793eEa3f15419DfE78dF4486aD23cFc4f1013",
-        "score": 19226,
-        "firstContent": 1465776058
     },
     {
         "username": "jdbender66",
@@ -918,12 +1140,6 @@
         "firstContent": 1438772900
     },
     {
-        "username": "ProtegeAA",
-        "address": "0x30EFDa616DbD3Dd0893bbea28BF3fE451BdC9ab7",
-        "score": 679,
-        "firstContent": 1439004270
-    },
-    {
         "username": "niklas_buschmann",
         "address": "0xE31EE3FE8580F9fB9F3a1B994718A35B53824337",
         "score": 491,
@@ -982,6 +1198,24 @@
         "address": "0xd75b2c2c51E7AFb16f048A9Dd5fAf19DD43D10A7",
         "score": 4873,
         "firstContent": 1501117714
+    },
+    {
+        "username": "flowcrypt",
+        "address": "0x0fa3e67a4e451573ac68173fe85df69f9b357cef",
+        "score": 1280,
+        "firstContent": 1486636896
+    },
+    {
+        "username": "myownman",
+        "address": "0x38A82425dD6448d2D5Cb1e813Eb976a5eA8945bC",
+        "score": 19226,
+        "firstContent": 1465776058
+    },
+    {
+        "username": "ProtegeAA",
+        "address": "0x954bC03B086942F9c7595b60A9C11033d141da33",
+        "score": 679,
+        "firstContent": 1439004270
     },
     {
         "username": "nbr1bonehead",
@@ -1084,12 +1318,6 @@
         "address": "0x81057dc87c05092243c0132402f73417c64e37bb",
         "score": 395,
         "firstContent": 1466852493
-    },
-    {
-        "username": "r_bachman",
-        "address": "0x84ae057EFB7FcF5B1e8721b1E32fE2A00e69242B",
-        "score": 494,
-        "firstContent": 1502258268
     },
     {
         "username": "DitiPenguin",
@@ -1362,12 +1590,6 @@
         "firstContent": 1488455696
     },
     {
-        "username": "TheReasonabilists",
-        "address": "0x66d9F971aB39843c70b84fCA250b225876f96857",
-        "score": 3751,
-        "firstContent": 1491582837
-    },
-    {
         "username": "Connortbh",
         "address": "0xcCbFfa2005F8a4B1A451A483267c6Da1CECd513B",
         "score": 7672,
@@ -1378,12 +1600,6 @@
         "address": "0xa2558ac3451Cbd88384111F03c8f2F3e5DF43f6a",
         "score": 3704,
         "firstContent": 1495424446
-    },
-    {
-        "username": "xAlias",
-        "address": "0xA6ed17c1E96cAF2Bc623c8da24B641EC74Ef9479",
-        "score": 3858,
-        "firstContent": 1455741294
     },
     {
         "username": "civilobedient",
@@ -1452,6 +1668,18 @@
         "firstContent": 1498545247
     },
     {
+        "username": "xAlias",
+        "address": "0xA6ed17c1E96cAF2Bc623c8da24B641EC74Ef9479",
+        "score": 3858,
+        "firstContent": 1455741294
+    },
+    {
+        "username": "r_bachman",
+        "address": "0xF9D5c9A7200E1Ac4A0fD41b2a3d28FF5cf3F2284",
+        "score": 494,
+        "firstContent": 1502258268
+    },
+    {
         "username": "ngin-x",
         "address": "0x009cADD5812d266761B29B229aFaaD68b711f7d0",
         "score": 4965,
@@ -1480,12 +1708,6 @@
         "address": "0x466D1c8b892c96bAc12E8BE7434fb588f29eDa8B",
         "score": 246,
         "firstContent": 1488256000
-    },
-    {
-        "username": "Hypocriciety",
-        "address": "0xE59A92CF298dF0C120273495CDfe08230A5d424B",
-        "score": 1963,
-        "firstContent": 1504642797
     },
     {
         "username": "commonreallynow",
@@ -1800,12 +2022,6 @@
         "firstContent": 1485872124
     },
     {
-        "username": "vegasluna",
-        "address": "0xa7BA45Bd9e8993A977AC41AaC50f7BEa626191F5",
-        "score": 1494,
-        "firstContent": 1466271951
-    },
-    {
         "username": "mrcarner",
         "address": "0x9FB87596354e9B2d2E3a543201E3043eE4C66D32",
         "score": 1653,
@@ -1918,6 +2134,12 @@
         "address": "0x601c6D9efF76Ae8cd7bFF5fC4900f20F6F80734F",
         "score": 2671,
         "firstContent": 1391109407
+    },
+    {
+        "username": "vegasluna",
+        "address": "0x89C6822ED53445C14Ed6931e2d74967206611B2D",
+        "score": 1494,
+        "firstContent": 1466271951
     },
     {
         "username": "cmille20",
@@ -2238,12 +2460,6 @@
         "firstContent": 1496791054
     },
     {
-        "username": "McPheeb",
-        "address": "0xcb9bf6e8f964fa1e1ecce75c8607d0f613d0a715",
-        "score": 12546,
-        "firstContent": 1439649359
-    },
-    {
         "username": "rpr11",
         "address": "0x6c8c6eC7173D8702b4a9Ac755A96823e678E51E3",
         "score": 502,
@@ -2388,6 +2604,12 @@
         "firstContent": 1494316821
     },
     {
+        "username": "McPheeb",
+        "address": "0xcb9bf6e8f964fa1e1ecce75c8607d0f613d0a715",
+        "score": 12546,
+        "firstContent": 1439649359
+    },
+    {
         "username": "deturbanator",
         "address": "0xD62835Fe2B40C8411A10E7980a290270e6A23cDA",
         "score": 75,
@@ -2404,12 +2626,6 @@
         "address": "0x2d03258E8B15094DEC998EEf87914E1C802Ceff2",
         "score": 12,
         "firstContent": 1494360044
-    },
-    {
-        "username": "michaelai3",
-        "address": "0x7A0532bf8293CB4f4273df4A7cD9Ef508925E132",
-        "score": 100,
-        "firstContent": 1495694387
     },
     {
         "username": "timthetollman",
@@ -2838,6 +3054,18 @@
         "firstContent": 1457977902
     },
     {
+        "username": "michaelai3",
+        "address": "0x954dc267d92b32568C23dC3404d780f7921Df69D",
+        "score": 100,
+        "firstContent": 1495694387
+    },
+    {
+        "username": "againer",
+        "address": "0x8717e880f3461Ac345D820Bce9FA2F05b3d1b813",
+        "score": 8,
+        "firstContent": 1510719844
+    },
+    {
         "username": "OultimoChampion",
         "address": "0x29628D9feADDDe06b51c8471A61Ce111d1E56874",
         "score": 6,
@@ -2944,12 +3172,6 @@
         "address": "0x0C3FfB5a8CA67C270149B2D47830962bf7092Cda",
         "score": 520,
         "firstContent": 1504310212
-    },
-    {
-        "username": "derezzer",
-        "address": "0x2EAf22Df9A70697CF7fA1f164D0CD0026e64b713",
-        "score": 790,
-        "firstContent": 1495812106
     },
     {
         "username": "RyanRyanRyanRyanRyan",
@@ -3312,6 +3534,12 @@
         "firstContent": 1462100809
     },
     {
+        "username": "derezzer",
+        "address": "0xAc5159EA181BFd438a5147393886b797B49e8e71",
+        "score": 790,
+        "firstContent": 1495812106
+    },
+    {
         "username": "Wasted99",
         "address": "0xe863dF0aB3A3953F5E106788c41cb47De5fAE84a",
         "score": 705,
@@ -3340,6 +3568,18 @@
         "address": "0x80f66D2E0eaFa73910ED0B5d411640b48d23B838",
         "score": 8196,
         "firstContent": 1407252487
+    },
+    {
+        "username": "RockemSockemRowboats",
+        "address": "0x7934f93007bBD6ce4699E007A1A02c2e6F9AC15F",
+        "score": 295,
+        "firstContent": 1490629984
+    },
+    {
+        "username": "CosmosisQ",
+        "address": "0x0dB9d99592ee6A177E2Ce85AfFf45D86C1332E93",
+        "score": 208,
+        "firstContent": 1486920284
     },
     {
         "username": "ilcato",
@@ -3388,5 +3628,335 @@
         "address": "0x382Edf90cEBd31ae2481b95675fbB25081F83b62",
         "score": 1917,
         "firstContent": 1493991301
+    },
+    {
+        "username": "DownstairsWink",
+        "address": "0xe876275e5e1A77e0DE4006e5d9B85B33621d1442",
+        "score": 163,
+        "firstContent": 1492537884
+    },
+    {
+        "username": "scott_lew_is",
+        "address": "0x00b5F428905DEA1a67940093fFeaCeee58cA91Ae",
+        "score": 1995,
+        "firstContent": 1485889503
+    },
+    {
+        "username": "Max_Thunder",
+        "address": "0xF7BCa98a6566Def8823910474F542604bFF7b66e",
+        "score": 169,
+        "firstContent": 1504298453
+    },
+    {
+        "username": "phalangion",
+        "address": "0x0e3e13ca9896951f7531aac8eb65a563b859d1c4",
+        "score": 36,
+        "firstContent": 1497361127
+    },
+    {
+        "username": "poop_dragon",
+        "address": "0x67dc2b73d122e517eB282c8a74c34c95909B098F",
+        "score": 696,
+        "firstContent": 1490262936
+    },
+    {
+        "username": "southeast90",
+        "address": "0x88342A4793CbCD73888ff4577E9E78Cd17c9b722",
+        "score": 28,
+        "firstContent": 1488659303
+    },
+    {
+        "username": "eeksskee",
+        "address": "0x00BbCEAEE2C1f9dEB0235C2b187b8e4feAD8A102",
+        "score": 6714,
+        "firstContent": 1455119516
+    },
+    {
+        "username": "Cylow",
+        "address": "0xbe3521D667f030f4B284cD43383a5E52E45D6bb0",
+        "score": 432,
+        "firstContent": 1506964996
+    },
+    {
+        "username": "thisisenfield",
+        "address": "0xC545bF112E01F3BE9eA6CC5F4E284C0ae2cA432e",
+        "score": 31,
+        "firstContent": 1493656210
+    },
+    {
+        "username": "TheBounceSpotter",
+        "address": "0x60ba6ad396cfab61cd21d7e52ef424e88a00fd4f",
+        "score": 716,
+        "firstContent": 1495388109
+    },
+    {
+        "username": "xSwagstantin",
+        "address": "0xD7Eb162d2c43bfc5cBd7e299a950D5ed71Fc8347",
+        "score": 126,
+        "firstContent": 1496699488
+    },
+    {
+        "username": "mia109",
+        "address": "0xbaD7207A9B88bD824D35638Ad547715224BeB3c1",
+        "score": 7,
+        "firstContent": 1500518979
+    },
+    {
+        "username": "x_ETHeREAL_x",
+        "address": "0xf8189144b24Fdc47483b4FEfcEDB66AA727961dB",
+        "score": 5358,
+        "firstContent": 1440528608
+    },
+    {
+        "username": "Bexbox8",
+        "address": "0x22fc4336c5bc6540329676d9b1ced39a94804e63",
+        "score": 41,
+        "firstContent": 1461895470
+    },
+    {
+        "username": "HellaBester",
+        "address": "0xf0fd78Ea5F1a15fE07E694a4ce5DF3c5cD4dcbDb",
+        "score": 131,
+        "firstContent": 1492116024
+    },
+    {
+        "username": "Fawk9",
+        "address": "0xD45A619Ed1c90F5Bae88b91244c7d2A70dDF54e5",
+        "score": 1,
+        "firstContent": 1498418655
+    },
+    {
+        "username": "Vagus-Stranger",
+        "address": "0xa8C00aC92CEe610542Ff4D65d6De5ff319e179BB",
+        "score": 973,
+        "firstContent": 1492862538
+    },
+    {
+        "username": "_jaewonjung_",
+        "address": "0x04D077db652BE0aB1E1Df07D0D06953f8e11CE72",
+        "score": 42,
+        "firstContent": 1494261276
+    },
+    {
+        "username": "justdriftinaround",
+        "address": "0x0190cbcfceba2a520cca97c471372eac20681e36",
+        "score": 1,
+        "firstContent": 1497120628
+    },
+    {
+        "username": "chid3x",
+        "address": "0xE13C6dC69B7ff1A7BA08A9dC2DD2Ac219A34133E",
+        "score": 4,
+        "firstContent": 1494231702
+    },
+    {
+        "username": "thinhouse",
+        "address": "0x757841d66a9FDd663fc6CaeA5a0BFd9878f5B191",
+        "score": 94,
+        "firstContent": 1439821171
+    },
+    {
+        "username": "jscinoz",
+        "address": "0x36034Cba5413c0678b8256aCd0a87Af4E9D0873A",
+        "score": 22,
+        "firstContent": 1459854918
+    },
+    {
+        "username": "oxygenoxy",
+        "address": "0x0C7683C2599Fb2d33353254a1b267BD811F203A1",
+        "score": 7,
+        "firstContent": 1494742171
+    },
+    {
+        "username": "nugget954",
+        "address": "0x3134dC53e884d17aa0b5c20422c576981c3f5d1f",
+        "score": 6,
+        "firstContent": 1496708576
+    },
+    {
+        "username": "meta474",
+        "address": "0x14cC7eA4B921D15e6993b82866789F94d8664742",
+        "score": 406,
+        "firstContent": 1489180259
+    },
+    {
+        "username": "MrWatch",
+        "address": "0x3F50D551A3F468D5d51689335B2F43c462c8C47D",
+        "score": 3,
+        "firstContent": 1508255329
+    },
+    {
+        "username": "BudDePo",
+        "address": "0xC0A91925FF9Bbc6b11D7cDc791419F09a3276cD9",
+        "score": 1499,
+        "firstContent": 1489852047
+    },
+    {
+        "username": "Juceer",
+        "address": "0x3FcBA74D33201BB3d5213d047b0fAF9460acB85F",
+        "score": 5,
+        "firstContent": 1498079992
+    },
+    {
+        "username": "PINKPINGPONGBALL",
+        "address": "0x7bF5f99d95706EBA4Bb5D35828922619dAb4B68D",
+        "score": 10,
+        "firstContent": 1504722445
+    },
+    {
+        "username": "bosticetudis",
+        "address": "0xA94Af282Ac1E9d25ef0F10A6Ab2A5A27527ee519",
+        "score": 4878,
+        "firstContent": 1489869162
+    },
+    {
+        "username": "ercpck",
+        "address": "0x893088c143e837bf16755ffb9717db314468a5b6",
+        "score": 4,
+        "firstContent": 1503382651
+    },
+    {
+        "username": "seblt",
+        "address": "0x4aF973f9c9A8404F43980362ed0096Ff521845Ef",
+        "score": 27,
+        "firstContent": 1488456946
+    },
+    {
+        "username": "rzrkyb",
+        "address": "0x43F50AA31Af2f59893857DE411db6147011cC7cC",
+        "score": 464,
+        "firstContent": 1499933232
+    },
+    {
+        "username": "ToAlphaCentauriGuy",
+        "address": "0x940793a30d819301eaac360529a073f4136551ee",
+        "score": 166,
+        "firstContent": 1498853947
+    },
+    {
+        "username": "AdamSC1",
+        "address": "0x0F8Fe8f97169628CD2A17F700E57863D955cDF70",
+        "score": 2,
+        "firstContent": 1509578118
+    },
+    {
+        "username": "fauzool",
+        "address": "0x2cCd65C9E77149C8D59f977F457A1b7966879436",
+        "score": 105,
+        "firstContent": 1493886508
+    },
+    {
+        "username": "Moverperfect",
+        "address": "0xBB273fEc05cCA7433aa79c09abe5c2a8883CE99c",
+        "score": 302,
+        "firstContent": 1510237766
+    },
+    {
+        "username": "Ethorse",
+        "address": "0x9786C7774EF670B3FcAA2b4A39a386F4D7fC7Bf4",
+        "score": 122,
+        "firstContent": 1509021529
+    },
+    {
+        "username": "EZalmighty",
+        "address": "0xB5EA31801AaF32f67D899FdB948d8751d80324Db",
+        "score": 38,
+        "firstContent": 1508137149
+    },
+    {
+        "username": "Hypocriciety",
+        "address": "0xE59A92CF298dF0C120273495CDfe08230A5d424B",
+        "score": 1963,
+        "firstContent": 1504642797
+    },
+    {
+        "username": "seishi",
+        "address": "0x67E34b018D86A731cB80496739761B6f1d4d6deC",
+        "score": 93,
+        "firstContent": 1503069194
+    },
+    {
+        "username": "AgentSuperchillen",
+        "address": "0x02EAeC295A904656a334016165Bc885B9C72e864",
+        "score": 1209,
+        "firstContent": 1500652367
+    },
+    {
+        "username": "chauncemaster",
+        "address": "0x1FBC877C0dEb4Eee6fd7Aa1580712Bd839426351",
+        "score": 502,
+        "firstContent": 1493677879
+    },
+    {
+        "username": "SwaroopHegde",
+        "address": "0x7b07F01602b6411bdAeE69251F0cE27484cC4d41",
+        "score": 46,
+        "firstContent": 1510063337
+    },
+    {
+        "username": "boii0708",
+        "address": "0x5bD7a00Ba3709Fd33d4Ed6B8D6f6920a3Db0b5df",
+        "score": 414,
+        "firstContent": 1500420037
+    },
+    {
+        "username": "TheReasonabilists",
+        "address": "0x08aAffa0f64a11fC02B1869E7410493D95f5660f",
+        "score": 3751,
+        "firstContent": 1491582837
+    },
+    {
+        "username": "Borega",
+        "address": "0xC0D3142aF747e2d8C568866C62bE678F29421568",
+        "score": 60,
+        "firstContent": 1502810417
+    },
+    {
+        "username": "Theft_Via_Taxation",
+        "address": "0x3C427Cf1aF77018E46632329D265f38A8928c7c3",
+        "score": 543,
+        "firstContent": 1479583314
+    },
+    {
+        "username": "TheHealthyCat",
+        "address": "0xFAb70d48021e72c449A6111Fc4F40A004a0E52cc",
+        "score": 10,
+        "firstContent": 1503569220
+    },
+    {
+        "username": "paleovanguard",
+        "address": "0x906999B54C8fb6d6BeCf118b094c9C43e7BD1E46",
+        "score": 285,
+        "firstContent": 1462067130
+    },
+    {
+        "username": "Dr_Button_Pusher",
+        "address": "0xe7115A2d0DEfB327256CFD0D8eD2238E09c8d5ed",
+        "score": 11,
+        "firstContent": 1508368219
+    },
+    {
+        "username": "crusnik37",
+        "address": "0xCb886add661f26cccCEC9A29f3F0EAb9bA727DF4",
+        "score": 29,
+        "firstContent": 1510550880
+    },
+    {
+        "username": "pakmann",
+        "address": "0x0211a4Eea9D9511B18466df063B4C5AD3F5981E0",
+        "score": 1840,
+        "firstContent": 1496988461
+    },
+    {
+        "username": "yetami",
+        "address": "0xb0b88421D53458f928E91f40374000744822D9D6",
+        "score": 1,
+        "firstContent": 1465933688
+    },
+    {
+        "username": "SweetSweetInternet",
+        "address": "0x665c587798844d0604c922fdf740dd85f8a12de0",
+        "score": 61,
+        "firstContent": 1504277328
     }
 ]

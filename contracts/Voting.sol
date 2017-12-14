@@ -89,9 +89,18 @@ contract Voting {
         return prop.results[_prefIdx];
     }
 
+    function getVoted(uint _propIdx) public view returns (bool) {
+        Prop storage prop = props[_propIdx];
+        return prop.voted[msg.sender];
+    }
+
     function getWeightedVote(bytes20 _username, uint _propIdx) public view returns (uint) {        // override this method in DAO
         Prop storage prop = props[_propIdx];
         return token.balanceOfAt(msg.sender, prop.startedAt);
+    }
+
+    function getNumProps() public view returns (uint) {
+        return props.length;
     }
 
     function vote(uint _propIdx, uint _prefIdx) public {

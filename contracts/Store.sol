@@ -17,7 +17,7 @@ contract Store is Controlled {
           set("PROP_DURATION", 2);
       } else {
           set("SIG_VOTE_DELAY", 43);
-          set("PROP_DURATION", 43200);
+          set("PROP_DURATION", 12343);//43200);
       }
       set("TOKEN_AGE_DAY_CAP", 200);
     }
