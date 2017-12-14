@@ -1,0 +1,50 @@
+{
+  "default": {
+    "versions": {
+      "web3.js": "1.0.0-beta",
+      "solc": "0.4.17"
+    },
+    "deployment": {
+      "host": "localhost",
+      "port": 8545,
+      "type": "rpc"
+    },
+    "dappConnection": [
+      "$WEB3",
+      "http://localhost:8545",
+    ],
+    "gas": "auto",
+    "contracts": {
+      "EthTraderLib": {
+        "deploy": false
+      },
+      "EthTraderDAO": {
+        "args": [
+          0, "0x1631173b0b6c3788247949d149014684467c2b7fc945da65f605d4afa9bc4d28", "$MiniMeToken", "$Registry", "$Store"
+        ]
+      },
+      "MiniMeToken": {
+        "args": [
+            "$TokenFactory", 0, 0, "EthTrader Token", 9, "ETR", false
+        ],
+        "onDeploy": ["$MiniMeToken.changeController('$EthTraderDAO')"]
+      },
+      "Registry": {
+        "onDeploy": ["$Registry.changeController('$EthTraderDAO')"]
+      },
+      "Store": {
+        "args": [
+          true
+        ],
+        "onDeploy": ["$Store.changeController('$EthTraderDAO')"]
+      },
+      "TokenFactory": {
+        "deploy": false
+      }
+    }
+  },
+  "development": {
+    "contracts": {
+    }
+  }
+}
