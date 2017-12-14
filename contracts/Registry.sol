@@ -17,6 +17,12 @@ contract Registry is Controlled {
     event Added(bytes20 username);
     event Removed(bytes20 username);
 
+    function Registry() {
+        addUserValueName("TOKEN_AGE_START");
+        addUserValueName("DAY_TRANSFERS_START");
+        addUserValueName("DAY_TOTAL");
+    }
+
     function add(bytes20 _username, address _owner) public onlyController {
         usernameToUser[_username] = User({owner: _owner});
         ownerToUsername[_owner] = _username;

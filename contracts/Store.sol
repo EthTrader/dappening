@@ -9,6 +9,19 @@ contract Store is Controlled {
     event Set(bytes20 key, uint val);
     event Removed(bytes20 key);
 
+    function Store(bool _isDev) {
+      set("PROP_STAKE", 1000);
+      set("SIG_VOTE", 500);
+      if(_isDev) {
+          set("SIG_VOTE_DELAY", 0);
+          set("PROP_DURATION", 2);
+      } else {
+          set("SIG_VOTE_DELAY", 43);
+          set("PROP_DURATION", 43200);
+      }
+      set("TOKEN_AGE_DAY_CAP", 200);
+    }
+
     function set(bytes20 _key, uint _val) public onlyController {
         values[_key] = _val;
         Set(_key, _val);

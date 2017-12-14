@@ -1,10 +1,7 @@
 pragma solidity ^0.4.17;
 
-import "./MerkleTreeLib.sol";
-import "./MiniMeToken.sol";
+import "./EthTraderLib.sol";
 import "./Voting.sol";
-import "./Store.sol";
-import "./TokenController.sol";
 
 // is controller of Token, Registry
 contract EthTraderDAO is Voting, TokenController {
@@ -12,41 +9,17 @@ contract EthTraderDAO is Voting, TokenController {
     bool                        public regEndow = true;
     bytes32[]                   public roots;
 
-    function EthTraderDAO(address _parent, bytes32 _root, bool _isDev) {
-        isDev = _isDev;
+    function EthTraderDAO(address _parent, bytes32 _root, address _token, address _registry, address _store) {
         if(_parent == 0){
             roots.push(_root);
-            registry = new Registry();
-            registry.addUserValueName("TOKEN_AGE_START");
-            registry.addUserValueName("DAY_TRANSFERS_START");
-            registry.addUserValueName("DAY_TOTAL");
-            tokenFactory = new MiniMeTokenFactory();
-            token = new MiniMeToken(
-                tokenFactory,
-                0,// address _parentToken,
-                0,// uint _snapshotBlock,
-                "EthTrader Token",// string _tokenName,
-                9,// uint8 _decimalUnits,
-                "ETR",// string _tokenSymbol,
-                false// bool _transfersEnabled
-                );
-            store = new Store();
-            store.set("PROP_STAKE", 2000);
-            store.set("SIG_VOTE", 1000);
-            if(isDev) {
-                store.set("SIG_VOTE_DELAY", 0);
-                store.set("PROP_DURATION", 2);
-            } else {
-                store.set("SIG_VOTE_DELAY", 43);
-                store.set("PROP_DURATION", 43200);
-            }
-            store.set("TOKEN_AGE_DAY_CAP", 500);
+            token = IMiniMeToken(_token);
+            registry = IRegistry(_registry);
+            store = IStore(_store);
         } else {
             EthTraderDAO parentDAO = EthTraderDAO(_parent);
-            registry = Registry(address(parentDAO.registry));
-            tokenFactory = MiniMeTokenFactory(address(parentDAO.tokenFactory));
-            token = MiniMeToken(address(parentDAO.token));
-            store = Store(address(parentDAO.store));
+            token = IMiniMeToken(address(parentDAO.token));
+            registry = IRegistry(address(parentDAO.registry));
+            store = IStore(address(parentDAO.store));
         }
         actions = [bytes20("NONE"), bytes20("UPGRADE"), bytes20("ADD_ROOT"), bytes20("TOGGLE_TRANSFERABLE"), bytes20("TOGGLE_REG_ENDOW"), bytes20("SET_VALUE"), bytes20("ENDOW")];
     }
@@ -60,7 +33,7 @@ contract EthTraderDAO is Voting, TokenController {
             return;
 
         if( prop.action == actions[1] ) {                                       // UPGRADE
-            upgrade(address(extract20(prop.data)));
+            upgrade(address(EthTraderLib.extract20(prop.data)));
         } else if( prop.action == actions[2] ) {                                // ADD_ROOT
             roots.push(prop.data);
         } else if( prop.action ==  actions[3] ) {                               // TOGGLE_TRANSFERABLE
@@ -68,10 +41,10 @@ contract EthTraderDAO is Voting, TokenController {
         } else if( prop.action ==  actions[4] ) {                               // TOGGLE_REG_ENDOW
             regEndow = !regEndow;
         } else if( prop.action == actions[5] ) {                                // SET_VALUE
-            var (k, v) = split32_20_12(prop.data);
+            var (k, v) = EthTraderLib.split32_20_12(prop.data);
             store.set(k, uint(v));
         } else if( prop.action == actions[6] ) {                                // ENDOW
-            var (r, a) = split32_20_12(prop.data);
+            var (r, a) = EthTraderLib.split32_20_12(prop.data);
             token.generateTokens(address(r), uint(a));
         }
     }
@@ -91,7 +64,7 @@ contract EthTraderDAO is Voting, TokenController {
     ) public {
         require(
             registry.ownerToUsername(msg.sender) == 0 &&
-            registry.usernameToUser(_username) == 0 &&
+            registry.getOwner(_username) == 0 &&
             validate(_username, _endowment, _firstContent, _proof, _rootIndex)
             );
 
@@ -110,7 +83,7 @@ contract EthTraderDAO is Voting, TokenController {
         uint16 _rootIndex
     ) public view returns (bool) {
         bytes32 hash = keccak256(msg.sender, _username, _endowment, _firstContent);
-        return MerkleTreeLib.checkProof(_proof, roots[_rootIndex], hash);
+        return EthTraderLib.checkProof(_proof, roots[_rootIndex], hash);
     }
 
     function onTransfer(address _from, address _to, uint _amount) returns(bool) {

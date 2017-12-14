@@ -1,7 +1,9 @@
 // const Registry = artifacts.require("./RedditRegistry.sol");
+const TokenFactory = artifacts.require("./TokenFactory.sol");
 const MiniMeToken = artifacts.require("./MiniMeToken.sol");
 const Registry = artifacts.require("./Registry.sol");
 const EthTraderDAO = artifacts.require("./EthTraderDAO.sol");
+const EthTraderLib = artifacts.require("./EthTraderLib.sol");
 const Store = artifacts.require("./Store.sol");
 const utils = require("ethereumjs-util");
 const { toBuffer, bufferToHex, setLengthLeft, setLengthRight } = utils;
@@ -13,14 +15,30 @@ require('promise-log')(Promise);
 
 const testUsername0 = "carlslarson";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
-testData0.push(0);
-const testUsername1 = "MrKup";//"doppio";
-const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
-testData1.push(1);
+testData0.splice(-1,1); // remove address
+testData0.push(0);      // add merkle root index
+const testUsername1 = "heliumcraft";//"doppio";
+// const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
 // console.log(testData1)
 
 contract('EthTraderDAO', function(accounts) {
-    console.log(accounts);
+    let daoAddress;
+
+    it(`check the dao controls store,token, and registry`, () => {
+        let daoAddress;
+        return EthTraderDAO.deployed()
+            .then( dao => daoAddress = dao.address )
+            .then( () => Store.deployed() )
+            .then( store => store.controller() )
+            .then( controller => assert.equal(controller, daoAddress, `dao is not the store controller`) )
+            .then( () => Registry.deployed() )
+            .then( reg => reg.controller() )
+            .then( controller => assert.equal(controller, daoAddress, `dao is not the reg controller`) )
+            .then( () => MiniMeToken.deployed() )
+            .then( token => token.controller() )
+            .then( controller => assert.equal(controller, daoAddress, `dao is not the token controller`) );
+    });
+
     it(`merkle roots[0] matches ${merkleRoot}`, () => {
         return EthTraderDAO.deployed()
             .then( dao => dao.roots.call(0) )
@@ -36,24 +54,24 @@ contract('EthTraderDAO', function(accounts) {
     it(`${testUsername0} was registered`, () => {
         return EthTraderDAO.deployed()
             .then( dao => dao.register(...testData0) )
-            .then( tx => EthTraderDAO.deployed() )
+            .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.registry.call() )
             .then( address => Registry.at(address).getOwner.call(testUsername0) )
             .then( address => assert.equal(address, accounts[0], `${testUsername0} was not registered`) );
     });
 
     it(`${testUsername0} was endowed ${testData0[1]}`, () => {
-      return EthTraderDAO.deployed()
-        .then( dao => dao.token.call() )
-        .then( address => MiniMeToken.at(address).balanceOf.call(accounts[0]) )
-        .then( amount => assert.equal(amount.valueOf(), testData0[1], `${testUsername0} was not endowed ${testData0[1]}`) )
+        return EthTraderDAO.deployed()
+            .then( dao => dao.token.call() )
+            .then( address => MiniMeToken.at(address).balanceOf.call(accounts[0]) )
+            .then( amount => assert.equal(amount.valueOf(), testData0[1], `${testUsername0} was not endowed ${testData0[1]}`) )
     });
 
     it(`token transfers are not enabled`, () => {
-      return EthTraderDAO.deployed()
-        .then( dao => dao.token.call() )
-        .then( address => MiniMeToken.at(address).transfersEnabled.call() )
-        .then( enabled => assert.equal(enabled, false, `token transfers were not disabled`) )
+        return EthTraderDAO.deployed()
+            .then( dao => dao.token.call() )
+            .then( address => MiniMeToken.at(address).transfersEnabled.call() )
+            .then( enabled => assert.equal(enabled, false, `token transfers were not disabled`) )
     });
 
     // it(`${testUsername1} was registered@2 with new merkle root@1`, () => {
@@ -79,16 +97,14 @@ contract('EthTraderDAO', function(accounts) {
 
     it(`${testUsername0} weighted vote amount`, () => {
         return EthTraderDAO.deployed()
-            .then( dao => dao.getWeightedVote(testUsername0, 0) )
-            .log();
+            .then( dao => dao.getWeightedVote(testUsername0, 0) );
     });
 
     it(`${testUsername0} could vote:0`, () => {
         return EthTraderDAO.deployed()
-            .then( dao => dao.vote(0, 1) )                                      // vote in favour
+            .then( dao => dao.vote(0, 1) )
             .then( () => EthTraderDAO.deployed() )
-            .then( dao => dao.props.call(0) )
-            // .then( prop => assert.equal(prop[0], '0x4e4f4e4500000000000000000000000000000000', `token transfers were enabled`) );
+            .then( dao => dao.props.call(0) );
     });
 
     it(`${testUsername0} enacted prop:0, tokens are transferable`, () => {
@@ -100,30 +116,30 @@ contract('EthTraderDAO', function(accounts) {
             .then( enabled => assert.equal(enabled, true, `token transfers were not enabled`) );
     });
 
-    it(`${testUsername0} transfer 400 to ${testUsername1}`, () => {
+    it(`${testUsername0} transfer 150 to ${testUsername1}`, () => {
         return EthTraderDAO.deployed()
             .then( dao => dao.token.call() )
-            .then( address => MiniMeToken.at(address).transfer(accounts[1], 400) )
-            .then( () => EthTraderDAO.deployed())
+            .then( address => MiniMeToken.at(address).transfer(accounts[1], 150) )
+            .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.token.call() )
             .then( address => MiniMeToken.at(address).balanceOf(accounts[1]) )
-            .then( amount => assert.equal(amount.valueOf(), 400, `${testUsername1} did not receive 400`) );
+            .then( amount => assert.equal(amount.valueOf(), 150, `${testUsername1} did not receive 150`) );
     });
 
-    it(`TOKEN_AGE_DAY_CAP is 500`, () => {
+    it(`TOKEN_AGE_DAY_CAP is 200`, () => {
         return EthTraderDAO.deployed()
             .then( dao => dao.store.call() )
             .then( address => Store.at(address).values.call("TOKEN_AGE_DAY_CAP") )
-            .then( amount => assert.equal(amount.valueOf(), 500, `TOKEN_AGE_DAY_CAP not changed to 800`) );
+            .then( amount => assert.equal(amount.valueOf(), 200, `TOKEN_AGE_DAY_CAP not 200`) );
     });
 
     it(`${testUsername0} initialised a prop:1`, () => {
         let propData = bufferToHex(Buffer.concat([
           setLengthRight(toBuffer("TOKEN_AGE_DAY_CAP"), 20),
-          setLengthLeft(toBuffer(800), 12)
+          setLengthLeft(toBuffer(400), 12)
         ]));
-        return EthTraderDAO.deployed()
-            .then( dao => dao.split32_20_12.call(propData) )
+        return EthTraderLib.deployed()
+            .then( lib => lib.split32_20_12.call(propData) )
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.addProp("SET_VALUE", propData) );
     });
@@ -133,19 +149,19 @@ contract('EthTraderDAO', function(accounts) {
             .then( dao => dao.getWeightedVote(testUsername0, 1) )
             .log()
             .then( () => EthTraderDAO.deployed() )
-            .then( dao => dao.vote(1, 1) )                                      // vote in favour
+            .then( dao => dao.vote(1, 1) );                                     // vote in favour
     });
 
-    it(`${testUsername0} enacted prop:1, TOKEN_AGE_DAY_CAP changed to 800`, () => {
+    it(`${testUsername0} enacted prop:1, TOKEN_AGE_DAY_CAP changed to 400`, () => {
         return EthTraderDAO.deployed()
             .then( dao => dao.enactProp(1) )
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.store.call() )
             .then( address => Store.at(address).values.call("TOKEN_AGE_DAY_CAP") )
-            .then( amount => assert.equal(amount.valueOf(), 800, `TOKEN_AGE_DAY_CAP not changed to 800`) );
+            .then( amount => assert.equal(amount.valueOf(), 400, `TOKEN_AGE_DAY_CAP not changed to 400`) );
     });
 
-    const stake = 2000;
+    const stake = 1000;
     it(`prop:2 fail loses ${stake} stake`, () => {
         let totalSupply;
         return EthTraderDAO.deployed()
@@ -183,8 +199,17 @@ contract('EthTraderDAO', function(accounts) {
     });
 
     it(`prop:4 deploy new DAO and upgrade by vote`, () => {
-        let newDAOAddress;
-        return EthTraderDAO.new(0, 0, true)
+        let newDAOAddress, tokenAddress, regAddress, storeAddress;
+        return EthTraderDAO.deployed()
+            .then( dao => dao.token.call() )
+            .then( address => tokenAddress = address )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.registry.call() )
+            .then( address => regAddress = address )
+            .then( () => EthTraderDAO.deployed() )
+            .then( dao => dao.store.call() )
+            .then( address => storeAddress = address )
+            .then( () => EthTraderDAO.new(0, 0, tokenAddress, regAddress, storeAddress) )
             .then( instance => newDAOAddress = instance.address )
             .then( () => EthTraderDAO.deployed() )
             .then( dao => dao.addProp("UPGRADE", newDAOAddress) )
@@ -200,4 +225,5 @@ contract('EthTraderDAO', function(accounts) {
             .then( address => Registry.at(address).controller.call() )
             .then( address => assert.equal(address, newDAOAddress, `registry controller was not changed to new DAO address`) );
     });
+
 });
