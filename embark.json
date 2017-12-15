@@ -1,5 +1,5 @@
 {
-  "contracts": ["app/contracts/**"],
+  "contracts": ["contracts/**"],
   "app": {
   },
   "buildDir": "dist/",
