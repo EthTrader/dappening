@@ -28,14 +28,17 @@
         "gas": 1800000,
         "args": [
             "$TokenFactory", 0, 0, "EthTrader Token", 9, "ETR", false
-        ]
+        ],
+        "onDeploy": ["MiniMeToken.changeController('$EthTraderDAO')"]
       },
       "Registry": {
+        "onDeploy": ["Registry.changeController('$EthTraderDAO')"]
       },
       "Store": {
         "args": [
           true
-        ]
+        ],
+        "onDeploy": ["Store.changeController('$EthTraderDAO')"]
       },
       "TokenFactory": {
         "deploy": false

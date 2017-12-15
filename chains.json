@@ -19,7 +19,7 @@
       },
       "0x9989b3d095223450d28f258df2dbb3fed622d11b254a24bc2d55aa0552bd2e7e": {
         "name": "MiniMeToken",
-        "address": "0xd65b7c4efb602f9c8d3ec506f36fcc84adf72242"
+        "address": "0xd13e2fd204529409f0c19c4dcf3929d9bdf48ad9"
       },
       "0x340b519acf9052abd9cec51668f4412a225620203e31764f83e77a30272fb834": {
         "name": "EthTraderLib",
@@ -28,6 +28,10 @@
       "0x36527a076299f26466738fbe9a82b208a945a3c5b6d0d363a0866f6a8c86ecb6": {
         "name": "EthTraderDAO",
         "address": "0x3bd06ba4dfb838de903dbb527c52e91790dc440e"
+      },
+      "0x8eaafaedc7f833b58a8490ab22c249693c09883ffd899042747e938bc916290b": {
+        "name": "EthTraderDAO",
+        "address": "0x288a1b558023064e0c4cfda1458c90a7f94b371b"
       }
     },
     "name": "development"
