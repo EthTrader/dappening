@@ -1,0 +1,56 @@
+{
+  "contract_name": "ITokenFactory",
+  "code": "",
+  "runtime_bytecode": "",
+  "real_runtime_bytecode": "",
+  "swarm_hash": "",
+  "gas_estimates": {
+    "creation": {},
+    "external": {},
+    "internal": {}
+  },
+  "function_hashes": {
+    "createCloneToken(address,uint256,string,uint8,string,bool)": "5b7b72c1"
+  },
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "",
+          "type": "address"
+        },
+        {
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "name": "",
+          "type": "string"
+        },
+        {
+          "name": "",
+          "type": "uint8"
+        },
+        {
+          "name": "",
+          "type": "string"
+        },
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "name": "createCloneToken",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}

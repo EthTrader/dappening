@@ -1,0 +1,35 @@
+{
+  "0xb6cfeab83614da04c03db0fb8a6787a45d0be8d576fcc6f8f457a5a816d22ab3": {
+    "contracts": {
+      "0xb589c80216e843a84afe6613cd14855ec8f21ee23f49a890b2fc398e2888beea": {
+        "name": "MerkleTreeLib",
+        "address": "0x9a8cabfb42731dd0d1dbe91b2c5af04112b999d1"
+      },
+      "0x4d1d801dcea8ed0ceb2f827736edecb6c0aab792df78f271897c32ecf7fc2694": {
+        "name": "Controlled",
+        "address": "0x638edd7183392d96cb6596b9650b89195980033c"
+      },
+      "0xb11c8621f7b59a8c02eaad1a07a06ac5547ef560bc7565c01152c0f2da2b30c4": {
+        "name": "Store",
+        "address": "0xabddbbbefae67f79ecfa080cffe665df3f408eca"
+      },
+      "0x3646d8a724aab9cb8c9df6493ccdbc9ee853b9a00d50dc48a325d1328486d4d0": {
+        "name": "Registry",
+        "address": "0x718f24b1384ebe0d1e6f5bd7b38f8c8b1858dbc9"
+      },
+      "0x9989b3d095223450d28f258df2dbb3fed622d11b254a24bc2d55aa0552bd2e7e": {
+        "name": "MiniMeToken",
+        "address": "0xd65b7c4efb602f9c8d3ec506f36fcc84adf72242"
+      },
+      "0x340b519acf9052abd9cec51668f4412a225620203e31764f83e77a30272fb834": {
+        "name": "EthTraderLib",
+        "address": "0x78ff27c754ffd271727e4a86cc0e0c65ede6176b"
+      },
+      "0x36527a076299f26466738fbe9a82b208a945a3c5b6d0d363a0866f6a8c86ecb6": {
+        "name": "EthTraderDAO",
+        "address": "0x3bd06ba4dfb838de903dbb527c52e91790dc440e"
+      }
+    },
+    "name": "development"
+  }
+}

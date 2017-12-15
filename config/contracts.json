@@ -11,35 +11,38 @@
     },
     "dappConnection": [
       "$WEB3",
-      "http://localhost:8545",
+      "http://localhost:8545"
     ],
     "gas": "auto",
     "contracts": {
       "EthTraderLib": {
-        "deploy": false
+        "deploy": true
       },
       "EthTraderDAO": {
+        "gas": 3500000,
         "args": [
           0, "0x1631173b0b6c3788247949d149014684467c2b7fc945da65f605d4afa9bc4d28", "$MiniMeToken", "$Registry", "$Store"
         ]
       },
       "MiniMeToken": {
+        "gas": 1800000,
         "args": [
             "$TokenFactory", 0, 0, "EthTrader Token", 9, "ETR", false
-        ],
-        "onDeploy": ["$MiniMeToken.changeController('$EthTraderDAO')"]
+        ]
       },
       "Registry": {
-        "onDeploy": ["$Registry.changeController('$EthTraderDAO')"]
       },
       "Store": {
         "args": [
           true
-        ],
-        "onDeploy": ["$Store.changeController('$EthTraderDAO')"]
+        ]
       },
       "TokenFactory": {
         "deploy": false
+      },
+      "Voting": {
+        "deploy": false,
+        "gas": 1500000
       }
     }
   },

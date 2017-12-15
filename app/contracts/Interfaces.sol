@@ -50,7 +50,6 @@ contract IMiniMeToken is IControlled {
   function enableTransfers(bool) public;
 }
 
-
 contract ITokenFactory {
   function createCloneToken(address, uint, string, uint8, string, bool) public returns (IMiniMeToken);
 }
