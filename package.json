@@ -23,9 +23,10 @@
   },
   "homepage": "https://github.com/EthTrader/dappening#readme",
   "dependencies": {
-    "embark": "git@github.com:iurimatias/embark-framework.git#1666be11580f0657293c3ea313268560b1d8dc7c",
+    "async": "^2.6.0",
     "bluebird": "^3.5.0",
     "csvtojson": "^1.1.9",
+    "embark": "git@github.com:iurimatias/embark-framework.git#1666be11580f0657293c3ea313268560b1d8dc7c",
     "ethereum-bip44": "^2.1.3",
     "generate-contract-interface": "^0.1.13",
     "json2csv": "^3.11.5",
