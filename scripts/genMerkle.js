@@ -47,10 +47,15 @@ fs.writeFileSync(`${__dirname}/../out/modDayRate.json`, JSON.stringify(24))
 
 // const username = "MrKup";
 // const username = "doppio";
-const username = "carlslarson";
-const userIdx = users.findIndex(u=>u.username===username)
+var username = "carlslarson";
+var userIdx = users.findIndex(u=>u.username===username)
 // const proof = merkleTree.getProof(userHashBuffers[userIdx])
 // console.log(JSON.stringify(userArrays[userIdx]))
 // console.log(proof.map(p=>bufferToHex(p)))
 console.log(`${username} hash: ${bufferToHex(userHashBuffers[userIdx])}`)
+
+var username = "heliumcraft";
+var userIdx = users.findIndex(u=>u.username===username)
+console.log(`${username} hash: ${bufferToHex(userHashBuffers[userIdx])}`)
+
 console.log(`root: ${root}`)

@@ -15,18 +15,21 @@ require('promise-log')(Promise);
 
 const testUsername0 = "carlslarson";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
-console.log(testData0);
 testData0.splice(-1,1); // remove address
 testData0.push(0);      // add merkle root index
 const testUsername1 = "heliumcraft";//"doppio";
-// const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
-// console.log(testData1)
+const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
 var async = require('async');
 
 let accounts;
 
+const secret = require("../.secret.json");
+config({
+  mnemonic: secret.mnemonic
+});
+
 contract('EthTraderDAO', function() {
-    this.timeout(20000);
+    this.timeout(0);
     before(function(done) {
       var contractsConfig = {
         "EthTraderLib": {
@@ -77,7 +80,6 @@ contract('EthTraderDAO', function() {
     });
 
     it(`check the dao controls store,token, and registry`, (done) => {
-        console.log(web3.eth.accounts);
         async.waterfall([
           function(next) {
             Store.controller(function(err, result) {
@@ -108,10 +110,8 @@ contract('EthTraderDAO', function() {
     });
 
     it(`validate ${testUsername0} data`, (done) => {
-      EthTraderDAO.validate(...testData0, (err, result) => {
-        console.log("got result");
-        console.log(err);
-        console.log(result);
+      console.log("validate");
+      EthTraderDAO.validate(...testData0, {from: accounts[0]}, (err, result) => {
         assert.ok(result, `${testUsername0} failed merkle validation`);
         done();
       });

@@ -25,7 +25,7 @@
         ]
       },
       "MiniMeToken": {
-        "gas": 1800000,
+        "gas": 2800000,
         "args": [
             "$TokenFactory", 0, 0, "EthTrader Token", 9, "ETR", false
         ]
