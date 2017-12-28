@@ -22,6 +22,11 @@
         "gas": 3500000,
         "args": [
           0, "0x1631173b0b6c3788247949d149014684467c2b7fc945da65f605d4afa9bc4d28", "$MiniMeToken", "$Registry", "$Store"
+        ],
+        "onDeploy": [
+          "MiniMeToken.changeController('$EthTraderDAO')",
+          "Registry.changeController('$EthTraderDAO')",
+          "Store.changeController('$EthTraderDAO')"
         ]
       },
       "MiniMeToken": {
@@ -46,9 +51,6 @@
       }
     },
     "afterDeploy": [
-      "MiniMeToken.changeController('$EthTraderDAO')",
-      "Registry.changeController('$EthTraderDAO')",
-      "Store.changeController('$EthTraderDAO')"
     ]
   },
   "development": {
