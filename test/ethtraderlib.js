@@ -38,20 +38,23 @@ config({
 
 
 contract('EthTraderLib', function() {
-    this.timeout(20000);
+    this.timeout(40000);
     before(function(done) {
       var contractsConfig = {
         "EthTraderLib": {
           "deploy": true
         },
         "EthTraderDAO": {
-          "gas": 3500000,
           "args": [
             0, merkleRoot, "$MiniMeToken", "$Registry", "$Store"
+          ],
+          "onDeploy": [
+            "MiniMeToken.methods.changeController('$EthTraderDAO').send()",
+            "Registry.methods.changeController('$EthTraderDAO').send()",
+            "Store.methods.changeController('$EthTraderDAO').send()"
           ]
         },
         "MiniMeToken": {
-          "gas": 1800000,
           "args": [
             "$TokenFactory", 0, 0, "EthTrader Token", 9, "ETR", false
           ]
@@ -67,24 +70,13 @@ contract('EthTraderLib', function() {
           "deploy": false
         },
         "Voting": {
-          "deploy": false,
-          "gas": 1500000
+          "deploy": false
         }
       };
       EmbarkSpec.deployAll(contractsConfig, (_accounts) => {
         accounts = _accounts;
         console.log(accounts);
-        async.waterfall([
-          function(next) {
-            Store.changeController(EthTraderDAO.address, () =>{ next() });
-          },
-          function(next) {
-            Registry.changeController(EthTraderDAO.address, () => { next() });
-          },
-          function(next) {
-            MiniMeToken.changeController(EthTraderDAO.address, () => { next() });
-          },
-        ], done)
+        done();
       });
     });
 
@@ -93,7 +85,7 @@ contract('EthTraderLib', function() {
       var _root = web3.utils.bytesToHex(root);
       var elements_0 = web3.utils.bytesToHex(elements[0]);
 
-      EthTraderLib.checkProof(_proof, _root, elements_0, (err, result) => {
+      EthTraderLib.methods.checkProof(_proof, _root, elements_0).call().then((result) => {
         assert.ok(result, `proof is valid but failed`);
         done();
       });
@@ -104,7 +96,7 @@ contract('EthTraderLib', function() {
       var _root = web3.utils.bytesToHex(root);
       var elements_0 = web3.utils.bytesToHex(elements[0]);
 
-      EthTraderLib.checkProof(_proof, _root, elements_0, (err, result) => {
+      EthTraderLib.methods.checkProof(_proof, _root, elements_0).call().then((result) => {
         assert.ok(result==false, `proof is invalid but returned true anyway`);
         done();
       });
@@ -113,8 +105,7 @@ contract('EthTraderLib', function() {
     it(`should support keccak256`, (done) => {
       [_username, _endowment, _firstContent, _proof, _rootIndex] = testData1;
 
-      EthTraderLib.ethereumSHA3(_username, _endowment, _firstContent, (err, results) => {
-        console.log(err);
+      EthTraderLib.methods.ethereumSHA3(web3.utils.asciiToHex(_username), _endowment, _firstContent).call().then((results) => {
         console.log(results);
         done();
       })
