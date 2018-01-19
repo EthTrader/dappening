@@ -1,41 +1,24 @@
-const utils = require("ethereumjs-util");
-const { toBuffer, bufferToHex, setLengthLeft, setLengthRight } = utils;
 const userRegInputs = require("../out/userRegInputs.json");
 const merkleRoot = require("../out/merkleRoot.json");
-const modDayRate = require("../out/modDayRate.json");
-require('promise-log')(Promise);
 
-const testUsername0 = "carlslarson";
-const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
-console.log(testData0);
-testData0.splice(-1,1); // remove address
-testData0.push(0);      // add merkle root index
 const testUsername1 = "heliumcraft";//"doppio";
 const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
-console.log(testData1)
-var async = require('async');
 
 let accounts;
 
 var MerkleTree = require('merkle-tree-solidity');
 var checkProof = MerkleTree.checkProof;
-var checkProofSolidityFactory = MerkleTree.checkProofSolidityFactory;
 var sha3 = require('ethereumjs-util').sha3;
-var web3 = require('web3');
-
 const elements = [1, 2, 3].map(e => sha3(e))
 const merkleTree = new MerkleTree.default(elements)
 const root = merkleTree.getRoot()
-const easyRoot = MerkleTree.merkleRoot(elements)
 const proof = merkleTree.getProof(elements[0])
 var proofResult = checkProof(proof, root, elements[0])
-console.log('proofResult', proofResult);
 
 const secret = require("../.secret.json");
 config({
   mnemonic: secret.mnemonic
 });
-
 
 contract('EthTraderLib', function() {
     this.timeout(40000);

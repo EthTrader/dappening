@@ -1,3 +1,4 @@
+console.dir("test/dao.js");
 const utils = require("ethereumjs-util");
 const { toBuffer, bufferToHex, setLengthLeft, setLengthRight } = utils;
 // const RegReader = artifacts.require("./RegReader.sol");
@@ -8,15 +9,11 @@ require('promise-log')(Promise);
 
 const testUsername0 = "carlslarson";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
+console.log(testData0);
 testData0.splice(-1,1); // remove address
 testData0.push(0);      // add merkle root index
 
-
-//  let testData0_2 = testData0
-//  testData0_2[0] = web3.utils.asciiToHex(testData0[0]);
-
 testData0[0] = web3.utils.asciiToHex(testData0[0]);
-
 
 const testUsername1 = "heliumcraft";//"doppio";
 const testData1 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername1)];
