@@ -6,6 +6,8 @@ import "./Voting.sol";
 // is controller of Token, Registry
 contract EthTraderDAO is Voting, TokenController {
 
+    /* enum Actions                  { NONE, UPGRADE } */
+
     bool                        public regEndow = true;
     bytes32[]                   public roots;
 
@@ -27,7 +29,7 @@ contract EthTraderDAO is Voting, TokenController {
     function enactProp(uint _propIdx) public {
         Prop storage prop = props[_propIdx];
 
-        bool isPassed = resolveProp(prop);
+        bool isPassed = resolveProp(_propIdx);
         Resolved(_propIdx, isPassed);
         if(!isPassed)
             return;
@@ -57,7 +59,7 @@ contract EthTraderDAO is Voting, TokenController {
 
     function register(
         bytes20 _username,
-        uint24 _endowment,
+        uint96 _endowment,
         uint32 _firstContent,
         bytes32[] _proof,
         uint16 _rootIndex
@@ -77,7 +79,7 @@ contract EthTraderDAO is Voting, TokenController {
 
     function validate(
         bytes20 _username,
-        uint24 _endowment,
+        uint96 _endowment,
         uint32 _firstContent,
         bytes32[] _proof,
         uint16 _rootIndex

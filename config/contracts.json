@@ -39,7 +39,8 @@
       },
       "Store": {
         "args": [
-          true
+          true,
+          9
         ]
       },
       "TokenFactory": {

@@ -8,12 +8,11 @@ import "./Interfaces.sol";
 
 contract Voting {
 
-    enum PropState                  { UNRESOLVED, PASSED, FAILED, ENDED }
+    /* enum Actions                  { NONE } */
 
     struct Prop {
         bytes20                     action;
         bytes32                     data;
-        PropState                   state;
         uint                        startedAt;
         uint                        lastSigVoteAt;
         bytes20                     author;
@@ -22,6 +21,8 @@ contract Voting {
         mapping(address => bool)    voted;
     }
 
+    mapping(uint => bool)           public passed;
+    mapping(uint => bool)           public failed;
     bytes20[]                       public actions = [bytes20("NONE")];
     IStore                          public store;
     IRegistry                        public registry;
@@ -53,35 +54,28 @@ contract Voting {
         Proposed(props.push(prop)-1);
     }
 
-    function resolveProp(Prop storage _prop) internal returns(bool) {
+    function resolveProp(uint _propIdx) internal returns(bool) {
+        Prop storage prop = props[_propIdx];
+
         require(
-            _prop.state   == PropState.UNRESOLVED &&
-            block.number >= _prop.lastSigVoteAt + store.values("SIG_VOTE_DELAY") &&
-            block.number >= _prop.startedAt + store.values("PROP_DURATION")
+            prop.action != actions[0] &&
+            passed[_propIdx] == false &&
+            failed[_propIdx] == false &&
+            block.number >= prop.lastSigVoteAt + store.values("SIG_VOTE_DELAY") &&
+            block.number >= prop.startedAt + store.values("PROP_DURATION")
             );
 
-        if(_prop.action == actions[0]) {                                        // is "NONE" action
-            _prop.state = PropState.ENDED;
+        if(prop.results[1]/2 > prop.results[0]) {                             // need 2/3 majority to pass
+            passed[_propIdx] = true;
+            // return staked tokens
+            require( token.transferFrom(1, registry.getOwner(prop.author), prop.stake) );
             return true;
         } else {
-            if(_prop.results[1]/2 > _prop.results[0]) {                             // need 2/3 majority to pass
-                _prop.state = PropState.PASSED;
-                // return staked tokens
-                require( token.transferFrom(1, registry.getOwner(_prop.author), _prop.stake) );
-                return true;
-            } else {
-                _prop.state = PropState.FAILED;
-                // burn staked tokens
-                require( token.destroyTokens(1, _prop.stake) );
-                return false;
-            }
+            failed[_propIdx] = true;
+            // burn staked tokens
+            require( token.destroyTokens(1, prop.stake) );
+            return false;
         }
-    }
-
-    function endPoll(uint _propIdx) public {
-        Prop storage prop = props[_propIdx];
-        require( prop.action == actions[0] );
-        resolveProp(prop);
     }
 
     function getResult(uint _propIdx, uint _prefIdx) public view returns (uint) {
