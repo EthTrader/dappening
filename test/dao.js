@@ -4,12 +4,17 @@ const { toBuffer, bufferToHex, setLengthLeft, setLengthRight } = utils;
 const userRegInputs = require("../out/userRegInputs.json");
 const merkleRoot = require("../out/merkleRoot.json");
 const modDayRate = require("../out/modDayRate.json");
+const contractConfig = require("../config/contracts.json");
+const decimals = contractConfig.default.contracts.MiniMeToken.args[4];
+const etr = require("../utils/etr");
 require('promise-log')(Promise);
 
 const testUsername0 = "TEST_USER";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
 testData0.splice(-1,1); // remove address
 testData0.push(0);      // add merkle root index
+
+console.log(testData0);
 
 
 //  let testData0_2 = testData0
@@ -30,6 +35,8 @@ config({
   mnemonic: account.mnemonic
 });
 
+console.log("decimals:", decimals);
+
 contract('EthTraderDAO', function() {
     this.timeout(0);
     before(function(done) {
@@ -49,14 +56,15 @@ contract('EthTraderDAO', function() {
         },
         "MiniMeToken": {
           "args": [
-            "$TokenFactory", 0, 0, "EthTrader Token", 9, "ETR", false
+            "$TokenFactory", 0, 0, "EthTrader Token", decimals, "ETR", false
           ]
         },
         "Registry": {
         },
         "Store": {
           "args": [
-            true
+            true,
+            decimals
           ]
         },
         "TokenFactory": {
@@ -105,6 +113,7 @@ contract('EthTraderDAO', function() {
 
     it(`validate ${testUsername0} data`, (done) => {
       EthTraderDAO.methods.validate(...testData0).call().then((result) => {
+        console.log(result);
         assert.ok(result, `${testUsername0} failed merkle validation`);
         done();
       });
@@ -172,9 +181,9 @@ contract('EthTraderDAO', function() {
         EthTraderDAO.methods.props(0).call().then((prop) => {
           // prop is an object in web3.js 1.0
           //assert.equal(prop.length, 7, `return data length mismatch`);
-
-          assert.equal(prop[6], 1000, `return data length mismatch`);
-          assert.equal(prop[7], undefined, `return data length mismatch`);
+          console.log(prop, etr(1000));
+          assert.equal(prop[5], etr(1000), `return data length mismatch`);
+          assert.equal(prop[6], undefined, `return data length mismatch`);
           done();
         });
       });
@@ -182,7 +191,7 @@ contract('EthTraderDAO', function() {
 
     it(`${testUsername0} weighted vote amount`, (done) => {
         EthTraderDAO.methods.getWeightedVote(web3.utils.asciiToHex(testUsername0), 0).call().then((result) => {
-          assert.equal(result, 45000, `weight vote is incorrect`);
+          assert.equal(result, etr(45000), `weight vote is incorrect`);
           done();
         });
     });
@@ -206,9 +215,9 @@ contract('EthTraderDAO', function() {
     });
 
     it(`${testUsername0} transfer 150 to ${testUsername1}`, (done) => {
-      MiniMeToken.methods.transfer(accounts[1], 150).send().then((results) => {
+      MiniMeToken.methods.transfer(accounts[1], etr(150)).send().then((results) => {
         MiniMeToken.methods.balanceOf(accounts[1]).call().then((balance) => {
-          assert.equal(balance, 150, `${testUsername1} did not receive 150`);
+          assert.equal(balance, etr(150), `${testUsername1} did not receive 150`);
           done();
         });
       });
@@ -216,7 +225,7 @@ contract('EthTraderDAO', function() {
 
     it(`TOKEN_AGE_DAY_CAP is 200`, (done) => {
         Store.methods.values(web3.utils.asciiToHex("TOKEN_AGE_DAY_CAP")).call().then((amount) => {
-          amount => assert.equal(amount.valueOf(), 200, `TOKEN_AGE_DAY_CAP not 200`);
+          amount => assert.equal(amount.valueOf(), etr(200), `TOKEN_AGE_DAY_CAP not 200`);
           done();
         });
     });
@@ -224,7 +233,7 @@ contract('EthTraderDAO', function() {
     it(`${testUsername0} initialised a prop:1`, (done) => {
         let propData = bufferToHex(Buffer.concat([
           setLengthRight(toBuffer("TOKEN_AGE_DAY_CAP"), 20),
-          setLengthLeft(toBuffer(400), 12)
+          setLengthLeft(toBuffer(etr(400)), 12)
         ]));
 
         EthTraderLib.methods.split32_20_12(propData).call().then((results) => {

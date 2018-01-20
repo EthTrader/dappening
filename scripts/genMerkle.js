@@ -17,12 +17,13 @@ const users = require("../data/users.json");
 const fs = require("fs");
 
 const userArrays = users.map(u=>[u.address, u.username, calcEndowment(u), u.firstContent]);
+console.log(userArrays[0])
 
 const userHashBuffers = userArrays.map(u=>{
   let userBuffer = Buffer.concat([
     toBuffer(u[0]),
     setLengthRight(toBuffer(u[1]), 20),
-    setLengthLeft(toBuffer(u[2]), 3),
+    setLengthLeft(toBuffer(u[2]), 12),
     setLengthLeft(toBuffer(u[3]), 4)
   ])
   return keccak256(userBuffer)
@@ -47,11 +48,12 @@ fs.writeFileSync(`${__dirname}/../out/modDayRate.json`, JSON.stringify(24))
 
 // const username = "MrKup";
 // const username = "doppio";
+var username = "TEST_USER";
+var userIdx = users.findIndex(u=>u.username===username)
+console.log(`${username} hash: ${bufferToHex(userHashBuffers[userIdx])}`)
+
 var username = "carlslarson";
 var userIdx = users.findIndex(u=>u.username===username)
-// const proof = merkleTree.getProof(userHashBuffers[userIdx])
-// console.log(JSON.stringify(userArrays[userIdx]))
-// console.log(proof.map(p=>bufferToHex(p)))
 console.log(`${username} hash: ${bufferToHex(userHashBuffers[userIdx])}`)
 
 var username = "heliumcraft";

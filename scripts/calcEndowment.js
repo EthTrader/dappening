@@ -1,5 +1,6 @@
 const modDayRate = require("../out/modDayRate.json");
 const collectedTill = require("../out/collectedTill.json");
+const etr = require("../utils/etr");
 
 function calcEndowment(user){
     // const postScores = [user.ethereumPosts, user.ethtraderPosts, user.ethdevPosts, user.etherminingPosts];
@@ -20,14 +21,14 @@ function calcEndowment(user){
     //     }
     // }
 
-    let endowment = user.score;
+    let score = user.score;
 
     // if(modStartMax > 0 && modStartMax < collectedTill) {
     //     endowment += (collectedTill - modStartMax) * modDayRate / (60*60*24);
     // }
 
-    if(endowment < 0) endowment = 0;
-    return endowment;
+    if(score < 0) score = 0;
+    return etr(score);
 }
 
 // let myTestData = ["carlslarson",1403190201,[216,1688,422,1055],[756,3056,611,1528],[0,1427241600,0,0]]

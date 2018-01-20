@@ -13,7 +13,7 @@ module.exports = function(deployer) {
     .then( () => deployer.link(EthTraderLib, EthTraderDAO) )
     .then( () => deployer.deploy(TokenFactory) )
     .then( () => TokenFactory.deployed() )
-    .then( tokenFactory => deployer.deploy(MiniMeToken, tokenFactory.address, 0, 0, "EthTrader Token", 9, "ETR", false ) )
+    .then( tokenFactory => deployer.deploy(MiniMeToken, tokenFactory.address, 0, 0, "EthTrader Token", 18, "ETR", false ) )
     .then( () => MiniMeToken.deployed() )
     .then( token => tokenAddress = token.address )
     .then( () => deployer.deploy(Registry) )
