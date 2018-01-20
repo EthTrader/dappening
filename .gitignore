@@ -57,10 +57,12 @@ typings/
 # dotenv environment variables file
 .env
 
-.secret.json
+.secret*
+**/.secret*
 
 build/
 bot*/praw.ini
 bot/regbot.db
 out/users.csv
 data
+.embark/

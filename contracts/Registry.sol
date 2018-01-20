@@ -39,7 +39,7 @@ contract Registry is Controlled {
         userValueNames.push(_valueName);
     }
 
-    function getOwner(bytes20 _username) public returns(address owner) {
+    function getOwner(bytes20 _username) public view returns(address owner) {
         owner = usernameToUser[_username].owner;
     }
 

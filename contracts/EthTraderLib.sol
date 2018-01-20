@@ -26,4 +26,9 @@ library EthTraderLib {
             result^=(bytes20(0xff00000000000000000000000000000000000000)&data[i])>>(i*8);
     }
 
+    function ethereumSHA3(bytes20 _username, uint24 _endowment,  uint32 _firstContent) public view returns (bytes32 result) {
+        bytes32 hash = keccak256(msg.sender, _username, _endowment, _firstContent);
+        return hash;
+    }
+
 }
