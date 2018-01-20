@@ -1,5 +1,11 @@
 [
     {
+        "username": "TEST_USER",
+        "address": "0xF562Da23c987ECccfc03BA177E589f5610BE9B74",
+        "score": 10000,
+        "firstContent": 1407252487
+    },
+    {
         "username": "weirdbeard666",
         "address": "0x0b56b4782aD76c2b881f2162b57D8E2be5b16401",
         "score": 49,
@@ -3565,7 +3571,7 @@
     },
     {
         "username": "carlslarson",
-        "address": "0x2348138cB6b2B39E3D8fCab031aC6310d2745b64",
+        "address": "0x80f66D2E0eaFa73910ED0B5d411640b48d23B838",
         "score": 8196,
         "firstContent": 1407252487
     },

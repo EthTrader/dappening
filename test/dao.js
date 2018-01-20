@@ -6,7 +6,7 @@ const merkleRoot = require("../out/merkleRoot.json");
 const modDayRate = require("../out/modDayRate.json");
 require('promise-log')(Promise);
 
-const testUsername0 = "carlslarson";
+const testUsername0 = "TEST_USER";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
 testData0.splice(-1,1); // remove address
 testData0.push(0);      // add merkle root index
@@ -24,10 +24,10 @@ var async = require('async');
 
 let accounts;
 
-const secret = require("../.secret.json");
+const account = require("../config/account");
 config({
   //node: "http://localhost:8545",
-  mnemonic: secret.mnemonic
+  mnemonic: account.mnemonic
 });
 
 contract('EthTraderDAO', function() {
@@ -182,7 +182,7 @@ contract('EthTraderDAO', function() {
 
     it(`${testUsername0} weighted vote amount`, (done) => {
         EthTraderDAO.methods.getWeightedVote(web3.utils.asciiToHex(testUsername0), 0).call().then((result) => {
-          assert.equal(result, 35980, `weight vote is incorrect`);
+          assert.equal(result, 45000, `weight vote is incorrect`);
           done();
         });
     });

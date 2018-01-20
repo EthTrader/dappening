@@ -5,7 +5,7 @@ const merkleRoot = require("../out/merkleRoot.json");
 const modDayRate = require("../out/modDayRate.json");
 require('promise-log')(Promise);
 
-const testUsername0 = "carlslarson";
+const testUsername0 = "TEST_USER";
 const testData0 = userRegInputs[userRegInputs.findIndex(u=>u[0]===testUsername0)];
 console.log(testData0);
 testData0.splice(-1,1); // remove address
@@ -31,11 +31,10 @@ const proof = merkleTree.getProof(elements[0])
 var proofResult = checkProof(proof, root, elements[0])
 console.log('proofResult', proofResult);
 
-const secret = require("../.secret.json");
+const account = require("../config/account");
 config({
-  mnemonic: secret.mnemonic
+  mnemonic: account.mnemonic
 });
-
 
 contract('EthTraderLib', function() {
     this.timeout(40000);
