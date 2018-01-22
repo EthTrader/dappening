@@ -97,9 +97,25 @@ contract Voting {
         return props.length;
     }
 
-    /* function getProps() public view returns (action, data, startedAt, lastSigVoteAt, voted) {
+    /* function getProps() public view returns (Prop[]) { */
+    function getProps() public view returns (Actions[], bytes32[], uint[], uint[], bool[]) {
+        Actions[]    memory actions = new Actions[](props.length);
+        bytes32[] memory data = new bytes32[](props.length);
+        uint[]    memory starts = new uint[](props.length);
+        uint[]    memory lasts = new uint[](props.length);
+        bool[]    memory voted = new bool[](props.length);
 
-    } */
+        for (uint i = 0; i < props.length; i++) {
+            Prop storage prop = props[i];
+            actions[i] = prop.action;
+            data[i] = prop.data;
+            starts[i] = prop.startedAt;
+            lasts[i] = prop.lastSigVoteAt;
+            voted[i] = prop.voted[msg.sender];
+        }
+
+        return (actions, data, starts, lasts, voted);
+    }
 
     function vote(uint _propIdx, uint _prefIdx) public {
         bytes20 username = registry.ownerToUsername(msg.sender);

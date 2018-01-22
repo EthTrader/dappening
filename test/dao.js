@@ -251,13 +251,6 @@ contract('EthTraderDAO', function() {
         });
       });
     });
-
-    // it(`get props`, (done) => {
-    //   EthTraderDAO.methods.getProps().call().then((results) => {
-    //     done();
-    //   });
-    // });
-
     it(`${testUsername0} enacted prop:1, TOKEN_AGE_DAY_CAP changed to 400`, (done) => {
       // TODO: re-add this, might be a bug with the test; prop should be added first
       done();
@@ -318,6 +311,14 @@ contract('EthTraderDAO', function() {
         });
       });
     });
+
+    it(`get props`, (done) => {
+      EthTraderDAO.methods.getProps().call().then((results) => {
+        console.log(results);
+        done();
+      });
+    });
+
 
 //    it(`prop:4 deploy new DAO and upgrade by vote`, () => {
 //        let newDAOAddress, tokenAddress, regAddress, storeAddress;

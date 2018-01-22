@@ -6,7 +6,7 @@ Install embark:
 ```bash
 $ git clone git@github.com:iurimatias/embark-framework.github
 $ cd embark-framework
-$ npm Install
+$ npm install
 $ npm link
 ```
 
