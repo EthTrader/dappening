@@ -30,10 +30,10 @@ var async = require('async');
 
 let accounts;
 
-const account = require("../config/account");
+const mnemonic = require("../config/blockchain.json").development.simulatorMnemonic;
 config({
   //node: "http://localhost:8545",
-  mnemonic: account.mnemonic
+  mnemonic
 });
 
 console.log("decimals:", decimals);
