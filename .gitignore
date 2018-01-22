@@ -66,3 +66,4 @@ bot/regbot.db
 out/users.csv
 data
 .embark/
+dist/
