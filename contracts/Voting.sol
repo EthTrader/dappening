@@ -8,10 +8,10 @@ import "./Interfaces.sol";
 
 contract Voting {
 
-    /* enum Actions                  { NONE } */
+    enum Actions                  { NONE, UPGRADE, ADD_ROOT, TOGGLE_TRANSFERABLE, TOGGLE_REG_ENDOW, SET_VALUE, ENDOW, DEREG }
 
     struct Prop {
-        bytes20                     action;
+        Actions                     action;
         bytes32                     data;
         uint                        startedAt;
         uint                        lastSigVoteAt;
@@ -23,23 +23,23 @@ contract Voting {
 
     mapping(uint => bool)           public passed;
     mapping(uint => bool)           public failed;
-    bytes20[]                       public actions = [bytes20("NONE")];
+    /* bytes20[]                       public actions = [bytes20("NONE")]; */
     IStore                          public store;
-    IRegistry                        public registry;
-    IMiniMeToken                     public token;
+    IRegistry                       public registry;
+    IMiniMeToken                    public token;
     Prop[]                          public props;
 
     event Proposed(uint propIdx);
     event Voted(bytes20 username, uint propIdx, uint prefIdx);
     event Resolved(uint propIdx, bool result);
 
-    function addProp(bytes20 _action, bytes32 _data) public {
+    function addProp(Actions _action, bytes32 _data) public {
         bytes20 username = registry.ownerToUsername(msg.sender);
         require( username != 0 );
 
         Prop memory prop;
 
-        if(_action == actions[0]) {                                             // is "NONE" action, treat as poll
+        if(_action == Actions.NONE) {                                             // is "NONE" action, treat as poll
             require( token.destroyTokens(msg.sender, store.values("POLL_COST")) );
         } else {
             prop.stake = store.values("PROP_STAKE");
@@ -58,7 +58,7 @@ contract Voting {
         Prop storage prop = props[_propIdx];
 
         require(
-            prop.action != actions[0] &&
+            prop.action != Actions.NONE &&
             passed[_propIdx] == false &&
             failed[_propIdx] == false &&
             block.number >= prop.lastSigVoteAt + store.values("SIG_VOTE_DELAY") &&
@@ -96,6 +96,10 @@ contract Voting {
     function getNumProps() public view returns (uint) {
         return props.length;
     }
+
+    /* function getProps() public view returns (action, data, startedAt, lastSigVoteAt, voted) {
+
+    } */
 
     function vote(uint _propIdx, uint _prefIdx) public {
         bytes20 username = registry.ownerToUsername(msg.sender);

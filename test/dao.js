@@ -5,6 +5,7 @@ const userRegInputs = require("../out/userRegInputs.json");
 const merkleRoot = require("../out/merkleRoot.json");
 const modDayRate = require("../out/modDayRate.json");
 const contractConfig = require("../config/contracts.json");
+const { DAO_ACTIONS } = require("../constants");
 const decimals = contractConfig.default.contracts.MiniMeToken.args[4];
 const etr = require("../utils/etr");
 require('promise-log')(Promise);
@@ -177,7 +178,7 @@ contract('EthTraderDAO', function() {
     //});
 
     it(`${testUsername0} initialised a prop:0`, (done) => {
-      EthTraderDAO.methods.addProp(web3.utils.asciiToHex("TOGGLE_TRANSFERABLE"), web3.utils.asciiToHex(0)).send().then((results) => {
+      EthTraderDAO.methods.addProp(DAO_ACTIONS.TOGGLE_TRANSFERABLE.enum, web3.utils.asciiToHex(0)).send().then((results) => {
         EthTraderDAO.methods.props(0).call().then((prop) => {
           // prop is an object in web3.js 1.0
           //assert.equal(prop.length, 7, `return data length mismatch`);
@@ -237,7 +238,7 @@ contract('EthTraderDAO', function() {
         ]));
 
         EthTraderLib.methods.split32_20_12(propData).call().then((results) => {
-          EthTraderDAO.methods.addProp(web3.utils.asciiToHex("SET_VALUE"), propData).send().then((results) => {
+          EthTraderDAO.methods.addProp(DAO_ACTIONS.SET_VALUE.enum, propData).send().then((results) => {
             done();
           });
         });
@@ -250,6 +251,12 @@ contract('EthTraderDAO', function() {
         });
       });
     });
+
+    // it(`get props`, (done) => {
+    //   EthTraderDAO.methods.getProps().call().then((results) => {
+    //     done();
+    //   });
+    // });
 
     it(`${testUsername0} enacted prop:1, TOKEN_AGE_DAY_CAP changed to 400`, (done) => {
       // TODO: re-add this, might be a bug with the test; prop should be added first
@@ -275,7 +282,7 @@ contract('EthTraderDAO', function() {
       MiniMeToken.methods.totalSupply().call().then((amount) => {
         totalSupply = amount.toNumber();
 
-        EthTraderDAO.methods.addProp("ENDOW", 0).send({from: web3.eth.defaultAccount}).then((results) => {
+        EthTraderDAO.methods.addProp(DAO_ACTIONS.ENDOW.enum, 0).send({from: web3.eth.defaultAccount}).then((results) => {
           console.log("addProp", results);
           EthTraderDAO.methods.getWeightedVote(testUsername0, 2).call().then((results) => {
             console.log("getWeightedVote", results);
@@ -297,7 +304,7 @@ contract('EthTraderDAO', function() {
 
     it(`prop:3 simple poll`, (done) => {
       // TODO: add assert...
-      EthTraderDAO.methods.addProp(web3.utils.asciiToHex("NONE"), web3.utils.asciiToHex(0)).send({from: web3.eth.defaultAccount}).then((results) => {
+      EthTraderDAO.methods.addProp(DAO_ACTIONS.NONE.enum, web3.utils.asciiToHex(0)).send({from: web3.eth.defaultAccount}).then((results) => {
         EthTraderDAO.methods.getWeightedVote(web3.utils.asciiToHex(testUsername0), web3.utils.asciiToHex(3)).call().then((results) => {
           done();
           // TODO: it's resulting in an invalid opcode error
@@ -333,7 +340,7 @@ contract('EthTraderDAO', function() {
 //        //    .then( () => EthTraderDAO.new(0, 0, tokenAddress, regAddress, storeAddress) )
 //        //    .then( instance => newDAOAddress = instance.address )
 //        //    .then( () => EthTraderDAO.deployed() )
-//        //    .then( dao => dao.addProp("UPGRADE", newDAOAddress) )
+//        //    .then( dao => dao.addProp(DAO_ACTIONS.UPGRADE.enum, newDAOAddress) )
 //        //    .then( () => EthTraderDAO.deployed() )
 //        //    .then( dao => dao.getWeightedVote(testUsername0, 4) )
 //        //    .log()

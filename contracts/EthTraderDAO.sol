@@ -6,8 +6,6 @@ import "./Voting.sol";
 // is controller of Token, Registry
 contract EthTraderDAO is Voting, TokenController {
 
-    /* enum Actions                  { NONE, UPGRADE } */
-
     bool                        public regEndow = true;
     bytes32[]                   public roots;
 
@@ -23,7 +21,6 @@ contract EthTraderDAO is Voting, TokenController {
             registry = IRegistry(address(parentDAO.registry));
             store = IStore(address(parentDAO.store));
         }
-        actions = [bytes20("NONE"), bytes20("UPGRADE"), bytes20("ADD_ROOT"), bytes20("TOGGLE_TRANSFERABLE"), bytes20("TOGGLE_REG_ENDOW"), bytes20("SET_VALUE"), bytes20("ENDOW")];
     }
 
     function enactProp(uint _propIdx) public {
@@ -33,21 +30,23 @@ contract EthTraderDAO is Voting, TokenController {
         Resolved(_propIdx, isPassed);
         if(!isPassed)
             return;
-
-        if( prop.action == actions[1] ) {                                       // UPGRADE
+        if( prop.action == Actions.UPGRADE ) {
             upgrade(address(EthTraderLib.extract20(prop.data)));
-        } else if( prop.action == actions[2] ) {                                // ADD_ROOT
+        } else if( prop.action == Actions.ADD_ROOT ) {
             roots.push(prop.data);
-        } else if( prop.action ==  actions[3] ) {                               // TOGGLE_TRANSFERABLE
+        } else if( prop.action ==  Actions.TOGGLE_TRANSFERABLE ) {
             token.enableTransfers(!token.transfersEnabled());
-        } else if( prop.action ==  actions[4] ) {                               // TOGGLE_REG_ENDOW
+        } else if( prop.action ==  Actions.TOGGLE_REG_ENDOW ) {
             regEndow = !regEndow;
-        } else if( prop.action == actions[5] ) {                                // SET_VALUE
+        } else if( prop.action == Actions.SET_VALUE ) {
             var (k, v) = EthTraderLib.split32_20_12(prop.data);
             store.set(k, uint(v));
-        } else if( prop.action == actions[6] ) {                                // ENDOW
+        } else if( prop.action == Actions.ENDOW ) {
             var (r, a) = EthTraderLib.split32_20_12(prop.data);
             token.generateTokens(address(r), uint(a));
+        } else if( prop.action == Actions.DEREG ) {
+            var (u,) = EthTraderLib.split32_20_12(prop.data);
+            registry.remove(u);
         }
     }
 
