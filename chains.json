@@ -1,1 +1,31 @@
-{}
+{
+  "0x2401fb40db2120d6fffe7f05db8e0db915a6ef08f55b5777a3f742b021c2cef4": {
+    "contracts": {
+      "0xb589c80216e843a84afe6613cd14855ec8f21ee23f49a890b2fc398e2888beea": {
+        "name": "MerkleTreeLib",
+        "address": "0x47E49ade7229803645A357EBB064FEDF34e77AE6"
+      },
+      "0x1db88b4e87fed1eb30132160f475f13f5bab72a844b09b28e9a0b12d2c85921a": {
+        "name": "Store",
+        "address": "0x716935B951ccd1CA53Fe1D53a3Ae2dC143B7c61D"
+      },
+      "0xc69916695d6b46a5f3fff8279655c74b49795dd38b113da81be92637c0c48af8": {
+        "name": "Registry",
+        "address": "0x4e993DEA2483B453add5Dd10c521d4007aB26DCE"
+      },
+      "0x9989b3d095223450d28f258df2dbb3fed622d11b254a24bc2d55aa0552bd2e7e": {
+        "name": "MiniMeToken",
+        "address": "0x483d8a8cdf2cce5e8995284c8D345E01E1735028"
+      },
+      "0xa0070eb87a7a7c91d2a9ebb5ef9209af4241a50cd4b6aafcce5260e8972115b0": {
+        "name": "EthTraderLib",
+        "address": "0x94dE33Dfda761FD450448DC991b9E5152Ffff22E"
+      },
+      "0xaa97eb0a325e0d3af6ac27b0e79c5f1d80d548951d435dd0e510d4194a675995": {
+        "name": "EthTraderDAO",
+        "address": "0xb13352239C314808C22fe31bFa8f3BCB8bd2f088"
+      }
+    },
+    "name": "development"
+  }
+}

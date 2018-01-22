@@ -43,6 +43,7 @@ const root = bufferToHex(merkleTree.getRoot())
 
 fs.writeFileSync(`${__dirname}/../out/userRegInputs.json`, JSON.stringify(userRegInputs))
 fs.writeFileSync(`${__dirname}/../out/merkleRoot.json`, JSON.stringify(root))
+fs.writeFileSync(`${__dirname}/../out/merkleRoot`, root)
 // TODO properly calculate modDayRate
 fs.writeFileSync(`${__dirname}/../out/modDayRate.json`, JSON.stringify(24))
 

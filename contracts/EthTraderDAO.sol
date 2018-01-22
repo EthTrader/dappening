@@ -87,6 +87,16 @@ contract EthTraderDAO is Voting, TokenController {
         return EthTraderLib.checkProof(_proof, roots[_rootIndex], hash);
     }
 
+    function hash(
+        bytes20 _username,
+        uint96 _endowment,
+        uint32 _firstContent,
+        bytes32[] _proof,
+        uint16 _rootIndex
+    ) public view returns (bytes32 hash) {
+        hash = keccak256(msg.sender, _username, _endowment, _firstContent);
+    }
+
     function onTransfer(address _from, address _to, uint _amount) returns(bool) {
         if( _to == 0 || _to == 1 ) return true;                                 // skip if burn or staking transfer
         bytes20 username = registry.ownerToUsername(_from);

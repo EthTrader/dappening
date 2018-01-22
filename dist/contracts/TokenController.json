@@ -1,0 +1,44 @@
+{
+  "contract_name": "TokenController",
+  "code": "",
+  "runtime_bytecode": "",
+  "real_runtime_bytecode": "",
+  "swarm_hash": "",
+  "gas_estimates": {
+    "creation": {},
+    "external": {},
+    "internal": {}
+  },
+  "function_hashes": {
+    "onTransfer(address,address,uint256)": "4a393149"
+  },
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "name": "_to",
+          "type": "address"
+        },
+        {
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "onTransfer",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}

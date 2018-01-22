@@ -2,7 +2,8 @@ const utils = require("ethereumjs-util");
 const { toBuffer, bufferToHex, setLengthLeft, setLengthRight } = utils;
 // const RegReader = artifacts.require("./RegReader.sol");
 const userRegInputs = require("../out/userRegInputs.json");
-const merkleRoot = require("../out/merkleRoot.json");
+// const merkleRoot = require("../out/merkleRoot.json");
+const merkleRoot = require("../config/contracts.json").default.contracts.EthTraderDAO.args[1];
 const modDayRate = require("../out/modDayRate.json");
 const contractConfig = require("../config/contracts.json");
 const { DAO_ACTIONS } = require("../constants");
@@ -16,6 +17,7 @@ testData0.splice(-1,1); // remove address
 testData0.push(0);      // add merkle root index
 
 console.log(testData0);
+console.log(merkleRoot)
 
 
 //  let testData0_2 = testData0
