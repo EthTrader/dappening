@@ -42,6 +42,9 @@ contract('EthTraderDAO', function() {
     this.timeout(0);
     before(function(done) {
       var contractsConfig = {
+        "Controlled": {
+          "deploy": false
+        },
         "EthTraderLib": {
           "deploy": true
         },
