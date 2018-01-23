@@ -1,29 +1,29 @@
 {
-  "0x2401fb40db2120d6fffe7f05db8e0db915a6ef08f55b5777a3f742b021c2cef4": {
+  "0x5a78aa78088a9ffa6d344325f41e1c0df33c6d0ee5070ae112342d635e4bc2f1": {
     "contracts": {
-      "0xb589c80216e843a84afe6613cd14855ec8f21ee23f49a890b2fc398e2888beea": {
+      "0x4abd8727ab0a9726ec7640de94f63183fecbc52a557b792f51831dd2b3d9c84c": {
         "name": "MerkleTreeLib",
-        "address": "0x47E49ade7229803645A357EBB064FEDF34e77AE6"
+        "address": "0x9F937bdf232C9CBA83132011802240243Db83847"
       },
-      "0x1db88b4e87fed1eb30132160f475f13f5bab72a844b09b28e9a0b12d2c85921a": {
+      "0x65d4ac5d4ed4e3f91eec2cef407683a01107703e1c81c311baf754fe6fd83edc": {
         "name": "Store",
-        "address": "0x716935B951ccd1CA53Fe1D53a3Ae2dC143B7c61D"
+        "address": "0x7304BE5962d124B0415Cd7976779dbDa85B1518D"
       },
-      "0xc69916695d6b46a5f3fff8279655c74b49795dd38b113da81be92637c0c48af8": {
+      "0x49f849c179c67ea88e7fe4436a2d6a0e902354dd52572b75e06ec64fd22bbe06": {
         "name": "Registry",
-        "address": "0x4e993DEA2483B453add5Dd10c521d4007aB26DCE"
+        "address": "0x72458A89922913734aaFf8596F1e47A94D9c5A01"
       },
-      "0x9989b3d095223450d28f258df2dbb3fed622d11b254a24bc2d55aa0552bd2e7e": {
+      "0x9d143d3d7a7ddb3df20a19300633dd23edcabd721b4656928f9adc43cb4765dc": {
         "name": "MiniMeToken",
-        "address": "0x483d8a8cdf2cce5e8995284c8D345E01E1735028"
+        "address": "0x175FB3175616955706a607A68da2b748B966B4dd"
       },
-      "0xa0070eb87a7a7c91d2a9ebb5ef9209af4241a50cd4b6aafcce5260e8972115b0": {
+      "0xee6baaff6f0331df255cac6b605e3627ee92dd29548a34c3ba99923eb76f3203": {
         "name": "EthTraderLib",
-        "address": "0x94dE33Dfda761FD450448DC991b9E5152Ffff22E"
+        "address": "0xb0e1eFf4E0f472fbf70f9361A0d76e4df5ad956d"
       },
-      "0xaa97eb0a325e0d3af6ac27b0e79c5f1d80d548951d435dd0e510d4194a675995": {
+      "0x28ec754ad7c817dcbff00492c4b431832513b8b4ba22cd9c58b4fcd736b2c355": {
         "name": "EthTraderDAO",
-        "address": "0xb13352239C314808C22fe31bFa8f3BCB8bd2f088"
+        "address": "0xf6614d62Be2045F21c774889866857aDEE92A3C4"
       }
     },
     "name": "development"

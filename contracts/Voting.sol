@@ -98,12 +98,14 @@ contract Voting {
     }
 
     /* function getProps() public view returns (Prop[]) { */
-    function getProps() public view returns (Actions[], bytes32[], uint[], uint[], bool[]) {
+    function getProps() public view returns (Actions[], bytes32[], uint[], uint[], bool[], bool[], bool[]) {
         Actions[]    memory actions = new Actions[](props.length);
         bytes32[] memory data = new bytes32[](props.length);
         uint[]    memory starts = new uint[](props.length);
         uint[]    memory lasts = new uint[](props.length);
         bool[]    memory voted = new bool[](props.length);
+        bool[]    memory endedPassed = new bool[](props.length);
+        bool[]    memory endedFailed = new bool[](props.length);
 
         for (uint i = 0; i < props.length; i++) {
             Prop storage prop = props[i];
@@ -112,9 +114,11 @@ contract Voting {
             starts[i] = prop.startedAt;
             lasts[i] = prop.lastSigVoteAt;
             voted[i] = prop.voted[msg.sender];
+            endedPassed[i] = passed[i];
+            endedFailed[i] = failed[i];
         }
 
-        return (actions, data, starts, lasts, voted);
+        return (actions, data, starts, lasts, voted, endedPassed, endedFailed);
     }
 
     function vote(uint _propIdx, uint _prefIdx) public {
