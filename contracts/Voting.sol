@@ -88,9 +88,11 @@ contract Voting {
         return prop.voted[msg.sender];
     }
 
-    function getWeightedVote(bytes20 _username, uint _propIdx) public view returns (uint) {        // override this method in DAO
-        Prop storage prop = props[_propIdx];
-        return token.balanceOfAt(msg.sender, prop.startedAt);
+    function getVoteWeight(address _voter, uint _blockNumber) public view returns (uint) {
+        // some penalty if > X tokens moved within some recent time frame?
+        // penalty if tokens moved in (could be buying influence) but then could be abused to limit someones influence
+        // penalty if tokens moved out ? is that worth it?
+        return token.balanceOfAt(_voter, _blockNumber);
     }
 
     function getNumProps() public view returns (uint) {
@@ -103,9 +105,9 @@ contract Voting {
         bytes32[] memory data = new bytes32[](props.length);
         uint[]    memory starts = new uint[](props.length);
         uint[]    memory lasts = new uint[](props.length);
-        bool[]    memory voted = new bool[](props.length);
         bool[]    memory endedPassed = new bool[](props.length);
         bool[]    memory endedFailed = new bool[](props.length);
+        bool[]    memory voted = new bool[](props.length);
 
         for (uint i = 0; i < props.length; i++) {
             Prop storage prop = props[i];
@@ -113,12 +115,12 @@ contract Voting {
             data[i] = prop.data;
             starts[i] = prop.startedAt;
             lasts[i] = prop.lastSigVoteAt;
-            voted[i] = prop.voted[msg.sender];
             endedPassed[i] = passed[i];
             endedFailed[i] = failed[i];
+            voted[i] = prop.voted[msg.sender];
         }
 
-        return (actions, data, starts, lasts, voted, endedPassed, endedFailed);
+        return (actions, data, starts, lasts, endedPassed, endedFailed, voted);
     }
 
     function vote(uint _propIdx, uint _prefIdx) public {
@@ -133,10 +135,10 @@ contract Voting {
             block.number < prop.lastSigVoteAt + store.values("SIG_VOTE_DELAY")
             );
 
-        uint weightedVote = getWeightedVote(username, _propIdx);
-        if(weightedVote >= store.values("SIG_VOTE"))
+        uint voteWeight = getVoteWeight(msg.sender, prop.startedAt);
+        if(voteWeight >= store.values("SIG_VOTE"))
             prop.lastSigVoteAt = block.number;
-        prop.results[_prefIdx] += weightedVote;
+        prop.results[_prefIdx] += voteWeight;
         prop.voted[msg.sender] = true;
         Voted(username, _propIdx, _prefIdx);
     }

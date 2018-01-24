@@ -4,7 +4,8 @@ import "./EthTraderLib.sol";
 import "./Voting.sol";
 
 // is controller of Token, Registry
-contract EthTraderDAO is Voting, TokenController {
+/* contract EthTraderDAO is Voting, TokenController { */
+contract EthTraderDAO is Voting {
 
     bool                        public regEndow = true;
     bytes32[]                   public roots;
@@ -59,18 +60,19 @@ contract EthTraderDAO is Voting, TokenController {
     function register(
         bytes20 _username,
         uint96 _endowment,
-        uint32 _firstContent,
+        /* uint32 _firstContent, */
         bytes32[] _proof,
         uint16 _rootIndex
     ) public {
         require(
             registry.ownerToUsername(msg.sender) == 0 &&
             registry.getOwner(_username) == 0 &&
-            validate(_username, _endowment, _firstContent, _proof, _rootIndex)
+            /* validate(_username, _endowment, _firstContent, _proof, _rootIndex) */
+            validate(_username, _endowment, _proof, _rootIndex)
             );
 
         registry.add(_username, msg.sender);
-        registry.setUserValue(_username, 0, _firstContent);                     // set initial token age to (time since epoch) of users first ethtrader content
+        /* registry.setUserValue(_username, 0, _firstContent);                     // set initial token age to (time since epoch) of users first ethtrader content */
 
         if(regEndow)
             token.generateTokens(msg.sender, _endowment);
@@ -79,11 +81,12 @@ contract EthTraderDAO is Voting, TokenController {
     function validate(
         bytes20 _username,
         uint96 _endowment,
-        uint32 _firstContent,
+        /* uint32 _firstContent, */
         bytes32[] _proof,
         uint16 _rootIndex
     ) public view returns (bool) {
-        bytes32 hash = keccak256(msg.sender, _username, _endowment, _firstContent);
+        /* bytes32 hash = keccak256(msg.sender, _username, _endowment, _firstContent); */
+        bytes32 hash = keccak256(msg.sender, _username, _endowment);
         return EthTraderLib.checkProof(_proof, roots[_rootIndex], hash);
     }
 
@@ -94,10 +97,11 @@ contract EthTraderDAO is Voting, TokenController {
         bytes32[] _proof,
         uint16 _rootIndex
     ) public view returns (bytes32 hash) {
-        hash = keccak256(msg.sender, _username, _endowment, _firstContent);
+        /* hash = keccak256(msg.sender, _username, _endowment, _firstContent); */
+        hash = keccak256(msg.sender, _username, _endowment);
     }
 
-    function onTransfer(address _from, address _to, uint _amount) returns(bool) {
+    /* function onTransfer(address _from, address _to, uint _amount) returns(bool) {
         if( _to == 0 || _to == 1 ) return true;                                 // skip if burn or staking transfer
         bytes20 username = registry.ownerToUsername(_from);
         if( username == 0 || _amount == 0 ) return true;                        // skip if not registered
@@ -119,16 +123,6 @@ contract EthTraderDAO is Voting, TokenController {
             }
         }
         return true;
-    }
-
-    function getWeightedVote(bytes20 _username, uint _propIdx) public view returns (uint) {
-        Prop storage prop = props[_propIdx];
-        uint tokenAgeStart = registry.getUserValue(_username, 0);
-        uint multiplier = 0;
-        if(tokenAgeStart != 0)
-            multiplier = (block.timestamp - tokenAgeStart) / 8 weeks;
-        if(multiplier > 5) multiplier = 5;
-        return multiplier * token.balanceOfAt(msg.sender, prop.startedAt);
-    }
+    } */
 
 }
