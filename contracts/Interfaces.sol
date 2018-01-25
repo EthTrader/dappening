@@ -25,12 +25,12 @@ contract IRegistry is IControlled {
   function setUserValue(bytes20, uint, uint) public;
 }
 
-contract IMiniMeToken is IControlled {
+contract IToken is IControlled {
   function name() public constant returns(string);
   function decimals() public constant returns(uint8);
   function symbol() public constant returns(string);
   function version() public constant returns(string);
-  function parentToken() public constant returns(IMiniMeToken);
+  function parentToken() public constant returns(IToken);
   function parentSnapShotBlock() public constant returns(uint);
   function creationBlock() public constant returns(uint);
   function transfersEnabled() public constant returns(bool);
@@ -51,5 +51,5 @@ contract IMiniMeToken is IControlled {
 }
 
 contract ITokenFactory {
-  function createCloneToken(address, uint, string, uint8, string, bool) public returns (IMiniMeToken);
+  function createCloneToken(address, uint, string, uint8, string, bool) public returns (IToken);
 }

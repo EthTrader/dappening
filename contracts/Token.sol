@@ -17,7 +17,7 @@ pragma solidity ^0.4.6;
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/// @title MiniMeToken Contract
+/// @title Token Contract
 /// @author Jordi Baylina
 /// @dev This token contract's goal is to make it easy for anyone to clone this
 ///  token using the token distribution at a given block, this will allow DAO's
@@ -26,7 +26,7 @@ pragma solidity ^0.4.6;
 /// @dev It is ERC20 compliant, but still needs to under go further testing.
 
 import "./Controlled.sol";
-import "./TokenController.sol";
+/* import "./TokenController.sol"; */
 import "./TokenFactory.sol";
 
 contract ApproveAndCallFallBack {
@@ -36,14 +36,12 @@ contract ApproveAndCallFallBack {
 /// @dev The actual token contract, the default controller is the msg.sender
 ///  that deploys the contract, so usually this token will be deployed by a
 ///  token controller contract, which Giveth will call a "Campaign"
-contract MiniMeToken is Controlled {
+contract Token is Controlled {
 
-    string public name;                //The Token's name: e.g. DigixDAO Tokens
-    uint8 public decimals;             //Number of decimals of the smallest unit
-    string public symbol;              //An identifier: e.g. REP
-    string public version = 'MMT_0.1'; //An arbitrary versioning scheme
-
-    uint constant MAX_UINT = 2**256 - 1;
+    string          public name;                //The Token's name: e.g. DigixDAO Tokens
+    uint8           public decimals;             //Number of decimals of the smallest unit
+    string          public symbol;              //An identifier: e.g. REP
+    uint            constant MAX_UINT = 2**256 - 1;
 
 
     /// @dev `Checkpoint` is the structure that attaches a block number to a
@@ -60,7 +58,7 @@ contract MiniMeToken is Controlled {
 
     // `parentToken` is the Token address that was cloned to produce this token;
     //  it will be 0x0 for a token that was not cloned
-    MiniMeToken public parentToken;
+    Token public parentToken;
 
     // `parentSnapShotBlock` is the block number from the Parent Token that was
     //  used to determine the initial distribution of the Clone Token
@@ -72,7 +70,7 @@ contract MiniMeToken is Controlled {
     // `balances` is the map that tracks the balance of each address, in this
     //  contract when the balance changes the block number that the change
     //  occurred is also included in the map
-    mapping (address => Checkpoint[]) balances;
+    mapping (address => Checkpoint[]) public balances;
 
     // `allowed` tracks any extra transfer rights as in all ERC20 tokens
     mapping (address => mapping (address => uint256)) allowed;
@@ -90,7 +88,7 @@ contract MiniMeToken is Controlled {
 // Constructor
 ////////////////
 
-    /// @notice Constructor to create a MiniMeToken
+    /// @notice Constructor to create a Token
     /// @param _tokenFactory The address of the TokenFactory contract that
     ///  will create the Clone token contracts, the token factory needs to be
     ///  deployed first
@@ -103,7 +101,7 @@ contract MiniMeToken is Controlled {
     /// @param _decimalUnits Number of decimals of the new token
     /// @param _tokenSymbol Token Symbol for the new token
     /// @param _transfersEnabled If true, tokens will be able to be transferred
-    function MiniMeToken(
+    function Token(
         address _tokenFactory,
         address _parentToken,
         uint _parentSnapShotBlock,
@@ -116,7 +114,7 @@ contract MiniMeToken is Controlled {
         name = _tokenName;                                 // Set the name
         decimals = _decimalUnits;                          // Set the decimals
         symbol = _tokenSymbol;                             // Set the symbol
-        parentToken = MiniMeToken(_parentToken);
+        parentToken = Token(_parentToken);
         parentSnapShotBlock = _parentSnapShotBlock;
         transfersEnabled = _transfersEnabled;
         creationBlock = block.number;
@@ -185,9 +183,9 @@ contract MiniMeToken is Controlled {
            }
 
            // Alerts the token controller of the transfer
-           if (isContract(controller)) {
+           /* if (isContract(controller)) {
                require(TokenController(controller).onTransfer(_from, _to, _amount));
-           }
+           } */
 
            // First update the balance array with the new value for the address
            //  sending the tokens
@@ -339,7 +337,7 @@ contract MiniMeToken is Controlled {
     ///  copied to set the initial distribution of the new clone token;
     ///  if the block is zero than the actual block, the current block is used
     /// @param _transfersEnabled True if transfers are allowed in the clone
-    /// @return The address of the new MiniMeToken Contract
+    /// @return The address of the new Token Contract
     function createCloneToken(
         string _cloneTokenName,
         uint8 _cloneDecimalUnits,
@@ -348,7 +346,7 @@ contract MiniMeToken is Controlled {
         bool _transfersEnabled
         ) public returns(address) {
         if (_snapshotBlock == 0) _snapshotBlock = block.number;
-        MiniMeToken cloneToken = tokenFactory.createCloneToken(
+        Token cloneToken = tokenFactory.createCloneToken(
             this,
             _snapshotBlock,
             _cloneTokenName,

@@ -1,6 +1,6 @@
 pragma solidity ^0.4.17;
 
-library EthTraderLib {
+library UtilityLib {
 
     function checkProof(bytes32[] proof, bytes32 root, bytes32 hash) public pure returns (bool) {
 

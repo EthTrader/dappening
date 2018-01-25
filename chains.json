@@ -14,15 +14,15 @@
         "address": "0x72458A89922913734aaFf8596F1e47A94D9c5A01"
       },
       "0x9d143d3d7a7ddb3df20a19300633dd23edcabd721b4656928f9adc43cb4765dc": {
-        "name": "MiniMeToken",
+        "name": "Token",
         "address": "0x175FB3175616955706a607A68da2b748B966B4dd"
       },
       "0xee6baaff6f0331df255cac6b605e3627ee92dd29548a34c3ba99923eb76f3203": {
-        "name": "EthTraderLib",
+        "name": "UtilityLib",
         "address": "0xb0e1eFf4E0f472fbf70f9361A0d76e4df5ad956d"
       },
       "0x28ec754ad7c817dcbff00492c4b431832513b8b4ba22cd9c58b4fcd736b2c355": {
-        "name": "EthTraderDAO",
+        "name": "TokenDAO",
         "address": "0xf6614d62Be2045F21c774889866857aDEE92A3C4"
       }
     },

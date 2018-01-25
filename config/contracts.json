@@ -18,21 +18,21 @@
       "Controlled": {
         "deploy": false
       },
-      "EthTraderLib": {
+      "UtilityLib": {
         "deploy": true
       },
-      "EthTraderDAO": {
+      "TokenDAO": {
         "gas": 3500000,
         "args": [
-          0, "0x8eaad41acd059ee0d61479c7bbd36ea4e217585da714f922aeaeb9986a196351", "$MiniMeToken", "$Registry", "$Store"
+          0, "0x8eaad41acd059ee0d61479c7bbd36ea4e217585da714f922aeaeb9986a196351", "$Token", "$Registry", "$Store"
         ],
         "onDeploy": [
-          "MiniMeToken.methods.changeController('$EthTraderDAO').send()",
-          "Registry.methods.changeController('$EthTraderDAO').send()",
-          "Store.methods.changeController('$EthTraderDAO').send()"
+          "Token.methods.changeController('$TokenDAO').send()",
+          "Registry.methods.changeController('$TokenDAO').send()",
+          "Store.methods.changeController('$TokenDAO').send()"
         ]
       },
-      "MiniMeToken": {
+      "Token": {
         "gas": 2800000,
         "args": [
             "$TokenFactory", 0, 0, "EthTrader Token", 9, "ETR", false

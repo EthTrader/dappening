@@ -17,7 +17,7 @@ pragma solidity ^0.4.6;
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/// @title MiniMeToken Contract
+/// @title Token Contract
 /// @author Jordi Baylina
 /// @dev This token contract's goal is to make it easy for anyone to clone this
 ///  token using the token distribution at a given block, this will allow DAO's
