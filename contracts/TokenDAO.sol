@@ -13,6 +13,7 @@ contract TokenDAO {
         bytes32                     data;
         uint                        startedAt;
         uint                        lastSigVoteAt;
+        bytes20                     author;
         bool                        passed;
         mapping(uint => uint)       results;
         mapping(address => bool)    voted;
@@ -25,12 +26,12 @@ contract TokenDAO {
 
     uint                            constant PROP_STAKE = 1000;
     uint                            constant SIG_VOTE = 200;
-    uint                            constant SIG_VOTE_DELAY = 43;
-    uint                            constant PROP_DURATION = 12343; //43200;
+    uint                            public SIG_VOTE_DELAY = 43;
+    uint                            public PROP_DURATION = 12343; //43200;
 
     event Proposed(bytes20 username, uint propIdx);
     event Voted(bytes20 username, uint propIdx, uint prefIdx);
-    event Resolved(uint propIdx, bool result);
+    event Enacted(uint propIdx);
 
     function TokenDAO(bool _isDev, address _parent, address _token, address _registry, bytes32 _root){
       if(_isDev) {
@@ -68,8 +69,7 @@ contract TokenDAO {
 
         registry.add(_username, msg.sender, _firstContent);
 
-        if(regEndow)
-            token.generateTokens(msg.sender, _endowment);
+        token.generateTokens(msg.sender, _endowment);
     }
 
     function validate(
@@ -89,8 +89,8 @@ contract TokenDAO {
 
         Prop memory prop;
 
-        require( 
-            token.transferFrom(msg.sender, 1, PROP_STAKE * 10**token.decimals)
+        require(
+            token.transferFrom(msg.sender, 1, PROP_STAKE * 10**token.decimals())
             );
 
         prop.action = _action;
@@ -98,7 +98,7 @@ contract TokenDAO {
         prop.startedAt = block.number;
         prop.author = username;
 
-        Proposed(bytes20 username, props.push(prop)-1);
+        Proposed(username, props.push(prop)-1);
     }
 
     function enact(uint _propIdx) public {
@@ -106,13 +106,14 @@ contract TokenDAO {
 
         require(
             prop.passed == false &&
+            !isVotable(prop.startedAt, prop.lastSigVoteAt) &&
             block.number >= prop.lastSigVoteAt + SIG_VOTE_DELAY &&
             block.number >= prop.startedAt + PROP_DURATION &&
             prop.results[1]/2 > prop.results[0] &&                              // 2/3 majority to pass
             token.transferFrom(                                                 // return staked tokens
                 1,
                 registry.getOwner(prop.author),
-                PROP_STAKE * 10**token.decimals
+                PROP_STAKE * 10**token.decimals()
                 )
             );
 
@@ -124,6 +125,8 @@ contract TokenDAO {
         } else if( prop.action == Actions.ADD_ROOT ) {
             roots.push(prop.data);
         }
+
+        Enacted(_propIdx);
     }
 
     function getResult(uint _propIdx, uint _prefIdx) public view returns (uint) {
@@ -136,16 +139,9 @@ contract TokenDAO {
         return prop.voted[msg.sender];
     }
 
-    function isVotable(Prop _prop) returns (bool) {
-        return block.number < prop.startedAt + PROP_DURATION ||
-            block.number < prop.lastSigVoteAt + SIG_VOTE_DELAY;
-    }
-
-    function getVoteWeight(address _voter, uint _blockNumber) public view returns (uint) {
-        // some penalty if > X tokens moved within some recent time frame?
-        // penalty if tokens moved in (could be buying influence) but then could be abused to limit someones influence
-        // penalty if tokens moved out ? is that worth it?
-        return token.balanceOfAt(_voter, _blockNumber);
+    function isVotable(uint _startedAt, uint _lastSigVoteAt) public returns (bool) {
+        return block.number < _startedAt + PROP_DURATION ||
+            block.number < _lastSigVoteAt + SIG_VOTE_DELAY;
     }
 
     function getNumProps() public view returns (uint) {
@@ -180,14 +176,13 @@ contract TokenDAO {
 
         Prop storage prop = props[_propIdx];
 
-        require(prop.voted[msg.sender] == false);                               // didn't already vote
-        require(                                                                // prop still active
-            block.number < prop.startedAt + PROP_DURATION ||
-            block.number < prop.lastSigVoteAt + SIG_VOTE_DELAY
-            );
+        require(
+          prop.voted[msg.sender] == false &&                                    // didn't already vote
+          isVotable(prop.startedAt, prop.lastSigVoteAt)                                                       // prop still active
+          );
 
-        uint voteWeight = token.balances(msg.sender)[0].value;                  // starting balance
-        if(voteWeight >= SIG_VOTE * 10**token.decimals)
+        uint voteWeight = token.initialBalanceOf(msg.sender);                   // starting balance
+        if(voteWeight >= SIG_VOTE * 10**token.decimals())
             prop.lastSigVoteAt = block.number;
         prop.results[_prefIdx] += voteWeight;
         prop.voted[msg.sender] = true;

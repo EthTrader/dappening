@@ -3,11 +3,12 @@ const { toBuffer, bufferToHex, setLengthLeft, setLengthRight } = utils;
 // const RegReader = artifacts.require("./RegReader.sol");
 const userRegInputs = require("../out/userRegInputs.json");
 // const merkleRoot = require("../out/merkleRoot.json");
-const merkleRoot = require("../config/contracts.json").default.contracts.TokenDAO.args[1];
+const contractsConfig = require("../config/contracts.json").default.contracts;
+const merkleRoot = contractsConfig.TokenDAO.args[4];
 const modDayRate = require("../out/modDayRate.json");
 const contractConfig = require("../config/contracts.json");
 const { DAO_ACTIONS } = require("../constants");
-const decimals = contractConfig.default.contracts.Token.args[4];
+const decimals = contractsConfig.Token.args[4];
 const etr = require("../utils/etr");
 require('promise-log')(Promise);
 
@@ -43,43 +44,6 @@ console.log("decimals:", decimals);
 contract('TokenDAO', function() {
     this.timeout(0);
     before(function(done) {
-      var contractsConfig = {
-        "Controlled": {
-          "deploy": false
-        },
-        "UtilityLib": {
-          "deploy": true
-        },
-        "TokenDAO": {
-          "args": [
-            0, merkleRoot, "$Token", "$Registry", "$Store"
-          ],
-          "onDeploy": [
-            "Token.methods.changeController('$TokenDAO').send()",
-            "Registry.methods.changeController('$TokenDAO').send()",
-            "Store.methods.changeController('$TokenDAO').send()"
-          ]
-        },
-        "Token": {
-          "args": [
-            "$TokenFactory", 0, 0, "EthTrader Token", decimals, "ETR", false
-          ]
-        },
-        "Registry": {
-        },
-        "Store": {
-          "args": [
-            true,
-            decimals
-          ]
-        },
-        "TokenFactory": {
-          "deploy": false
-        },
-        "Voting": {
-          "deploy": false
-        }
-      };
       EmbarkSpec.deployAll(contractsConfig, (_accounts) => {
         accounts = _accounts;
         console.log(accounts);
@@ -89,12 +53,6 @@ contract('TokenDAO', function() {
 
     it(`check the dao controls store,token, and registry`, (done) => {
         async.waterfall([
-          function(next) {
-            Store.methods.controller().call().then(function(result) {
-              assert.equal(result, TokenDAO.address);
-              next();
-            });
-          },
           function(next) {
             Registry.methods.controller().call().then(function(result) {
               assert.equal(result, TokenDAO.address);
@@ -148,11 +106,11 @@ contract('TokenDAO', function() {
       });
     });
 
-    it(`token transfers are not enabled`, (done) => {
+    it(`token transfers ARE enabled`, (done) => {
       TokenDAO.methods.token().call().then((tokenAddress) => {
         //Token.at(tokenAddress).transfersEnabled((enabled) => {
         Token.methods.transfersEnabled().call().then((enabled) => {
-          assert.equal(enabled, false, `token transfers were not disabled`);
+          assert.equal(enabled, true, `token transfers were disabled`);
           done();
         });
       });
@@ -183,21 +141,21 @@ contract('TokenDAO', function() {
     //});
 
     it(`${testUsername0} initialised a prop:0`, (done) => {
-      TokenDAO.methods.addProp(DAO_ACTIONS.TOGGLE_TRANSFERABLE.enum, web3.utils.asciiToHex(0)).send().then((results) => {
+      TokenDAO.methods.addProp(DAO_ACTIONS.ADD_ROOT.enum, web3.utils.asciiToHex(0)).send().then((results) => {
         TokenDAO.methods.props(0).call().then((prop) => {
           // prop is an object in web3.js 1.0
           //assert.equal(prop.length, 7, `return data length mismatch`);
-          console.log(prop, etr(1000));
-          assert.equal(prop[5], etr(1000), `return data length mismatch`);
+          console.log(prop);
+          assert.equal(prop[5], false, `return data length mismatch`);
           assert.equal(prop[6], undefined, `return data length mismatch`);
           done();
         });
       });
     });
 
-    it(`${testUsername0} weighted vote amount`, (done) => {
-        TokenDAO.methods.getWeightedVote(web3.utils.asciiToHex(testUsername0), 0).call().then((result) => {
-          assert.equal(result, etr(45000), `weight vote is incorrect`);
+    it(`${testUsername0} weighted vote amount (=initial token balance)`, (done) => {
+        Token.methods.initialBalanceOf(accounts[0]).call().then((result) => {
+          assert.equal(result, testData0[1], `weight vote is incorrect`);
           done();
         });
     });
@@ -211,108 +169,11 @@ contract('TokenDAO', function() {
       });
     });
 
-    it(`${testUsername0} enacted prop:0, tokens are transferable`, (done) => {
-      TokenDAO.methods.enactProp(0).send().then((results) => {
-        Token.methods.transfersEnabled().call().then((enabled) => {
-          assert.equal(enabled, true, `token transfers were not enabled`);
-          done();
-        });
-      });
-    });
-
     it(`${testUsername0} transfer 150 to ${testUsername1}`, (done) => {
       Token.methods.transfer(accounts[1], etr(150)).send().then((results) => {
         Token.methods.balanceOf(accounts[1]).call().then((balance) => {
           assert.equal(balance, etr(150), `${testUsername1} did not receive 150`);
           done();
-        });
-      });
-    });
-
-    it(`TOKEN_AGE_DAY_CAP is 200`, (done) => {
-        Store.methods.values(web3.utils.asciiToHex("TOKEN_AGE_DAY_CAP")).call().then((amount) => {
-          amount => assert.equal(amount.valueOf(), etr(200), `TOKEN_AGE_DAY_CAP not 200`);
-          done();
-        });
-    });
-
-    it(`${testUsername0} initialised a prop:1`, (done) => {
-        let propData = bufferToHex(Buffer.concat([
-          setLengthRight(toBuffer("TOKEN_AGE_DAY_CAP"), 20),
-          setLengthLeft(toBuffer(etr(400)), 12)
-        ]));
-
-        UtilityLib.methods.split32_20_12(propData).call().then((results) => {
-          TokenDAO.methods.addProp(DAO_ACTIONS.SET_VALUE.enum, propData).send().then((results) => {
-            done();
-          });
-        });
-    });
-
-    it(`${testUsername0} could vote:1`, (done) => {
-      TokenDAO.methods.getWeightedVote(web3.utils.asciiToHex(testUsername0), 1).call().then((results) => {
-        TokenDAO.methods.vote(1, 1).send().then((results) => {
-          done();
-        });
-      });
-    });
-    it(`${testUsername0} enacted prop:1, TOKEN_AGE_DAY_CAP changed to 400`, (done) => {
-      // TODO: re-add this, might be a bug with the test; prop should be added first
-      done();
-
-      //TokenDAO.enactProp2(1, {gas: 1000000, from: accounts[0]}, (results) => {
-      //  console.log(results);
-      //  done();
-      //  //Store.values("TOKEN_AGE_DAY_CAP", (amount) => {
-      //  //  //console.log(amount);
-      //  //  assert.equal(amount.toNumber(), 400, `TOKEN_AGE_DAY_CAP not changed to 400`);
-      //  //  done();
-      //  //});
-      //});
-    });
-
-    const stake = 1000;
-    it(`prop:2 fail loses ${stake} stake`, (done) => {
-      // TODO: issue with addProp
-      return done();
-      let totalSupply;
-
-      Token.methods.totalSupply().call().then((amount) => {
-        totalSupply = amount.toNumber();
-
-        TokenDAO.methods.addProp(DAO_ACTIONS.ENDOW.enum, 0).send({from: web3.eth.defaultAccount}).then((results) => {
-          console.log("addProp", results);
-          TokenDAO.methods.getWeightedVote(testUsername0, 2).call().then((results) => {
-            console.log("getWeightedVote", results);
-            TokenDAO.methods.vote(2, 0).send({from: web3.eth.defaultAccount}).then((results) => {
-              console.log("vote", results);
-              TokenDAO.methods.enactProp(2).send({from: web3.eth.defaultAccount}).then((results) => {
-                console.log("enactProp", results);
-                Token.methods.totalSupply().call().then((amount) => {
-                  console.log("totalSupply", results);
-                  assert.equal(amount.toNumber(), totalSupply-stake, `totalSupply not reduced by ${stake}`);
-                  done();
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-
-    it(`prop:3 simple poll`, (done) => {
-      // TODO: add assert...
-      TokenDAO.methods.addProp(DAO_ACTIONS.NONE.enum, web3.utils.asciiToHex(0)).send({from: web3.eth.defaultAccount}).then((results) => {
-        TokenDAO.methods.getWeightedVote(web3.utils.asciiToHex(testUsername0), web3.utils.asciiToHex(3)).call().then((results) => {
-          done();
-          // TODO: it's resulting in an invalid opcode error
-          //TokenDAO.methods.vote(3,7).send().then((results) => {
-          //  TokenDAO.methods.endPoll(3).send().then((results) => {
-          //    TokenDAO.methods.getResult(3, 7).call().then((results) => {
-          //      done();
-          //    });
-          //  });
-          //});
         });
       });
     });

@@ -7,49 +7,63 @@ contract IControlled {
   function changeController(address _newController) public;
 }
 
-contract IStore is IControlled {
-  function values(bytes20) public constant returns(uint);
-  function set(bytes20, uint) public;
-  function remove(bytes20) public;
-}
-
 contract IRegistry is IControlled {
-  // function usernameToUser(bytes20) public constant returns(User);
-  function ownerToUsername(address) public constant returns(bytes20);
-  function userValueNames(uint) public constant returns(bytes20);
-  function add(bytes20, address) public;
-  function remove(bytes20) public;
-  function addUserValueName(bytes20) public;
-  function getOwner(bytes20) public returns(address);
-  function getUserValue(bytes20, uint) public returns(uint);
-  function setUserValue(bytes20, uint, uint) public;
+
+  struct User {
+      address                     owner;
+      uint32                      firstContentAt;
+  }
+
+  function usernameToUser(bytes20 _username) public constant returns(User);
+  function ownerToUsername(address _owner) public constant returns(bytes20);
+  function add(bytes20 _username, address _owner, uint32 _firstContentAt) public;
+  function remove(bytes20 _username) public;
+  function getOwner(bytes20 _username) public returns(address owner);
+  function getFirstContentAt(bytes20 _username) public returns(address owner);
 }
 
 contract IToken is IControlled {
+
+  struct  Checkpoint {
+      uint128 fromBlock;
+      uint128 value;
+  }
+
   function name() public constant returns(string);
   function decimals() public constant returns(uint8);
   function symbol() public constant returns(string);
-  function version() public constant returns(string);
   function parentToken() public constant returns(IToken);
   function parentSnapShotBlock() public constant returns(uint);
   function creationBlock() public constant returns(uint);
   function transfersEnabled() public constant returns(bool);
   function tokenFactory() public constant returns(ITokenFactory);
-  function transfer(address, uint256) public returns (bool);
-  function transferFrom(address, address, uint256) public returns (bool);
-  function balanceOf(address) public returns (uint256);
-  function approve(address, uint256) public returns (bool);
-  function allowance(address, address) public returns (uint256);
-  function approveAndCall(address, uint256, bytes) public returns (bool);
+  function transfer(address _to, uint256 _amount) public returns (bool success);
+  function transferFrom(address _from, address _to, uint256 _amount) public returns (bool success);
+  function initialBalanceOf(address _owner) public view returns (uint256 balance);
+  function balanceOf(address _owner) public returns (uint256 balance);
+  function approve(address _spender, uint256 _amount) public returns (bool success);
+  function allowance(address _owner, address _spender) public returns (uint256 remaining);
+  function approveAndCall(address _spender, uint256 _amount, bytes _extraData) public returns (bool success);
   function totalSupply() public returns (uint);
-  function balanceOfAt(address, uint) public returns (uint);
-  function totalSupplyAt(uint) public returns(uint);
-  function createCloneToken(string, uint8, string, uint, bool) public returns(address);
-  function generateTokens(address, uint) public returns (bool);
-  function destroyTokens(address, uint) public returns (bool);
-  function enableTransfers(bool) public;
+  function balanceOfAt(address _owner, uint _blockNumber) public returns (uint);
+  function totalSupplyAt(uint _blockNumber) public returns(uint);
+  function createCloneToken(
+        string _cloneTokenName,
+        uint8 _cloneDecimalUnits,
+        string _cloneTokenSymbol,
+        uint _snapshotBlock,
+        bool _transfersEnabled) public returns(address);
+  function generateTokens(address _owner, uint _amount) public returns (bool);
+  function destroyTokens(address _owner, uint _amount) public returns (bool);
+  function enableTransfers(bool _transfersEnabled) public;
 }
 
 contract ITokenFactory {
-  function createCloneToken(address, uint, string, uint8, string, bool) public returns (IToken);
+  function createCloneToken(
+        address _parentToken,
+        uint _snapshotBlock,
+        string _tokenName,
+        uint8 _decimalUnits,
+        string _tokenSymbol,
+        bool _transfersEnabled) public returns (IToken);
 }
