@@ -1,6 +1,4 @@
-pragma solidity ^0.4.17;
-
-import "./Controlled.sol";
+pragma solidity ^0.4.19;
 
 contract IControlled {
   function controller() public constant returns(address);
@@ -9,17 +7,23 @@ contract IControlled {
 
 contract IRegistry is IControlled {
 
-  struct User {
+  /* struct User {
       address                     owner;
+      uint32                      karma;
       uint32                      firstContentAt;
+      uint16                      lastRootIndex;
   }
 
-  function usernameToUser(bytes20 _username) public constant returns(User);
+  function usernameToUser(bytes20 _username) public constant returns(User); */
   function ownerToUsername(address _owner) public constant returns(bytes20);
-  function add(bytes20 _username, address _owner, uint32 _firstContentAt) public;
+  function add(bytes20 _username, address _owner, uint32 _karma, uint32 _firstContentAt, uint16 _rootIndex) public;
+  function update(bytes20 _username, address _owner, uint32 _karma, uint16 _rootIndex) public;
   function remove(bytes20 _username) public;
-  function getOwner(bytes20 _username) public returns(address owner);
-  function getFirstContentAt(bytes20 _username) public returns(address owner);
+  function getOwner(bytes20 _username) public returns(address);
+  function getKarma(bytes20 _username) public view returns(uint32);
+  function getFirstContentAt(bytes20 _username) public returns(uint32);
+  function getLastRootIndex(bytes20 _username) public returns(uint16);
+
 }
 
 contract IToken is IControlled {
@@ -39,7 +43,9 @@ contract IToken is IControlled {
   function tokenFactory() public constant returns(ITokenFactory);
   function transfer(address _to, uint256 _amount) public returns (bool success);
   function transferFrom(address _from, address _to, uint256 _amount) public returns (bool success);
-  function initialBalanceOf(address _owner) public view returns (uint256 balance);
+  function balances(address _owner) public view returns (Checkpoint[]);
+  function getCheckpointCount(address _owner) public view returns (uint);
+  function getCheckpoint(address _owner, uint _index) public view returns (Checkpoint);
   function balanceOf(address _owner) public returns (uint256 balance);
   function approve(address _spender, uint256 _amount) public returns (bool success);
   function allowance(address _owner, address _spender) public returns (uint256 remaining);

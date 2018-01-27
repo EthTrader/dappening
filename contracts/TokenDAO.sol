@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.4.19;
 
 import "./Token.sol";
 import "./Interfaces.sol";
@@ -56,30 +56,38 @@ contract TokenDAO {
 
     function register(
         bytes20 _username,
-        uint96 _endowment,
+        uint32 _karma,
         uint32 _firstContent,
         bytes32[] _proof,
         uint16 _rootIndex
     ) public {
-        require(
-            registry.ownerToUsername(msg.sender) == 0 &&
-            registry.getOwner(_username) == 0 &&
-            validate(_username, _endowment, _firstContent, _proof, _rootIndex)
-            );
 
-        registry.add(_username, msg.sender, _firstContent);
+        require(validate(_username, _karma, _firstContent, _proof, _rootIndex));
 
-        token.generateTokens(msg.sender, _endowment);
+        bytes20 existing = registry.ownerToUsername(msg.sender);
+
+        if(existing != 0) {
+          // update
+          require(_rootIndex > registry.getLastRootIndex(existing));            // prevent double reg
+          uint currentKarma = registry.getKarma(_username);
+          registry.update(_username, msg.sender, _karma, _rootIndex);
+          token.generateTokens(msg.sender, ( _karma - currentKarma )*10**token.decimals() );
+        } else {
+          // register
+          require(registry.getOwner(_username) == 0);
+          registry.add(_username, msg.sender, _karma, _firstContent, _rootIndex);
+          token.generateTokens(msg.sender, _karma*10**token.decimals());
+        }
     }
 
     function validate(
         bytes20 _username,
-        uint96 _endowment,
+        uint32 _karma,
         uint32 _firstContent,
         bytes32[] _proof,
         uint16 _rootIndex
     ) public view returns (bool) {
-        bytes32 hash = keccak256(msg.sender, _username, _endowment, _firstContent);
+        bytes32 hash = keccak256(msg.sender, _username, _karma, _firstContent);
         return UtilityLib.checkProof(_proof, roots[_rootIndex], hash);
     }
 
@@ -174,17 +182,21 @@ contract TokenDAO {
         bytes20 username = registry.ownerToUsername(msg.sender);
         require( username != 0 );
 
+        uint32 karma = registry.getKarma(username);
+
         Prop storage prop = props[_propIdx];
+        uint balance = token.balanceOf(msg.sender);
 
         require(
           prop.voted[msg.sender] == false &&                                    // didn't already vote
-          isVotable(prop.startedAt, prop.lastSigVoteAt)                                                       // prop still active
+          isVotable(prop.startedAt, prop.lastSigVoteAt)  &&                     // prop still active
+          balance/10**token.decimals() > karma/2                                // no vote if sold more than half of endowed tokens
           );
 
-        uint voteWeight = token.initialBalanceOf(msg.sender);                   // starting balance
+        uint voteWeight = registry.getKarma(username);                         // starting balance
         if(voteWeight >= SIG_VOTE * 10**token.decimals())
             prop.lastSigVoteAt = block.number;
-        prop.results[_prefIdx] += voteWeight;
+        prop.results[_prefIdx] += karma;
         prop.voted[msg.sender] = true;
         Voted(username, _propIdx, _prefIdx);
     }

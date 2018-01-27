@@ -22,3 +22,6 @@ $ embark test test/dao.js
 * [Browser plugin](https://github.com/EthTrader/plugin)
 * [EthTrader dApp](https://github.com/EthTrader/EthTrader.github.io)
 * [ICO review criteria](https://github.com/EthTrader/ico-review)
+
+STARTED COLLECTION
+  26-01-2018 16:56

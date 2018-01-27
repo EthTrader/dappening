@@ -1,4 +1,4 @@
-pragma solidity ^0.4.6;
+pragma solidity ^0.4.19;
 
 /*
     Copyright 2016, Jordi Baylina
@@ -70,7 +70,7 @@ contract Token is Controlled {
     // `balances` is the map that tracks the balance of each address, in this
     //  contract when the balance changes the block number that the change
     //  occurred is also included in the map
-    mapping (address => Checkpoint[]) balances;
+    mapping (address => Checkpoint[]) public balances;
 
     // `allowed` tracks any extra transfer rights as in all ERC20 tokens
     mapping (address => mapping (address => uint256)) allowed;
@@ -211,11 +211,14 @@ contract Token is Controlled {
 
     /// @param _owner The address that's balance is being requested
     /// @return The first balance of `_owner`
-    function initialBalanceOf(address _owner) public view returns (uint256 balance) {
-        if (balances[_owner].length == 0)
-            return 0;
-        else
-            return balances[_owner][0].value;
+    function getCheckpointCount(address _owner) public view returns (uint) {
+        return balances[_owner].length;
+    }
+
+    /// @param _owner The address that's balance is being requested
+    /// @return The first balance of `_owner`
+    function getCheckpoint(address _owner, uint _index) public view returns (Checkpoint) {
+        return balances[_owner][_index];
     }
 
     /// @notice `msg.sender` approves `_spender` to spend `_amount` tokens on
